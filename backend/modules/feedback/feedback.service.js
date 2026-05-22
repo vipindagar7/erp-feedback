@@ -744,8 +744,9 @@ export const bulkSubmitFeedback = async (form_id, buffer) => {
     const email = row.student_email?.toString().trim();
     if (!email) { results.failed.push({ row: rowNum, email: "—", reason: "student_email required" }); continue; }
     try {
-      const user = await prisma.user.findUnique({ where: { email }, include: { student: { select: { id: true, name: true } } } });
+      const user = await prisma.user.findUnique({ where: { email }, include: { student: { select: { id: true, name: true, section_id:true } } } });
       if (!user || !user.student) { results.failed.push({ row: rowNum, email, reason: "Student not found" }); continue; }
+      if (user.student.section_id !== form.section_id) { results.failed.push({ row: rowNum, email, reason: "Student not belongs to this section" }); continue; }
       const student_id = user.student.id;
       const existing = await prisma.feedbackResponse.findUnique({ where: { form_id_student_id: { form_id, student_id } } });
       if (existing) { results.failed.push({ row: rowNum, email, reason: "Already submitted" }); continue; }
