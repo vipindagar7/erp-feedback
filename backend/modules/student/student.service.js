@@ -3,6 +3,7 @@ import prisma from "../../utils/prisma.js";
 const masterClient = prisma;
 const replicaClient = prisma;
 import bcrypt from "bcryptjs";
+import xlsx from "xlsx";
 
 // ── Shared include ────────────────────────────────────────────────────────────
 const studentInclude = {
