@@ -24,7 +24,7 @@ import FeedbackCategoriesPage from "./pages/admin/FeedbackCategoriesPage.jsx";
 import FeedbackQuestionsPage from "./pages/admin/FeedbackQuestionsPage.jsx";
 import FeedbackFormsPage from "./pages/admin/FeedbackFormsPage.jsx";
 import FeedbackResultsPage from "./pages/admin/FeedbackResultsPage.jsx";
-import ReportsPage from "./pages/admin/ReportsPage.jsx";
+import FeedbackTeachingReportPage from "./pages/admin/FeedbackTeachingReportPage.jsx";
 import SettingsPage from "./pages/admin/SettingsPage.jsx";
 import AdminsPage from "./pages/admin/AdminsPage.jsx";
 import StudentEnrollmentPage from "./pages/student/StudentEnrollmentPage.jsx";
@@ -96,6 +96,8 @@ export const router = createBrowserRouter([
             { path: "feedback/results/:form_id", element: <FeedbackResultsPage /> },
             // Results needs :form_id param — FeedbackResultsPage uses useParams()
             { path: "feedback/results", element: <FeedbackResultsPage /> },
+            { path: "feedback/teaching", element: <FeedbackTeachingReportPage /> },
+
             { path: "admins", element: <AdminsPage /> },
             { path: "groups", element: <SpecialGroupsPage /> },
 

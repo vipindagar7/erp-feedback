@@ -48,4 +48,15 @@ router.delete("/forms/:formId", authenticate, authorize(...ADMIN), c.deleteForm)
 router.get("/my-forms", authenticate, authorize("STUDENT"), c.getMyForms);
 router.post("/forms/:formId/submit", authenticate, authorize("STUDENT"), validate(submitFormSchema), c.submitFeedback);
 
+// ── Form Groups ───────────────────────────────────────────────
+router.get("/groups", authenticate, authorize(...ADMIN), c.listFormGroups);
+router.get("/groups/:groupId", authenticate, authorize(...ADMIN), c.getFormGroup);
+router.patch("/groups/:groupId", authenticate, authorize(...ADMIN), c.updateFormGroup);
+router.delete("/groups/:groupId", authenticate, authorize(...ADMIN), c.deleteFormGroup);
+router.get("/groups/:groupId/export", authenticate, authorize(...ADMIN), c.exportGroupResults);
+
+// ── Teaching Report ───────────────────────────────────────────
+router.get("/teaching-report", authenticate, authorize(...ADMIN, "FACULTY"), c.getTeachingReport);
+router.get("/export-level", authenticate, authorize(...ADMIN), c.exportLevelReport);
+
 export default router;

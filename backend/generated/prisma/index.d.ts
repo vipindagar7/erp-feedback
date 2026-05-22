@@ -119,6 +119,11 @@ export type FeedbackQuestion = $Result.DefaultSelection<Prisma.$FeedbackQuestion
  */
 export type FeedbackForm = $Result.DefaultSelection<Prisma.$FeedbackFormPayload>
 /**
+ * Model FeedbackFormGroup
+ * 
+ */
+export type FeedbackFormGroup = $Result.DefaultSelection<Prisma.$FeedbackFormGroupPayload>
+/**
  * Model FeedbackFormStudent
  * 
  */
@@ -492,6 +497,16 @@ export class PrismaClient<
     * ```
     */
   get feedbackForm(): Prisma.FeedbackFormDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.feedbackFormGroup`: Exposes CRUD operations for the **FeedbackFormGroup** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FeedbackFormGroups
+    * const feedbackFormGroups = await prisma.feedbackFormGroup.findMany()
+    * ```
+    */
+  get feedbackFormGroup(): Prisma.FeedbackFormGroupDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.feedbackFormStudent`: Exposes CRUD operations for the **FeedbackFormStudent** model.
@@ -987,6 +1002,7 @@ export namespace Prisma {
     FeedbackCategory: 'FeedbackCategory',
     FeedbackQuestion: 'FeedbackQuestion',
     FeedbackForm: 'FeedbackForm',
+    FeedbackFormGroup: 'FeedbackFormGroup',
     FeedbackFormStudent: 'FeedbackFormStudent',
     FeedbackResponse: 'FeedbackResponse',
     FeedbackAnswer: 'FeedbackAnswer',
@@ -1006,7 +1022,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "admin" | "department" | "program" | "course" | "subject" | "section" | "sectionSubject" | "student" | "studentSubject" | "studentEnrollment" | "specialGroup" | "specialGroupMember" | "facultyGroup" | "facultyGroupMember" | "faculty" | "facultySubject" | "feedbackCategory" | "feedbackQuestion" | "feedbackForm" | "feedbackFormStudent" | "feedbackResponse" | "feedbackAnswer" | "notification"
+      modelProps: "user" | "passwordResetToken" | "admin" | "department" | "program" | "course" | "subject" | "section" | "sectionSubject" | "student" | "studentSubject" | "studentEnrollment" | "specialGroup" | "specialGroupMember" | "facultyGroup" | "facultyGroupMember" | "faculty" | "facultySubject" | "feedbackCategory" | "feedbackQuestion" | "feedbackForm" | "feedbackFormGroup" | "feedbackFormStudent" | "feedbackResponse" | "feedbackAnswer" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2564,6 +2580,80 @@ export namespace Prisma {
           }
         }
       }
+      FeedbackFormGroup: {
+        payload: Prisma.$FeedbackFormGroupPayload<ExtArgs>
+        fields: Prisma.FeedbackFormGroupFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FeedbackFormGroupFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackFormGroupPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FeedbackFormGroupFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackFormGroupPayload>
+          }
+          findFirst: {
+            args: Prisma.FeedbackFormGroupFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackFormGroupPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FeedbackFormGroupFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackFormGroupPayload>
+          }
+          findMany: {
+            args: Prisma.FeedbackFormGroupFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackFormGroupPayload>[]
+          }
+          create: {
+            args: Prisma.FeedbackFormGroupCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackFormGroupPayload>
+          }
+          createMany: {
+            args: Prisma.FeedbackFormGroupCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FeedbackFormGroupCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackFormGroupPayload>[]
+          }
+          delete: {
+            args: Prisma.FeedbackFormGroupDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackFormGroupPayload>
+          }
+          update: {
+            args: Prisma.FeedbackFormGroupUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackFormGroupPayload>
+          }
+          deleteMany: {
+            args: Prisma.FeedbackFormGroupDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FeedbackFormGroupUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FeedbackFormGroupUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackFormGroupPayload>[]
+          }
+          upsert: {
+            args: Prisma.FeedbackFormGroupUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackFormGroupPayload>
+          }
+          aggregate: {
+            args: Prisma.FeedbackFormGroupAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFeedbackFormGroup>
+          }
+          groupBy: {
+            args: Prisma.FeedbackFormGroupGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackFormGroupGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FeedbackFormGroupCountArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackFormGroupCountAggregateOutputType> | number
+          }
+        }
+      }
       FeedbackFormStudent: {
         payload: Prisma.$FeedbackFormStudentPayload<ExtArgs>
         fields: Prisma.FeedbackFormStudentFieldRefs
@@ -2989,6 +3079,7 @@ export namespace Prisma {
     feedbackCategory?: FeedbackCategoryOmit
     feedbackQuestion?: FeedbackQuestionOmit
     feedbackForm?: FeedbackFormOmit
+    feedbackFormGroup?: FeedbackFormGroupOmit
     feedbackFormStudent?: FeedbackFormStudentOmit
     feedbackResponse?: FeedbackResponseOmit
     feedbackAnswer?: FeedbackAnswerOmit
@@ -3610,11 +3701,13 @@ export namespace Prisma {
   export type FeedbackCategoryCountOutputType = {
     questions: number
     forms: number
+    feedbackFormGroups: number
   }
 
   export type FeedbackCategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     questions?: boolean | FeedbackCategoryCountOutputTypeCountQuestionsArgs
     forms?: boolean | FeedbackCategoryCountOutputTypeCountFormsArgs
+    feedbackFormGroups?: boolean | FeedbackCategoryCountOutputTypeCountFeedbackFormGroupsArgs
   }
 
   // Custom InputTypes
@@ -3640,6 +3733,13 @@ export namespace Prisma {
    */
   export type FeedbackCategoryCountOutputTypeCountFormsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FeedbackFormWhereInput
+  }
+
+  /**
+   * FeedbackCategoryCountOutputType without action
+   */
+  export type FeedbackCategoryCountOutputTypeCountFeedbackFormGroupsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackFormGroupWhereInput
   }
 
 
@@ -3711,6 +3811,37 @@ export namespace Prisma {
    */
   export type FeedbackFormCountOutputTypeCountStudentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FeedbackFormStudentWhereInput
+  }
+
+
+  /**
+   * Count Type FeedbackFormGroupCountOutputType
+   */
+
+  export type FeedbackFormGroupCountOutputType = {
+    feedbackForms: number
+  }
+
+  export type FeedbackFormGroupCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    feedbackForms?: boolean | FeedbackFormGroupCountOutputTypeCountFeedbackFormsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FeedbackFormGroupCountOutputType without action
+   */
+  export type FeedbackFormGroupCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroupCountOutputType
+     */
+    select?: FeedbackFormGroupCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FeedbackFormGroupCountOutputType without action
+   */
+  export type FeedbackFormGroupCountOutputTypeCountFeedbackFormsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackFormWhereInput
   }
 
 
@@ -25172,6 +25303,7 @@ export namespace Prisma {
     createdAt?: boolean
     questions?: boolean | FeedbackCategory$questionsArgs<ExtArgs>
     forms?: boolean | FeedbackCategory$formsArgs<ExtArgs>
+    feedbackFormGroups?: boolean | FeedbackCategory$feedbackFormGroupsArgs<ExtArgs>
     _count?: boolean | FeedbackCategoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feedbackCategory"]>
 
@@ -25203,6 +25335,7 @@ export namespace Prisma {
   export type FeedbackCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     questions?: boolean | FeedbackCategory$questionsArgs<ExtArgs>
     forms?: boolean | FeedbackCategory$formsArgs<ExtArgs>
+    feedbackFormGroups?: boolean | FeedbackCategory$feedbackFormGroupsArgs<ExtArgs>
     _count?: boolean | FeedbackCategoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FeedbackCategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -25213,6 +25346,7 @@ export namespace Prisma {
     objects: {
       questions: Prisma.$FeedbackQuestionPayload<ExtArgs>[]
       forms: Prisma.$FeedbackFormPayload<ExtArgs>[]
+      feedbackFormGroups: Prisma.$FeedbackFormGroupPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -25616,6 +25750,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     questions<T extends FeedbackCategory$questionsArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackCategory$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     forms<T extends FeedbackCategory$formsArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackCategory$formsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    feedbackFormGroups<T extends FeedbackCategory$feedbackFormGroupsArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackCategory$feedbackFormGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -26088,6 +26223,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FeedbackFormScalarFieldEnum | FeedbackFormScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackCategory.feedbackFormGroups
+   */
+  export type FeedbackCategory$feedbackFormGroupsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    where?: FeedbackFormGroupWhereInput
+    orderBy?: FeedbackFormGroupOrderByWithRelationInput | FeedbackFormGroupOrderByWithRelationInput[]
+    cursor?: FeedbackFormGroupWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeedbackFormGroupScalarFieldEnum | FeedbackFormGroupScalarFieldEnum[]
   }
 
   /**
@@ -27295,6 +27454,7 @@ export namespace Prisma {
     section_id: string | null
     group_id: string | null
     specialGroupId: string | null
+    feedbackFormGroupId: string | null
   }
 
   export type FeedbackFormMaxAggregateOutputType = {
@@ -27314,6 +27474,7 @@ export namespace Prisma {
     section_id: string | null
     group_id: string | null
     specialGroupId: string | null
+    feedbackFormGroupId: string | null
   }
 
   export type FeedbackFormCountAggregateOutputType = {
@@ -27333,6 +27494,7 @@ export namespace Prisma {
     section_id: number
     group_id: number
     specialGroupId: number
+    feedbackFormGroupId: number
     _all: number
   }
 
@@ -27362,6 +27524,7 @@ export namespace Prisma {
     section_id?: true
     group_id?: true
     specialGroupId?: true
+    feedbackFormGroupId?: true
   }
 
   export type FeedbackFormMaxAggregateInputType = {
@@ -27381,6 +27544,7 @@ export namespace Prisma {
     section_id?: true
     group_id?: true
     specialGroupId?: true
+    feedbackFormGroupId?: true
   }
 
   export type FeedbackFormCountAggregateInputType = {
@@ -27400,6 +27564,7 @@ export namespace Prisma {
     section_id?: true
     group_id?: true
     specialGroupId?: true
+    feedbackFormGroupId?: true
     _all?: true
   }
 
@@ -27506,6 +27671,7 @@ export namespace Prisma {
     section_id: string | null
     group_id: string | null
     specialGroupId: string | null
+    feedbackFormGroupId: string | null
     _count: FeedbackFormCountAggregateOutputType | null
     _avg: FeedbackFormAvgAggregateOutputType | null
     _sum: FeedbackFormSumAggregateOutputType | null
@@ -27544,6 +27710,7 @@ export namespace Prisma {
     section_id?: boolean
     group_id?: boolean
     specialGroupId?: boolean
+    feedbackFormGroupId?: boolean
     category?: boolean | FeedbackCategoryDefaultArgs<ExtArgs>
     department?: boolean | FeedbackForm$departmentArgs<ExtArgs>
     course?: boolean | FeedbackForm$courseArgs<ExtArgs>
@@ -27553,6 +27720,7 @@ export namespace Prisma {
     responses?: boolean | FeedbackForm$responsesArgs<ExtArgs>
     students?: boolean | FeedbackForm$studentsArgs<ExtArgs>
     specialGroup?: boolean | FeedbackForm$specialGroupArgs<ExtArgs>
+    feedbackFormGroup?: boolean | FeedbackForm$feedbackFormGroupArgs<ExtArgs>
     _count?: boolean | FeedbackFormCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feedbackForm"]>
 
@@ -27573,6 +27741,7 @@ export namespace Prisma {
     section_id?: boolean
     group_id?: boolean
     specialGroupId?: boolean
+    feedbackFormGroupId?: boolean
     category?: boolean | FeedbackCategoryDefaultArgs<ExtArgs>
     department?: boolean | FeedbackForm$departmentArgs<ExtArgs>
     course?: boolean | FeedbackForm$courseArgs<ExtArgs>
@@ -27580,6 +27749,7 @@ export namespace Prisma {
     subject?: boolean | FeedbackForm$subjectArgs<ExtArgs>
     section?: boolean | FeedbackForm$sectionArgs<ExtArgs>
     specialGroup?: boolean | FeedbackForm$specialGroupArgs<ExtArgs>
+    feedbackFormGroup?: boolean | FeedbackForm$feedbackFormGroupArgs<ExtArgs>
   }, ExtArgs["result"]["feedbackForm"]>
 
   export type FeedbackFormSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -27599,6 +27769,7 @@ export namespace Prisma {
     section_id?: boolean
     group_id?: boolean
     specialGroupId?: boolean
+    feedbackFormGroupId?: boolean
     category?: boolean | FeedbackCategoryDefaultArgs<ExtArgs>
     department?: boolean | FeedbackForm$departmentArgs<ExtArgs>
     course?: boolean | FeedbackForm$courseArgs<ExtArgs>
@@ -27606,6 +27777,7 @@ export namespace Prisma {
     subject?: boolean | FeedbackForm$subjectArgs<ExtArgs>
     section?: boolean | FeedbackForm$sectionArgs<ExtArgs>
     specialGroup?: boolean | FeedbackForm$specialGroupArgs<ExtArgs>
+    feedbackFormGroup?: boolean | FeedbackForm$feedbackFormGroupArgs<ExtArgs>
   }, ExtArgs["result"]["feedbackForm"]>
 
   export type FeedbackFormSelectScalar = {
@@ -27625,9 +27797,10 @@ export namespace Prisma {
     section_id?: boolean
     group_id?: boolean
     specialGroupId?: boolean
+    feedbackFormGroupId?: boolean
   }
 
-  export type FeedbackFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "category_id" | "title" | "is_active" | "action_taken" | "start_date" | "end_date" | "all_students" | "batch_year" | "department_id" | "course_id" | "faculty_id" | "subject_id" | "section_id" | "group_id" | "specialGroupId", ExtArgs["result"]["feedbackForm"]>
+  export type FeedbackFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "category_id" | "title" | "is_active" | "action_taken" | "start_date" | "end_date" | "all_students" | "batch_year" | "department_id" | "course_id" | "faculty_id" | "subject_id" | "section_id" | "group_id" | "specialGroupId" | "feedbackFormGroupId", ExtArgs["result"]["feedbackForm"]>
   export type FeedbackFormInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | FeedbackCategoryDefaultArgs<ExtArgs>
     department?: boolean | FeedbackForm$departmentArgs<ExtArgs>
@@ -27638,6 +27811,7 @@ export namespace Prisma {
     responses?: boolean | FeedbackForm$responsesArgs<ExtArgs>
     students?: boolean | FeedbackForm$studentsArgs<ExtArgs>
     specialGroup?: boolean | FeedbackForm$specialGroupArgs<ExtArgs>
+    feedbackFormGroup?: boolean | FeedbackForm$feedbackFormGroupArgs<ExtArgs>
     _count?: boolean | FeedbackFormCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FeedbackFormIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -27648,6 +27822,7 @@ export namespace Prisma {
     subject?: boolean | FeedbackForm$subjectArgs<ExtArgs>
     section?: boolean | FeedbackForm$sectionArgs<ExtArgs>
     specialGroup?: boolean | FeedbackForm$specialGroupArgs<ExtArgs>
+    feedbackFormGroup?: boolean | FeedbackForm$feedbackFormGroupArgs<ExtArgs>
   }
   export type FeedbackFormIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | FeedbackCategoryDefaultArgs<ExtArgs>
@@ -27657,6 +27832,7 @@ export namespace Prisma {
     subject?: boolean | FeedbackForm$subjectArgs<ExtArgs>
     section?: boolean | FeedbackForm$sectionArgs<ExtArgs>
     specialGroup?: boolean | FeedbackForm$specialGroupArgs<ExtArgs>
+    feedbackFormGroup?: boolean | FeedbackForm$feedbackFormGroupArgs<ExtArgs>
   }
 
   export type $FeedbackFormPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -27671,6 +27847,7 @@ export namespace Prisma {
       responses: Prisma.$FeedbackResponsePayload<ExtArgs>[]
       students: Prisma.$FeedbackFormStudentPayload<ExtArgs>[]
       specialGroup: Prisma.$SpecialGroupPayload<ExtArgs> | null
+      feedbackFormGroup: Prisma.$FeedbackFormGroupPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -27689,6 +27866,7 @@ export namespace Prisma {
       section_id: string | null
       group_id: string | null
       specialGroupId: string | null
+      feedbackFormGroupId: string | null
     }, ExtArgs["result"]["feedbackForm"]>
     composites: {}
   }
@@ -28092,6 +28270,7 @@ export namespace Prisma {
     responses<T extends FeedbackForm$responsesArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$responsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     students<T extends FeedbackForm$studentsArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackFormStudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     specialGroup<T extends FeedbackForm$specialGroupArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$specialGroupArgs<ExtArgs>>): Prisma__SpecialGroupClient<$Result.GetResult<Prisma.$SpecialGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    feedbackFormGroup<T extends FeedbackForm$feedbackFormGroupArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$feedbackFormGroupArgs<ExtArgs>>): Prisma__FeedbackFormGroupClient<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -28137,6 +28316,7 @@ export namespace Prisma {
     readonly section_id: FieldRef<"FeedbackForm", 'String'>
     readonly group_id: FieldRef<"FeedbackForm", 'String'>
     readonly specialGroupId: FieldRef<"FeedbackForm", 'String'>
+    readonly feedbackFormGroupId: FieldRef<"FeedbackForm", 'String'>
   }
     
 
@@ -28700,6 +28880,25 @@ export namespace Prisma {
   }
 
   /**
+   * FeedbackForm.feedbackFormGroup
+   */
+  export type FeedbackForm$feedbackFormGroupArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    where?: FeedbackFormGroupWhereInput
+  }
+
+  /**
    * FeedbackForm without action
    */
   export type FeedbackFormDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -28715,6 +28914,1151 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: FeedbackFormInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FeedbackFormGroup
+   */
+
+  export type AggregateFeedbackFormGroup = {
+    _count: FeedbackFormGroupCountAggregateOutputType | null
+    _min: FeedbackFormGroupMinAggregateOutputType | null
+    _max: FeedbackFormGroupMaxAggregateOutputType | null
+  }
+
+  export type FeedbackFormGroupMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    category_id: string | null
+    start_date: Date | null
+    end_date: Date | null
+    is_active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FeedbackFormGroupMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    category_id: string | null
+    start_date: Date | null
+    end_date: Date | null
+    is_active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FeedbackFormGroupCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    category_id: number
+    start_date: number
+    end_date: number
+    is_active: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FeedbackFormGroupMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    category_id?: true
+    start_date?: true
+    end_date?: true
+    is_active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FeedbackFormGroupMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    category_id?: true
+    start_date?: true
+    end_date?: true
+    is_active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FeedbackFormGroupCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    category_id?: true
+    start_date?: true
+    end_date?: true
+    is_active?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FeedbackFormGroupAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeedbackFormGroup to aggregate.
+     */
+    where?: FeedbackFormGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackFormGroups to fetch.
+     */
+    orderBy?: FeedbackFormGroupOrderByWithRelationInput | FeedbackFormGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FeedbackFormGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackFormGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackFormGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FeedbackFormGroups
+    **/
+    _count?: true | FeedbackFormGroupCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FeedbackFormGroupMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FeedbackFormGroupMaxAggregateInputType
+  }
+
+  export type GetFeedbackFormGroupAggregateType<T extends FeedbackFormGroupAggregateArgs> = {
+        [P in keyof T & keyof AggregateFeedbackFormGroup]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFeedbackFormGroup[P]>
+      : GetScalarType<T[P], AggregateFeedbackFormGroup[P]>
+  }
+
+
+
+
+  export type FeedbackFormGroupGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackFormGroupWhereInput
+    orderBy?: FeedbackFormGroupOrderByWithAggregationInput | FeedbackFormGroupOrderByWithAggregationInput[]
+    by: FeedbackFormGroupScalarFieldEnum[] | FeedbackFormGroupScalarFieldEnum
+    having?: FeedbackFormGroupScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FeedbackFormGroupCountAggregateInputType | true
+    _min?: FeedbackFormGroupMinAggregateInputType
+    _max?: FeedbackFormGroupMaxAggregateInputType
+  }
+
+  export type FeedbackFormGroupGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    category_id: string
+    start_date: Date
+    end_date: Date
+    is_active: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: FeedbackFormGroupCountAggregateOutputType | null
+    _min: FeedbackFormGroupMinAggregateOutputType | null
+    _max: FeedbackFormGroupMaxAggregateOutputType | null
+  }
+
+  type GetFeedbackFormGroupGroupByPayload<T extends FeedbackFormGroupGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FeedbackFormGroupGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FeedbackFormGroupGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FeedbackFormGroupGroupByOutputType[P]>
+            : GetScalarType<T[P], FeedbackFormGroupGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FeedbackFormGroupSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    category_id?: boolean
+    start_date?: boolean
+    end_date?: boolean
+    is_active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    category?: boolean | FeedbackCategoryDefaultArgs<ExtArgs>
+    feedbackForms?: boolean | FeedbackFormGroup$feedbackFormsArgs<ExtArgs>
+    _count?: boolean | FeedbackFormGroupCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feedbackFormGroup"]>
+
+  export type FeedbackFormGroupSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    category_id?: boolean
+    start_date?: boolean
+    end_date?: boolean
+    is_active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    category?: boolean | FeedbackCategoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feedbackFormGroup"]>
+
+  export type FeedbackFormGroupSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    category_id?: boolean
+    start_date?: boolean
+    end_date?: boolean
+    is_active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    category?: boolean | FeedbackCategoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feedbackFormGroup"]>
+
+  export type FeedbackFormGroupSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    category_id?: boolean
+    start_date?: boolean
+    end_date?: boolean
+    is_active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FeedbackFormGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "category_id" | "start_date" | "end_date" | "is_active" | "createdAt" | "updatedAt", ExtArgs["result"]["feedbackFormGroup"]>
+  export type FeedbackFormGroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | FeedbackCategoryDefaultArgs<ExtArgs>
+    feedbackForms?: boolean | FeedbackFormGroup$feedbackFormsArgs<ExtArgs>
+    _count?: boolean | FeedbackFormGroupCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type FeedbackFormGroupIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | FeedbackCategoryDefaultArgs<ExtArgs>
+  }
+  export type FeedbackFormGroupIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | FeedbackCategoryDefaultArgs<ExtArgs>
+  }
+
+  export type $FeedbackFormGroupPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FeedbackFormGroup"
+    objects: {
+      category: Prisma.$FeedbackCategoryPayload<ExtArgs>
+      feedbackForms: Prisma.$FeedbackFormPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      category_id: string
+      start_date: Date
+      end_date: Date
+      is_active: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["feedbackFormGroup"]>
+    composites: {}
+  }
+
+  type FeedbackFormGroupGetPayload<S extends boolean | null | undefined | FeedbackFormGroupDefaultArgs> = $Result.GetResult<Prisma.$FeedbackFormGroupPayload, S>
+
+  type FeedbackFormGroupCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FeedbackFormGroupFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FeedbackFormGroupCountAggregateInputType | true
+    }
+
+  export interface FeedbackFormGroupDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FeedbackFormGroup'], meta: { name: 'FeedbackFormGroup' } }
+    /**
+     * Find zero or one FeedbackFormGroup that matches the filter.
+     * @param {FeedbackFormGroupFindUniqueArgs} args - Arguments to find a FeedbackFormGroup
+     * @example
+     * // Get one FeedbackFormGroup
+     * const feedbackFormGroup = await prisma.feedbackFormGroup.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FeedbackFormGroupFindUniqueArgs>(args: SelectSubset<T, FeedbackFormGroupFindUniqueArgs<ExtArgs>>): Prisma__FeedbackFormGroupClient<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FeedbackFormGroup that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FeedbackFormGroupFindUniqueOrThrowArgs} args - Arguments to find a FeedbackFormGroup
+     * @example
+     * // Get one FeedbackFormGroup
+     * const feedbackFormGroup = await prisma.feedbackFormGroup.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FeedbackFormGroupFindUniqueOrThrowArgs>(args: SelectSubset<T, FeedbackFormGroupFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FeedbackFormGroupClient<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeedbackFormGroup that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackFormGroupFindFirstArgs} args - Arguments to find a FeedbackFormGroup
+     * @example
+     * // Get one FeedbackFormGroup
+     * const feedbackFormGroup = await prisma.feedbackFormGroup.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FeedbackFormGroupFindFirstArgs>(args?: SelectSubset<T, FeedbackFormGroupFindFirstArgs<ExtArgs>>): Prisma__FeedbackFormGroupClient<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeedbackFormGroup that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackFormGroupFindFirstOrThrowArgs} args - Arguments to find a FeedbackFormGroup
+     * @example
+     * // Get one FeedbackFormGroup
+     * const feedbackFormGroup = await prisma.feedbackFormGroup.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FeedbackFormGroupFindFirstOrThrowArgs>(args?: SelectSubset<T, FeedbackFormGroupFindFirstOrThrowArgs<ExtArgs>>): Prisma__FeedbackFormGroupClient<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FeedbackFormGroups that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackFormGroupFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FeedbackFormGroups
+     * const feedbackFormGroups = await prisma.feedbackFormGroup.findMany()
+     * 
+     * // Get first 10 FeedbackFormGroups
+     * const feedbackFormGroups = await prisma.feedbackFormGroup.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const feedbackFormGroupWithIdOnly = await prisma.feedbackFormGroup.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FeedbackFormGroupFindManyArgs>(args?: SelectSubset<T, FeedbackFormGroupFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FeedbackFormGroup.
+     * @param {FeedbackFormGroupCreateArgs} args - Arguments to create a FeedbackFormGroup.
+     * @example
+     * // Create one FeedbackFormGroup
+     * const FeedbackFormGroup = await prisma.feedbackFormGroup.create({
+     *   data: {
+     *     // ... data to create a FeedbackFormGroup
+     *   }
+     * })
+     * 
+     */
+    create<T extends FeedbackFormGroupCreateArgs>(args: SelectSubset<T, FeedbackFormGroupCreateArgs<ExtArgs>>): Prisma__FeedbackFormGroupClient<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FeedbackFormGroups.
+     * @param {FeedbackFormGroupCreateManyArgs} args - Arguments to create many FeedbackFormGroups.
+     * @example
+     * // Create many FeedbackFormGroups
+     * const feedbackFormGroup = await prisma.feedbackFormGroup.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FeedbackFormGroupCreateManyArgs>(args?: SelectSubset<T, FeedbackFormGroupCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FeedbackFormGroups and returns the data saved in the database.
+     * @param {FeedbackFormGroupCreateManyAndReturnArgs} args - Arguments to create many FeedbackFormGroups.
+     * @example
+     * // Create many FeedbackFormGroups
+     * const feedbackFormGroup = await prisma.feedbackFormGroup.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FeedbackFormGroups and only return the `id`
+     * const feedbackFormGroupWithIdOnly = await prisma.feedbackFormGroup.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FeedbackFormGroupCreateManyAndReturnArgs>(args?: SelectSubset<T, FeedbackFormGroupCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FeedbackFormGroup.
+     * @param {FeedbackFormGroupDeleteArgs} args - Arguments to delete one FeedbackFormGroup.
+     * @example
+     * // Delete one FeedbackFormGroup
+     * const FeedbackFormGroup = await prisma.feedbackFormGroup.delete({
+     *   where: {
+     *     // ... filter to delete one FeedbackFormGroup
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FeedbackFormGroupDeleteArgs>(args: SelectSubset<T, FeedbackFormGroupDeleteArgs<ExtArgs>>): Prisma__FeedbackFormGroupClient<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FeedbackFormGroup.
+     * @param {FeedbackFormGroupUpdateArgs} args - Arguments to update one FeedbackFormGroup.
+     * @example
+     * // Update one FeedbackFormGroup
+     * const feedbackFormGroup = await prisma.feedbackFormGroup.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FeedbackFormGroupUpdateArgs>(args: SelectSubset<T, FeedbackFormGroupUpdateArgs<ExtArgs>>): Prisma__FeedbackFormGroupClient<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FeedbackFormGroups.
+     * @param {FeedbackFormGroupDeleteManyArgs} args - Arguments to filter FeedbackFormGroups to delete.
+     * @example
+     * // Delete a few FeedbackFormGroups
+     * const { count } = await prisma.feedbackFormGroup.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FeedbackFormGroupDeleteManyArgs>(args?: SelectSubset<T, FeedbackFormGroupDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeedbackFormGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackFormGroupUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FeedbackFormGroups
+     * const feedbackFormGroup = await prisma.feedbackFormGroup.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FeedbackFormGroupUpdateManyArgs>(args: SelectSubset<T, FeedbackFormGroupUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeedbackFormGroups and returns the data updated in the database.
+     * @param {FeedbackFormGroupUpdateManyAndReturnArgs} args - Arguments to update many FeedbackFormGroups.
+     * @example
+     * // Update many FeedbackFormGroups
+     * const feedbackFormGroup = await prisma.feedbackFormGroup.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FeedbackFormGroups and only return the `id`
+     * const feedbackFormGroupWithIdOnly = await prisma.feedbackFormGroup.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FeedbackFormGroupUpdateManyAndReturnArgs>(args: SelectSubset<T, FeedbackFormGroupUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FeedbackFormGroup.
+     * @param {FeedbackFormGroupUpsertArgs} args - Arguments to update or create a FeedbackFormGroup.
+     * @example
+     * // Update or create a FeedbackFormGroup
+     * const feedbackFormGroup = await prisma.feedbackFormGroup.upsert({
+     *   create: {
+     *     // ... data to create a FeedbackFormGroup
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FeedbackFormGroup we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FeedbackFormGroupUpsertArgs>(args: SelectSubset<T, FeedbackFormGroupUpsertArgs<ExtArgs>>): Prisma__FeedbackFormGroupClient<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FeedbackFormGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackFormGroupCountArgs} args - Arguments to filter FeedbackFormGroups to count.
+     * @example
+     * // Count the number of FeedbackFormGroups
+     * const count = await prisma.feedbackFormGroup.count({
+     *   where: {
+     *     // ... the filter for the FeedbackFormGroups we want to count
+     *   }
+     * })
+    **/
+    count<T extends FeedbackFormGroupCountArgs>(
+      args?: Subset<T, FeedbackFormGroupCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FeedbackFormGroupCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FeedbackFormGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackFormGroupAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FeedbackFormGroupAggregateArgs>(args: Subset<T, FeedbackFormGroupAggregateArgs>): Prisma.PrismaPromise<GetFeedbackFormGroupAggregateType<T>>
+
+    /**
+     * Group by FeedbackFormGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackFormGroupGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FeedbackFormGroupGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FeedbackFormGroupGroupByArgs['orderBy'] }
+        : { orderBy?: FeedbackFormGroupGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FeedbackFormGroupGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFeedbackFormGroupGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FeedbackFormGroup model
+   */
+  readonly fields: FeedbackFormGroupFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FeedbackFormGroup.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FeedbackFormGroupClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    category<T extends FeedbackCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackCategoryDefaultArgs<ExtArgs>>): Prisma__FeedbackCategoryClient<$Result.GetResult<Prisma.$FeedbackCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    feedbackForms<T extends FeedbackFormGroup$feedbackFormsArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackFormGroup$feedbackFormsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FeedbackFormGroup model
+   */
+  interface FeedbackFormGroupFieldRefs {
+    readonly id: FieldRef<"FeedbackFormGroup", 'String'>
+    readonly name: FieldRef<"FeedbackFormGroup", 'String'>
+    readonly description: FieldRef<"FeedbackFormGroup", 'String'>
+    readonly category_id: FieldRef<"FeedbackFormGroup", 'String'>
+    readonly start_date: FieldRef<"FeedbackFormGroup", 'DateTime'>
+    readonly end_date: FieldRef<"FeedbackFormGroup", 'DateTime'>
+    readonly is_active: FieldRef<"FeedbackFormGroup", 'Boolean'>
+    readonly createdAt: FieldRef<"FeedbackFormGroup", 'DateTime'>
+    readonly updatedAt: FieldRef<"FeedbackFormGroup", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FeedbackFormGroup findUnique
+   */
+  export type FeedbackFormGroupFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackFormGroup to fetch.
+     */
+    where: FeedbackFormGroupWhereUniqueInput
+  }
+
+  /**
+   * FeedbackFormGroup findUniqueOrThrow
+   */
+  export type FeedbackFormGroupFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackFormGroup to fetch.
+     */
+    where: FeedbackFormGroupWhereUniqueInput
+  }
+
+  /**
+   * FeedbackFormGroup findFirst
+   */
+  export type FeedbackFormGroupFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackFormGroup to fetch.
+     */
+    where?: FeedbackFormGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackFormGroups to fetch.
+     */
+    orderBy?: FeedbackFormGroupOrderByWithRelationInput | FeedbackFormGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeedbackFormGroups.
+     */
+    cursor?: FeedbackFormGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackFormGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackFormGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackFormGroups.
+     */
+    distinct?: FeedbackFormGroupScalarFieldEnum | FeedbackFormGroupScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackFormGroup findFirstOrThrow
+   */
+  export type FeedbackFormGroupFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackFormGroup to fetch.
+     */
+    where?: FeedbackFormGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackFormGroups to fetch.
+     */
+    orderBy?: FeedbackFormGroupOrderByWithRelationInput | FeedbackFormGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeedbackFormGroups.
+     */
+    cursor?: FeedbackFormGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackFormGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackFormGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackFormGroups.
+     */
+    distinct?: FeedbackFormGroupScalarFieldEnum | FeedbackFormGroupScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackFormGroup findMany
+   */
+  export type FeedbackFormGroupFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which FeedbackFormGroups to fetch.
+     */
+    where?: FeedbackFormGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackFormGroups to fetch.
+     */
+    orderBy?: FeedbackFormGroupOrderByWithRelationInput | FeedbackFormGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FeedbackFormGroups.
+     */
+    cursor?: FeedbackFormGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackFormGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackFormGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackFormGroups.
+     */
+    distinct?: FeedbackFormGroupScalarFieldEnum | FeedbackFormGroupScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackFormGroup create
+   */
+  export type FeedbackFormGroupCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FeedbackFormGroup.
+     */
+    data: XOR<FeedbackFormGroupCreateInput, FeedbackFormGroupUncheckedCreateInput>
+  }
+
+  /**
+   * FeedbackFormGroup createMany
+   */
+  export type FeedbackFormGroupCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FeedbackFormGroups.
+     */
+    data: FeedbackFormGroupCreateManyInput | FeedbackFormGroupCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FeedbackFormGroup createManyAndReturn
+   */
+  export type FeedbackFormGroupCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * The data used to create many FeedbackFormGroups.
+     */
+    data: FeedbackFormGroupCreateManyInput | FeedbackFormGroupCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FeedbackFormGroup update
+   */
+  export type FeedbackFormGroupUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FeedbackFormGroup.
+     */
+    data: XOR<FeedbackFormGroupUpdateInput, FeedbackFormGroupUncheckedUpdateInput>
+    /**
+     * Choose, which FeedbackFormGroup to update.
+     */
+    where: FeedbackFormGroupWhereUniqueInput
+  }
+
+  /**
+   * FeedbackFormGroup updateMany
+   */
+  export type FeedbackFormGroupUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FeedbackFormGroups.
+     */
+    data: XOR<FeedbackFormGroupUpdateManyMutationInput, FeedbackFormGroupUncheckedUpdateManyInput>
+    /**
+     * Filter which FeedbackFormGroups to update
+     */
+    where?: FeedbackFormGroupWhereInput
+    /**
+     * Limit how many FeedbackFormGroups to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackFormGroup updateManyAndReturn
+   */
+  export type FeedbackFormGroupUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * The data used to update FeedbackFormGroups.
+     */
+    data: XOR<FeedbackFormGroupUpdateManyMutationInput, FeedbackFormGroupUncheckedUpdateManyInput>
+    /**
+     * Filter which FeedbackFormGroups to update
+     */
+    where?: FeedbackFormGroupWhereInput
+    /**
+     * Limit how many FeedbackFormGroups to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FeedbackFormGroup upsert
+   */
+  export type FeedbackFormGroupUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FeedbackFormGroup to update in case it exists.
+     */
+    where: FeedbackFormGroupWhereUniqueInput
+    /**
+     * In case the FeedbackFormGroup found by the `where` argument doesn't exist, create a new FeedbackFormGroup with this data.
+     */
+    create: XOR<FeedbackFormGroupCreateInput, FeedbackFormGroupUncheckedCreateInput>
+    /**
+     * In case the FeedbackFormGroup was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FeedbackFormGroupUpdateInput, FeedbackFormGroupUncheckedUpdateInput>
+  }
+
+  /**
+   * FeedbackFormGroup delete
+   */
+  export type FeedbackFormGroupDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    /**
+     * Filter which FeedbackFormGroup to delete.
+     */
+    where: FeedbackFormGroupWhereUniqueInput
+  }
+
+  /**
+   * FeedbackFormGroup deleteMany
+   */
+  export type FeedbackFormGroupDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeedbackFormGroups to delete
+     */
+    where?: FeedbackFormGroupWhereInput
+    /**
+     * Limit how many FeedbackFormGroups to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackFormGroup.feedbackForms
+   */
+  export type FeedbackFormGroup$feedbackFormsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackForm
+     */
+    select?: FeedbackFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackForm
+     */
+    omit?: FeedbackFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormInclude<ExtArgs> | null
+    where?: FeedbackFormWhereInput
+    orderBy?: FeedbackFormOrderByWithRelationInput | FeedbackFormOrderByWithRelationInput[]
+    cursor?: FeedbackFormWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeedbackFormScalarFieldEnum | FeedbackFormScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackFormGroup without action
+   */
+  export type FeedbackFormGroupDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
   }
 
 
@@ -33369,10 +34713,26 @@ export namespace Prisma {
     subject_id: 'subject_id',
     section_id: 'section_id',
     group_id: 'group_id',
-    specialGroupId: 'specialGroupId'
+    specialGroupId: 'specialGroupId',
+    feedbackFormGroupId: 'feedbackFormGroupId'
   };
 
   export type FeedbackFormScalarFieldEnum = (typeof FeedbackFormScalarFieldEnum)[keyof typeof FeedbackFormScalarFieldEnum]
+
+
+  export const FeedbackFormGroupScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    category_id: 'category_id',
+    start_date: 'start_date',
+    end_date: 'end_date',
+    is_active: 'is_active',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FeedbackFormGroupScalarFieldEnum = (typeof FeedbackFormGroupScalarFieldEnum)[keyof typeof FeedbackFormGroupScalarFieldEnum]
 
 
   export const FeedbackFormStudentScalarFieldEnum: {
@@ -35035,6 +36395,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FeedbackCategory"> | Date | string
     questions?: FeedbackQuestionListRelationFilter
     forms?: FeedbackFormListRelationFilter
+    feedbackFormGroups?: FeedbackFormGroupListRelationFilter
   }
 
   export type FeedbackCategoryOrderByWithRelationInput = {
@@ -35045,6 +36406,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     questions?: FeedbackQuestionOrderByRelationAggregateInput
     forms?: FeedbackFormOrderByRelationAggregateInput
+    feedbackFormGroups?: FeedbackFormGroupOrderByRelationAggregateInput
   }
 
   export type FeedbackCategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -35058,6 +36420,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FeedbackCategory"> | Date | string
     questions?: FeedbackQuestionListRelationFilter
     forms?: FeedbackFormListRelationFilter
+    feedbackFormGroups?: FeedbackFormGroupListRelationFilter
   }, "id">
 
   export type FeedbackCategoryOrderByWithAggregationInput = {
@@ -35172,6 +36535,7 @@ export namespace Prisma {
     section_id?: StringNullableFilter<"FeedbackForm"> | string | null
     group_id?: StringNullableFilter<"FeedbackForm"> | string | null
     specialGroupId?: StringNullableFilter<"FeedbackForm"> | string | null
+    feedbackFormGroupId?: StringNullableFilter<"FeedbackForm"> | string | null
     category?: XOR<FeedbackCategoryScalarRelationFilter, FeedbackCategoryWhereInput>
     department?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
     course?: XOR<CourseNullableScalarRelationFilter, CourseWhereInput> | null
@@ -35181,6 +36545,7 @@ export namespace Prisma {
     responses?: FeedbackResponseListRelationFilter
     students?: FeedbackFormStudentListRelationFilter
     specialGroup?: XOR<SpecialGroupNullableScalarRelationFilter, SpecialGroupWhereInput> | null
+    feedbackFormGroup?: XOR<FeedbackFormGroupNullableScalarRelationFilter, FeedbackFormGroupWhereInput> | null
   }
 
   export type FeedbackFormOrderByWithRelationInput = {
@@ -35200,6 +36565,7 @@ export namespace Prisma {
     section_id?: SortOrderInput | SortOrder
     group_id?: SortOrderInput | SortOrder
     specialGroupId?: SortOrderInput | SortOrder
+    feedbackFormGroupId?: SortOrderInput | SortOrder
     category?: FeedbackCategoryOrderByWithRelationInput
     department?: DepartmentOrderByWithRelationInput
     course?: CourseOrderByWithRelationInput
@@ -35209,6 +36575,7 @@ export namespace Prisma {
     responses?: FeedbackResponseOrderByRelationAggregateInput
     students?: FeedbackFormStudentOrderByRelationAggregateInput
     specialGroup?: SpecialGroupOrderByWithRelationInput
+    feedbackFormGroup?: FeedbackFormGroupOrderByWithRelationInput
   }
 
   export type FeedbackFormWhereUniqueInput = Prisma.AtLeast<{
@@ -35231,6 +36598,7 @@ export namespace Prisma {
     section_id?: StringNullableFilter<"FeedbackForm"> | string | null
     group_id?: StringNullableFilter<"FeedbackForm"> | string | null
     specialGroupId?: StringNullableFilter<"FeedbackForm"> | string | null
+    feedbackFormGroupId?: StringNullableFilter<"FeedbackForm"> | string | null
     category?: XOR<FeedbackCategoryScalarRelationFilter, FeedbackCategoryWhereInput>
     department?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
     course?: XOR<CourseNullableScalarRelationFilter, CourseWhereInput> | null
@@ -35240,6 +36608,7 @@ export namespace Prisma {
     responses?: FeedbackResponseListRelationFilter
     students?: FeedbackFormStudentListRelationFilter
     specialGroup?: XOR<SpecialGroupNullableScalarRelationFilter, SpecialGroupWhereInput> | null
+    feedbackFormGroup?: XOR<FeedbackFormGroupNullableScalarRelationFilter, FeedbackFormGroupWhereInput> | null
   }, "id">
 
   export type FeedbackFormOrderByWithAggregationInput = {
@@ -35259,6 +36628,7 @@ export namespace Prisma {
     section_id?: SortOrderInput | SortOrder
     group_id?: SortOrderInput | SortOrder
     specialGroupId?: SortOrderInput | SortOrder
+    feedbackFormGroupId?: SortOrderInput | SortOrder
     _count?: FeedbackFormCountOrderByAggregateInput
     _avg?: FeedbackFormAvgOrderByAggregateInput
     _max?: FeedbackFormMaxOrderByAggregateInput
@@ -35286,6 +36656,85 @@ export namespace Prisma {
     section_id?: StringNullableWithAggregatesFilter<"FeedbackForm"> | string | null
     group_id?: StringNullableWithAggregatesFilter<"FeedbackForm"> | string | null
     specialGroupId?: StringNullableWithAggregatesFilter<"FeedbackForm"> | string | null
+    feedbackFormGroupId?: StringNullableWithAggregatesFilter<"FeedbackForm"> | string | null
+  }
+
+  export type FeedbackFormGroupWhereInput = {
+    AND?: FeedbackFormGroupWhereInput | FeedbackFormGroupWhereInput[]
+    OR?: FeedbackFormGroupWhereInput[]
+    NOT?: FeedbackFormGroupWhereInput | FeedbackFormGroupWhereInput[]
+    id?: StringFilter<"FeedbackFormGroup"> | string
+    name?: StringFilter<"FeedbackFormGroup"> | string
+    description?: StringNullableFilter<"FeedbackFormGroup"> | string | null
+    category_id?: StringFilter<"FeedbackFormGroup"> | string
+    start_date?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+    end_date?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+    is_active?: BoolFilter<"FeedbackFormGroup"> | boolean
+    createdAt?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+    updatedAt?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+    category?: XOR<FeedbackCategoryScalarRelationFilter, FeedbackCategoryWhereInput>
+    feedbackForms?: FeedbackFormListRelationFilter
+  }
+
+  export type FeedbackFormGroupOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    category_id?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    is_active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    category?: FeedbackCategoryOrderByWithRelationInput
+    feedbackForms?: FeedbackFormOrderByRelationAggregateInput
+  }
+
+  export type FeedbackFormGroupWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FeedbackFormGroupWhereInput | FeedbackFormGroupWhereInput[]
+    OR?: FeedbackFormGroupWhereInput[]
+    NOT?: FeedbackFormGroupWhereInput | FeedbackFormGroupWhereInput[]
+    name?: StringFilter<"FeedbackFormGroup"> | string
+    description?: StringNullableFilter<"FeedbackFormGroup"> | string | null
+    category_id?: StringFilter<"FeedbackFormGroup"> | string
+    start_date?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+    end_date?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+    is_active?: BoolFilter<"FeedbackFormGroup"> | boolean
+    createdAt?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+    updatedAt?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+    category?: XOR<FeedbackCategoryScalarRelationFilter, FeedbackCategoryWhereInput>
+    feedbackForms?: FeedbackFormListRelationFilter
+  }, "id">
+
+  export type FeedbackFormGroupOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    category_id?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    is_active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FeedbackFormGroupCountOrderByAggregateInput
+    _max?: FeedbackFormGroupMaxOrderByAggregateInput
+    _min?: FeedbackFormGroupMinOrderByAggregateInput
+  }
+
+  export type FeedbackFormGroupScalarWhereWithAggregatesInput = {
+    AND?: FeedbackFormGroupScalarWhereWithAggregatesInput | FeedbackFormGroupScalarWhereWithAggregatesInput[]
+    OR?: FeedbackFormGroupScalarWhereWithAggregatesInput[]
+    NOT?: FeedbackFormGroupScalarWhereWithAggregatesInput | FeedbackFormGroupScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FeedbackFormGroup"> | string
+    name?: StringWithAggregatesFilter<"FeedbackFormGroup"> | string
+    description?: StringNullableWithAggregatesFilter<"FeedbackFormGroup"> | string | null
+    category_id?: StringWithAggregatesFilter<"FeedbackFormGroup"> | string
+    start_date?: DateTimeWithAggregatesFilter<"FeedbackFormGroup"> | Date | string
+    end_date?: DateTimeWithAggregatesFilter<"FeedbackFormGroup"> | Date | string
+    is_active?: BoolWithAggregatesFilter<"FeedbackFormGroup"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"FeedbackFormGroup"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FeedbackFormGroup"> | Date | string
   }
 
   export type FeedbackFormStudentWhereInput = {
@@ -37105,6 +38554,7 @@ export namespace Prisma {
     createdAt?: Date | string
     questions?: FeedbackQuestionCreateNestedManyWithoutCategoryInput
     forms?: FeedbackFormCreateNestedManyWithoutCategoryInput
+    feedbackFormGroups?: FeedbackFormGroupCreateNestedManyWithoutCategoryInput
   }
 
   export type FeedbackCategoryUncheckedCreateInput = {
@@ -37115,6 +38565,7 @@ export namespace Prisma {
     createdAt?: Date | string
     questions?: FeedbackQuestionUncheckedCreateNestedManyWithoutCategoryInput
     forms?: FeedbackFormUncheckedCreateNestedManyWithoutCategoryInput
+    feedbackFormGroups?: FeedbackFormGroupUncheckedCreateNestedManyWithoutCategoryInput
   }
 
   export type FeedbackCategoryUpdateInput = {
@@ -37125,6 +38576,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: FeedbackQuestionUpdateManyWithoutCategoryNestedInput
     forms?: FeedbackFormUpdateManyWithoutCategoryNestedInput
+    feedbackFormGroups?: FeedbackFormGroupUpdateManyWithoutCategoryNestedInput
   }
 
   export type FeedbackCategoryUncheckedUpdateInput = {
@@ -37135,6 +38587,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: FeedbackQuestionUncheckedUpdateManyWithoutCategoryNestedInput
     forms?: FeedbackFormUncheckedUpdateManyWithoutCategoryNestedInput
+    feedbackFormGroups?: FeedbackFormGroupUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type FeedbackCategoryCreateManyInput = {
@@ -37253,6 +38706,7 @@ export namespace Prisma {
     responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
+    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateInput = {
@@ -37272,6 +38726,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
     responses?: FeedbackResponseUncheckedCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentUncheckedCreateNestedManyWithoutFormInput
   }
@@ -37295,6 +38750,7 @@ export namespace Prisma {
     responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
+    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateInput = {
@@ -37314,6 +38770,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     responses?: FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUncheckedUpdateManyWithoutFormNestedInput
   }
@@ -37335,6 +38792,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
   }
 
   export type FeedbackFormUpdateManyMutationInput = {
@@ -37366,6 +38824,94 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FeedbackFormGroupCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    start_date: Date | string
+    end_date: Date | string
+    is_active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    category: FeedbackCategoryCreateNestedOneWithoutFeedbackFormGroupsInput
+    feedbackForms?: FeedbackFormCreateNestedManyWithoutFeedbackFormGroupInput
+  }
+
+  export type FeedbackFormGroupUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    category_id: string
+    start_date: Date | string
+    end_date: Date | string
+    is_active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    feedbackForms?: FeedbackFormUncheckedCreateNestedManyWithoutFeedbackFormGroupInput
+  }
+
+  export type FeedbackFormGroupUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: FeedbackCategoryUpdateOneRequiredWithoutFeedbackFormGroupsNestedInput
+    feedbackForms?: FeedbackFormUpdateManyWithoutFeedbackFormGroupNestedInput
+  }
+
+  export type FeedbackFormGroupUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category_id?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feedbackForms?: FeedbackFormUncheckedUpdateManyWithoutFeedbackFormGroupNestedInput
+  }
+
+  export type FeedbackFormGroupCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    category_id: string
+    start_date: Date | string
+    end_date: Date | string
+    is_active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeedbackFormGroupUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackFormGroupUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category_id?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeedbackFormStudentCreateInput = {
@@ -38702,7 +40248,17 @@ export namespace Prisma {
     none?: FeedbackQuestionWhereInput
   }
 
+  export type FeedbackFormGroupListRelationFilter = {
+    every?: FeedbackFormGroupWhereInput
+    some?: FeedbackFormGroupWhereInput
+    none?: FeedbackFormGroupWhereInput
+  }
+
   export type FeedbackQuestionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FeedbackFormGroupOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -38801,6 +40357,11 @@ export namespace Prisma {
     isNot?: SpecialGroupWhereInput | null
   }
 
+  export type FeedbackFormGroupNullableScalarRelationFilter = {
+    is?: FeedbackFormGroupWhereInput | null
+    isNot?: FeedbackFormGroupWhereInput | null
+  }
+
   export type FeedbackFormCountOrderByAggregateInput = {
     id?: SortOrder
     category_id?: SortOrder
@@ -38818,6 +40379,7 @@ export namespace Prisma {
     section_id?: SortOrder
     group_id?: SortOrder
     specialGroupId?: SortOrder
+    feedbackFormGroupId?: SortOrder
   }
 
   export type FeedbackFormAvgOrderByAggregateInput = {
@@ -38841,6 +40403,7 @@ export namespace Prisma {
     section_id?: SortOrder
     group_id?: SortOrder
     specialGroupId?: SortOrder
+    feedbackFormGroupId?: SortOrder
   }
 
   export type FeedbackFormMinOrderByAggregateInput = {
@@ -38860,10 +40423,47 @@ export namespace Prisma {
     section_id?: SortOrder
     group_id?: SortOrder
     specialGroupId?: SortOrder
+    feedbackFormGroupId?: SortOrder
   }
 
   export type FeedbackFormSumOrderByAggregateInput = {
     batch_year?: SortOrder
+  }
+
+  export type FeedbackFormGroupCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    category_id?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    is_active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FeedbackFormGroupMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    category_id?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    is_active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FeedbackFormGroupMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    category_id?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    is_active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type FeedbackFormScalarRelationFilter = {
@@ -41101,6 +42701,13 @@ export namespace Prisma {
     connect?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
   }
 
+  export type FeedbackFormGroupCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<FeedbackFormGroupCreateWithoutCategoryInput, FeedbackFormGroupUncheckedCreateWithoutCategoryInput> | FeedbackFormGroupCreateWithoutCategoryInput[] | FeedbackFormGroupUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: FeedbackFormGroupCreateOrConnectWithoutCategoryInput | FeedbackFormGroupCreateOrConnectWithoutCategoryInput[]
+    createMany?: FeedbackFormGroupCreateManyCategoryInputEnvelope
+    connect?: FeedbackFormGroupWhereUniqueInput | FeedbackFormGroupWhereUniqueInput[]
+  }
+
   export type FeedbackQuestionUncheckedCreateNestedManyWithoutCategoryInput = {
     create?: XOR<FeedbackQuestionCreateWithoutCategoryInput, FeedbackQuestionUncheckedCreateWithoutCategoryInput> | FeedbackQuestionCreateWithoutCategoryInput[] | FeedbackQuestionUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: FeedbackQuestionCreateOrConnectWithoutCategoryInput | FeedbackQuestionCreateOrConnectWithoutCategoryInput[]
@@ -41113,6 +42720,13 @@ export namespace Prisma {
     connectOrCreate?: FeedbackFormCreateOrConnectWithoutCategoryInput | FeedbackFormCreateOrConnectWithoutCategoryInput[]
     createMany?: FeedbackFormCreateManyCategoryInputEnvelope
     connect?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
+  }
+
+  export type FeedbackFormGroupUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<FeedbackFormGroupCreateWithoutCategoryInput, FeedbackFormGroupUncheckedCreateWithoutCategoryInput> | FeedbackFormGroupCreateWithoutCategoryInput[] | FeedbackFormGroupUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: FeedbackFormGroupCreateOrConnectWithoutCategoryInput | FeedbackFormGroupCreateOrConnectWithoutCategoryInput[]
+    createMany?: FeedbackFormGroupCreateManyCategoryInputEnvelope
+    connect?: FeedbackFormGroupWhereUniqueInput | FeedbackFormGroupWhereUniqueInput[]
   }
 
   export type FeedbackQuestionUpdateManyWithoutCategoryNestedInput = {
@@ -41143,6 +42757,20 @@ export namespace Prisma {
     deleteMany?: FeedbackFormScalarWhereInput | FeedbackFormScalarWhereInput[]
   }
 
+  export type FeedbackFormGroupUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<FeedbackFormGroupCreateWithoutCategoryInput, FeedbackFormGroupUncheckedCreateWithoutCategoryInput> | FeedbackFormGroupCreateWithoutCategoryInput[] | FeedbackFormGroupUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: FeedbackFormGroupCreateOrConnectWithoutCategoryInput | FeedbackFormGroupCreateOrConnectWithoutCategoryInput[]
+    upsert?: FeedbackFormGroupUpsertWithWhereUniqueWithoutCategoryInput | FeedbackFormGroupUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: FeedbackFormGroupCreateManyCategoryInputEnvelope
+    set?: FeedbackFormGroupWhereUniqueInput | FeedbackFormGroupWhereUniqueInput[]
+    disconnect?: FeedbackFormGroupWhereUniqueInput | FeedbackFormGroupWhereUniqueInput[]
+    delete?: FeedbackFormGroupWhereUniqueInput | FeedbackFormGroupWhereUniqueInput[]
+    connect?: FeedbackFormGroupWhereUniqueInput | FeedbackFormGroupWhereUniqueInput[]
+    update?: FeedbackFormGroupUpdateWithWhereUniqueWithoutCategoryInput | FeedbackFormGroupUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: FeedbackFormGroupUpdateManyWithWhereWithoutCategoryInput | FeedbackFormGroupUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: FeedbackFormGroupScalarWhereInput | FeedbackFormGroupScalarWhereInput[]
+  }
+
   export type FeedbackQuestionUncheckedUpdateManyWithoutCategoryNestedInput = {
     create?: XOR<FeedbackQuestionCreateWithoutCategoryInput, FeedbackQuestionUncheckedCreateWithoutCategoryInput> | FeedbackQuestionCreateWithoutCategoryInput[] | FeedbackQuestionUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: FeedbackQuestionCreateOrConnectWithoutCategoryInput | FeedbackQuestionCreateOrConnectWithoutCategoryInput[]
@@ -41169,6 +42797,20 @@ export namespace Prisma {
     update?: FeedbackFormUpdateWithWhereUniqueWithoutCategoryInput | FeedbackFormUpdateWithWhereUniqueWithoutCategoryInput[]
     updateMany?: FeedbackFormUpdateManyWithWhereWithoutCategoryInput | FeedbackFormUpdateManyWithWhereWithoutCategoryInput[]
     deleteMany?: FeedbackFormScalarWhereInput | FeedbackFormScalarWhereInput[]
+  }
+
+  export type FeedbackFormGroupUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<FeedbackFormGroupCreateWithoutCategoryInput, FeedbackFormGroupUncheckedCreateWithoutCategoryInput> | FeedbackFormGroupCreateWithoutCategoryInput[] | FeedbackFormGroupUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: FeedbackFormGroupCreateOrConnectWithoutCategoryInput | FeedbackFormGroupCreateOrConnectWithoutCategoryInput[]
+    upsert?: FeedbackFormGroupUpsertWithWhereUniqueWithoutCategoryInput | FeedbackFormGroupUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: FeedbackFormGroupCreateManyCategoryInputEnvelope
+    set?: FeedbackFormGroupWhereUniqueInput | FeedbackFormGroupWhereUniqueInput[]
+    disconnect?: FeedbackFormGroupWhereUniqueInput | FeedbackFormGroupWhereUniqueInput[]
+    delete?: FeedbackFormGroupWhereUniqueInput | FeedbackFormGroupWhereUniqueInput[]
+    connect?: FeedbackFormGroupWhereUniqueInput | FeedbackFormGroupWhereUniqueInput[]
+    update?: FeedbackFormGroupUpdateWithWhereUniqueWithoutCategoryInput | FeedbackFormGroupUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: FeedbackFormGroupUpdateManyWithWhereWithoutCategoryInput | FeedbackFormGroupUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: FeedbackFormGroupScalarWhereInput | FeedbackFormGroupScalarWhereInput[]
   }
 
   export type FeedbackQuestionCreateoptionsInput = {
@@ -41292,6 +42934,12 @@ export namespace Prisma {
     connect?: SpecialGroupWhereUniqueInput
   }
 
+  export type FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput = {
+    create?: XOR<FeedbackFormGroupCreateWithoutFeedbackFormsInput, FeedbackFormGroupUncheckedCreateWithoutFeedbackFormsInput>
+    connectOrCreate?: FeedbackFormGroupCreateOrConnectWithoutFeedbackFormsInput
+    connect?: FeedbackFormGroupWhereUniqueInput
+  }
+
   export type FeedbackResponseUncheckedCreateNestedManyWithoutFormInput = {
     create?: XOR<FeedbackResponseCreateWithoutFormInput, FeedbackResponseUncheckedCreateWithoutFormInput> | FeedbackResponseCreateWithoutFormInput[] | FeedbackResponseUncheckedCreateWithoutFormInput[]
     connectOrCreate?: FeedbackResponseCreateOrConnectWithoutFormInput | FeedbackResponseCreateOrConnectWithoutFormInput[]
@@ -41402,6 +43050,16 @@ export namespace Prisma {
     update?: XOR<XOR<SpecialGroupUpdateToOneWithWhereWithoutFeedbackFormsInput, SpecialGroupUpdateWithoutFeedbackFormsInput>, SpecialGroupUncheckedUpdateWithoutFeedbackFormsInput>
   }
 
+  export type FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput = {
+    create?: XOR<FeedbackFormGroupCreateWithoutFeedbackFormsInput, FeedbackFormGroupUncheckedCreateWithoutFeedbackFormsInput>
+    connectOrCreate?: FeedbackFormGroupCreateOrConnectWithoutFeedbackFormsInput
+    upsert?: FeedbackFormGroupUpsertWithoutFeedbackFormsInput
+    disconnect?: FeedbackFormGroupWhereInput | boolean
+    delete?: FeedbackFormGroupWhereInput | boolean
+    connect?: FeedbackFormGroupWhereUniqueInput
+    update?: XOR<XOR<FeedbackFormGroupUpdateToOneWithWhereWithoutFeedbackFormsInput, FeedbackFormGroupUpdateWithoutFeedbackFormsInput>, FeedbackFormGroupUncheckedUpdateWithoutFeedbackFormsInput>
+  }
+
   export type FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput = {
     create?: XOR<FeedbackResponseCreateWithoutFormInput, FeedbackResponseUncheckedCreateWithoutFormInput> | FeedbackResponseCreateWithoutFormInput[] | FeedbackResponseUncheckedCreateWithoutFormInput[]
     connectOrCreate?: FeedbackResponseCreateOrConnectWithoutFormInput | FeedbackResponseCreateOrConnectWithoutFormInput[]
@@ -41428,6 +43086,62 @@ export namespace Prisma {
     update?: FeedbackFormStudentUpdateWithWhereUniqueWithoutFormInput | FeedbackFormStudentUpdateWithWhereUniqueWithoutFormInput[]
     updateMany?: FeedbackFormStudentUpdateManyWithWhereWithoutFormInput | FeedbackFormStudentUpdateManyWithWhereWithoutFormInput[]
     deleteMany?: FeedbackFormStudentScalarWhereInput | FeedbackFormStudentScalarWhereInput[]
+  }
+
+  export type FeedbackCategoryCreateNestedOneWithoutFeedbackFormGroupsInput = {
+    create?: XOR<FeedbackCategoryCreateWithoutFeedbackFormGroupsInput, FeedbackCategoryUncheckedCreateWithoutFeedbackFormGroupsInput>
+    connectOrCreate?: FeedbackCategoryCreateOrConnectWithoutFeedbackFormGroupsInput
+    connect?: FeedbackCategoryWhereUniqueInput
+  }
+
+  export type FeedbackFormCreateNestedManyWithoutFeedbackFormGroupInput = {
+    create?: XOR<FeedbackFormCreateWithoutFeedbackFormGroupInput, FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput> | FeedbackFormCreateWithoutFeedbackFormGroupInput[] | FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput[]
+    connectOrCreate?: FeedbackFormCreateOrConnectWithoutFeedbackFormGroupInput | FeedbackFormCreateOrConnectWithoutFeedbackFormGroupInput[]
+    createMany?: FeedbackFormCreateManyFeedbackFormGroupInputEnvelope
+    connect?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
+  }
+
+  export type FeedbackFormUncheckedCreateNestedManyWithoutFeedbackFormGroupInput = {
+    create?: XOR<FeedbackFormCreateWithoutFeedbackFormGroupInput, FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput> | FeedbackFormCreateWithoutFeedbackFormGroupInput[] | FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput[]
+    connectOrCreate?: FeedbackFormCreateOrConnectWithoutFeedbackFormGroupInput | FeedbackFormCreateOrConnectWithoutFeedbackFormGroupInput[]
+    createMany?: FeedbackFormCreateManyFeedbackFormGroupInputEnvelope
+    connect?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
+  }
+
+  export type FeedbackCategoryUpdateOneRequiredWithoutFeedbackFormGroupsNestedInput = {
+    create?: XOR<FeedbackCategoryCreateWithoutFeedbackFormGroupsInput, FeedbackCategoryUncheckedCreateWithoutFeedbackFormGroupsInput>
+    connectOrCreate?: FeedbackCategoryCreateOrConnectWithoutFeedbackFormGroupsInput
+    upsert?: FeedbackCategoryUpsertWithoutFeedbackFormGroupsInput
+    connect?: FeedbackCategoryWhereUniqueInput
+    update?: XOR<XOR<FeedbackCategoryUpdateToOneWithWhereWithoutFeedbackFormGroupsInput, FeedbackCategoryUpdateWithoutFeedbackFormGroupsInput>, FeedbackCategoryUncheckedUpdateWithoutFeedbackFormGroupsInput>
+  }
+
+  export type FeedbackFormUpdateManyWithoutFeedbackFormGroupNestedInput = {
+    create?: XOR<FeedbackFormCreateWithoutFeedbackFormGroupInput, FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput> | FeedbackFormCreateWithoutFeedbackFormGroupInput[] | FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput[]
+    connectOrCreate?: FeedbackFormCreateOrConnectWithoutFeedbackFormGroupInput | FeedbackFormCreateOrConnectWithoutFeedbackFormGroupInput[]
+    upsert?: FeedbackFormUpsertWithWhereUniqueWithoutFeedbackFormGroupInput | FeedbackFormUpsertWithWhereUniqueWithoutFeedbackFormGroupInput[]
+    createMany?: FeedbackFormCreateManyFeedbackFormGroupInputEnvelope
+    set?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
+    disconnect?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
+    delete?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
+    connect?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
+    update?: FeedbackFormUpdateWithWhereUniqueWithoutFeedbackFormGroupInput | FeedbackFormUpdateWithWhereUniqueWithoutFeedbackFormGroupInput[]
+    updateMany?: FeedbackFormUpdateManyWithWhereWithoutFeedbackFormGroupInput | FeedbackFormUpdateManyWithWhereWithoutFeedbackFormGroupInput[]
+    deleteMany?: FeedbackFormScalarWhereInput | FeedbackFormScalarWhereInput[]
+  }
+
+  export type FeedbackFormUncheckedUpdateManyWithoutFeedbackFormGroupNestedInput = {
+    create?: XOR<FeedbackFormCreateWithoutFeedbackFormGroupInput, FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput> | FeedbackFormCreateWithoutFeedbackFormGroupInput[] | FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput[]
+    connectOrCreate?: FeedbackFormCreateOrConnectWithoutFeedbackFormGroupInput | FeedbackFormCreateOrConnectWithoutFeedbackFormGroupInput[]
+    upsert?: FeedbackFormUpsertWithWhereUniqueWithoutFeedbackFormGroupInput | FeedbackFormUpsertWithWhereUniqueWithoutFeedbackFormGroupInput[]
+    createMany?: FeedbackFormCreateManyFeedbackFormGroupInputEnvelope
+    set?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
+    disconnect?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
+    delete?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
+    connect?: FeedbackFormWhereUniqueInput | FeedbackFormWhereUniqueInput[]
+    update?: FeedbackFormUpdateWithWhereUniqueWithoutFeedbackFormGroupInput | FeedbackFormUpdateWithWhereUniqueWithoutFeedbackFormGroupInput[]
+    updateMany?: FeedbackFormUpdateManyWithWhereWithoutFeedbackFormGroupInput | FeedbackFormUpdateManyWithWhereWithoutFeedbackFormGroupInput[]
+    deleteMany?: FeedbackFormScalarWhereInput | FeedbackFormScalarWhereInput[]
   }
 
   export type FeedbackFormCreateNestedOneWithoutStudentsInput = {
@@ -42699,6 +44413,7 @@ export namespace Prisma {
     responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
+    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutDepartmentInput = {
@@ -42717,6 +44432,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
     responses?: FeedbackResponseUncheckedCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentUncheckedCreateNestedManyWithoutFormInput
   }
@@ -42932,6 +44648,7 @@ export namespace Prisma {
     section_id?: StringNullableFilter<"FeedbackForm"> | string | null
     group_id?: StringNullableFilter<"FeedbackForm"> | string | null
     specialGroupId?: StringNullableFilter<"FeedbackForm"> | string | null
+    feedbackFormGroupId?: StringNullableFilter<"FeedbackForm"> | string | null
   }
 
   export type DepartmentCreateWithoutProgramsInput = {
@@ -43440,6 +45157,7 @@ export namespace Prisma {
     responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
+    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutCourseInput = {
@@ -43458,6 +45176,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
     responses?: FeedbackResponseUncheckedCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentUncheckedCreateNestedManyWithoutFormInput
   }
@@ -43638,6 +45357,7 @@ export namespace Prisma {
     responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
+    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutSubjectInput = {
@@ -43656,6 +45376,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
     responses?: FeedbackResponseUncheckedCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentUncheckedCreateNestedManyWithoutFormInput
   }
@@ -44036,6 +45757,7 @@ export namespace Prisma {
     responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
+    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutSectionInput = {
@@ -44054,6 +45776,7 @@ export namespace Prisma {
     subject_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
     responses?: FeedbackResponseUncheckedCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentUncheckedCreateNestedManyWithoutFormInput
   }
@@ -45810,6 +47533,7 @@ export namespace Prisma {
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
     responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
+    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutSpecialGroupInput = {
@@ -45828,6 +47552,7 @@ export namespace Prisma {
     subject_id?: string | null
     section_id?: string | null
     group_id?: string | null
+    feedbackFormGroupId?: string | null
     responses?: FeedbackResponseUncheckedCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentUncheckedCreateNestedManyWithoutFormInput
   }
@@ -46458,6 +48183,7 @@ export namespace Prisma {
     responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
+    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutFacultyInput = {
@@ -46476,6 +48202,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
     responses?: FeedbackResponseUncheckedCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentUncheckedCreateNestedManyWithoutFormInput
   }
@@ -46976,6 +48703,7 @@ export namespace Prisma {
     responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
+    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutCategoryInput = {
@@ -46994,6 +48722,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
     responses?: FeedbackResponseUncheckedCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentUncheckedCreateNestedManyWithoutFormInput
   }
@@ -47005,6 +48734,40 @@ export namespace Prisma {
 
   export type FeedbackFormCreateManyCategoryInputEnvelope = {
     data: FeedbackFormCreateManyCategoryInput | FeedbackFormCreateManyCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeedbackFormGroupCreateWithoutCategoryInput = {
+    id?: string
+    name: string
+    description?: string | null
+    start_date: Date | string
+    end_date: Date | string
+    is_active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    feedbackForms?: FeedbackFormCreateNestedManyWithoutFeedbackFormGroupInput
+  }
+
+  export type FeedbackFormGroupUncheckedCreateWithoutCategoryInput = {
+    id?: string
+    name: string
+    description?: string | null
+    start_date: Date | string
+    end_date: Date | string
+    is_active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    feedbackForms?: FeedbackFormUncheckedCreateNestedManyWithoutFeedbackFormGroupInput
+  }
+
+  export type FeedbackFormGroupCreateOrConnectWithoutCategoryInput = {
+    where: FeedbackFormGroupWhereUniqueInput
+    create: XOR<FeedbackFormGroupCreateWithoutCategoryInput, FeedbackFormGroupUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type FeedbackFormGroupCreateManyCategoryInputEnvelope = {
+    data: FeedbackFormGroupCreateManyCategoryInput | FeedbackFormGroupCreateManyCategoryInput[]
     skipDuplicates?: boolean
   }
 
@@ -47053,6 +48816,37 @@ export namespace Prisma {
     data: XOR<FeedbackFormUpdateManyMutationInput, FeedbackFormUncheckedUpdateManyWithoutCategoryInput>
   }
 
+  export type FeedbackFormGroupUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: FeedbackFormGroupWhereUniqueInput
+    update: XOR<FeedbackFormGroupUpdateWithoutCategoryInput, FeedbackFormGroupUncheckedUpdateWithoutCategoryInput>
+    create: XOR<FeedbackFormGroupCreateWithoutCategoryInput, FeedbackFormGroupUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type FeedbackFormGroupUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: FeedbackFormGroupWhereUniqueInput
+    data: XOR<FeedbackFormGroupUpdateWithoutCategoryInput, FeedbackFormGroupUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type FeedbackFormGroupUpdateManyWithWhereWithoutCategoryInput = {
+    where: FeedbackFormGroupScalarWhereInput
+    data: XOR<FeedbackFormGroupUpdateManyMutationInput, FeedbackFormGroupUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type FeedbackFormGroupScalarWhereInput = {
+    AND?: FeedbackFormGroupScalarWhereInput | FeedbackFormGroupScalarWhereInput[]
+    OR?: FeedbackFormGroupScalarWhereInput[]
+    NOT?: FeedbackFormGroupScalarWhereInput | FeedbackFormGroupScalarWhereInput[]
+    id?: StringFilter<"FeedbackFormGroup"> | string
+    name?: StringFilter<"FeedbackFormGroup"> | string
+    description?: StringNullableFilter<"FeedbackFormGroup"> | string | null
+    category_id?: StringFilter<"FeedbackFormGroup"> | string
+    start_date?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+    end_date?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+    is_active?: BoolFilter<"FeedbackFormGroup"> | boolean
+    createdAt?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+    updatedAt?: DateTimeFilter<"FeedbackFormGroup"> | Date | string
+  }
+
   export type FeedbackCategoryCreateWithoutQuestionsInput = {
     id?: string
     name: string
@@ -47060,6 +48854,7 @@ export namespace Prisma {
     is_active?: boolean
     createdAt?: Date | string
     forms?: FeedbackFormCreateNestedManyWithoutCategoryInput
+    feedbackFormGroups?: FeedbackFormGroupCreateNestedManyWithoutCategoryInput
   }
 
   export type FeedbackCategoryUncheckedCreateWithoutQuestionsInput = {
@@ -47069,6 +48864,7 @@ export namespace Prisma {
     is_active?: boolean
     createdAt?: Date | string
     forms?: FeedbackFormUncheckedCreateNestedManyWithoutCategoryInput
+    feedbackFormGroups?: FeedbackFormGroupUncheckedCreateNestedManyWithoutCategoryInput
   }
 
   export type FeedbackCategoryCreateOrConnectWithoutQuestionsInput = {
@@ -47120,6 +48916,7 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     forms?: FeedbackFormUpdateManyWithoutCategoryNestedInput
+    feedbackFormGroups?: FeedbackFormGroupUpdateManyWithoutCategoryNestedInput
   }
 
   export type FeedbackCategoryUncheckedUpdateWithoutQuestionsInput = {
@@ -47129,6 +48926,7 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     forms?: FeedbackFormUncheckedUpdateManyWithoutCategoryNestedInput
+    feedbackFormGroups?: FeedbackFormGroupUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type FeedbackAnswerUpsertWithWhereUniqueWithoutQuestionInput = {
@@ -47166,6 +48964,7 @@ export namespace Prisma {
     is_active?: boolean
     createdAt?: Date | string
     questions?: FeedbackQuestionCreateNestedManyWithoutCategoryInput
+    feedbackFormGroups?: FeedbackFormGroupCreateNestedManyWithoutCategoryInput
   }
 
   export type FeedbackCategoryUncheckedCreateWithoutFormsInput = {
@@ -47175,6 +48974,7 @@ export namespace Prisma {
     is_active?: boolean
     createdAt?: Date | string
     questions?: FeedbackQuestionUncheckedCreateNestedManyWithoutCategoryInput
+    feedbackFormGroups?: FeedbackFormGroupUncheckedCreateNestedManyWithoutCategoryInput
   }
 
   export type FeedbackCategoryCreateOrConnectWithoutFormsInput = {
@@ -47430,6 +49230,35 @@ export namespace Prisma {
     create: XOR<SpecialGroupCreateWithoutFeedbackFormsInput, SpecialGroupUncheckedCreateWithoutFeedbackFormsInput>
   }
 
+  export type FeedbackFormGroupCreateWithoutFeedbackFormsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    start_date: Date | string
+    end_date: Date | string
+    is_active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    category: FeedbackCategoryCreateNestedOneWithoutFeedbackFormGroupsInput
+  }
+
+  export type FeedbackFormGroupUncheckedCreateWithoutFeedbackFormsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    category_id: string
+    start_date: Date | string
+    end_date: Date | string
+    is_active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeedbackFormGroupCreateOrConnectWithoutFeedbackFormsInput = {
+    where: FeedbackFormGroupWhereUniqueInput
+    create: XOR<FeedbackFormGroupCreateWithoutFeedbackFormsInput, FeedbackFormGroupUncheckedCreateWithoutFeedbackFormsInput>
+  }
+
   export type FeedbackCategoryUpsertWithoutFormsInput = {
     update: XOR<FeedbackCategoryUpdateWithoutFormsInput, FeedbackCategoryUncheckedUpdateWithoutFormsInput>
     create: XOR<FeedbackCategoryCreateWithoutFormsInput, FeedbackCategoryUncheckedCreateWithoutFormsInput>
@@ -47448,6 +49277,7 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: FeedbackQuestionUpdateManyWithoutCategoryNestedInput
+    feedbackFormGroups?: FeedbackFormGroupUpdateManyWithoutCategoryNestedInput
   }
 
   export type FeedbackCategoryUncheckedUpdateWithoutFormsInput = {
@@ -47457,6 +49287,7 @@ export namespace Prisma {
     is_active?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: FeedbackQuestionUncheckedUpdateManyWithoutCategoryNestedInput
+    feedbackFormGroups?: FeedbackFormGroupUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type DepartmentUpsertWithoutFeedbackFormsInput = {
@@ -47733,6 +49564,165 @@ export namespace Prisma {
     members?: SpecialGroupMemberUncheckedUpdateManyWithoutGroupNestedInput
   }
 
+  export type FeedbackFormGroupUpsertWithoutFeedbackFormsInput = {
+    update: XOR<FeedbackFormGroupUpdateWithoutFeedbackFormsInput, FeedbackFormGroupUncheckedUpdateWithoutFeedbackFormsInput>
+    create: XOR<FeedbackFormGroupCreateWithoutFeedbackFormsInput, FeedbackFormGroupUncheckedCreateWithoutFeedbackFormsInput>
+    where?: FeedbackFormGroupWhereInput
+  }
+
+  export type FeedbackFormGroupUpdateToOneWithWhereWithoutFeedbackFormsInput = {
+    where?: FeedbackFormGroupWhereInput
+    data: XOR<FeedbackFormGroupUpdateWithoutFeedbackFormsInput, FeedbackFormGroupUncheckedUpdateWithoutFeedbackFormsInput>
+  }
+
+  export type FeedbackFormGroupUpdateWithoutFeedbackFormsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: FeedbackCategoryUpdateOneRequiredWithoutFeedbackFormGroupsNestedInput
+  }
+
+  export type FeedbackFormGroupUncheckedUpdateWithoutFeedbackFormsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category_id?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedbackCategoryCreateWithoutFeedbackFormGroupsInput = {
+    id?: string
+    name: string
+    type: string
+    is_active?: boolean
+    createdAt?: Date | string
+    questions?: FeedbackQuestionCreateNestedManyWithoutCategoryInput
+    forms?: FeedbackFormCreateNestedManyWithoutCategoryInput
+  }
+
+  export type FeedbackCategoryUncheckedCreateWithoutFeedbackFormGroupsInput = {
+    id?: string
+    name: string
+    type: string
+    is_active?: boolean
+    createdAt?: Date | string
+    questions?: FeedbackQuestionUncheckedCreateNestedManyWithoutCategoryInput
+    forms?: FeedbackFormUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type FeedbackCategoryCreateOrConnectWithoutFeedbackFormGroupsInput = {
+    where: FeedbackCategoryWhereUniqueInput
+    create: XOR<FeedbackCategoryCreateWithoutFeedbackFormGroupsInput, FeedbackCategoryUncheckedCreateWithoutFeedbackFormGroupsInput>
+  }
+
+  export type FeedbackFormCreateWithoutFeedbackFormGroupInput = {
+    id?: string
+    title: string
+    is_active?: boolean
+    action_taken?: string | null
+    start_date: Date | string
+    end_date: Date | string
+    all_students?: boolean
+    batch_year?: number | null
+    group_id?: string | null
+    category: FeedbackCategoryCreateNestedOneWithoutFormsInput
+    department?: DepartmentCreateNestedOneWithoutFeedbackFormsInput
+    course?: CourseCreateNestedOneWithoutFeedbackFormsInput
+    faculty?: FacultyCreateNestedOneWithoutFeedbackFormsInput
+    subject?: SubjectCreateNestedOneWithoutFeedbackFormsInput
+    section?: SectionCreateNestedOneWithoutFeedbackFormsInput
+    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
+    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
+    specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
+  }
+
+  export type FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput = {
+    id?: string
+    category_id: string
+    title: string
+    is_active?: boolean
+    action_taken?: string | null
+    start_date: Date | string
+    end_date: Date | string
+    all_students?: boolean
+    batch_year?: number | null
+    department_id?: string | null
+    course_id?: string | null
+    faculty_id?: string | null
+    subject_id?: string | null
+    section_id?: string | null
+    group_id?: string | null
+    specialGroupId?: string | null
+    responses?: FeedbackResponseUncheckedCreateNestedManyWithoutFormInput
+    students?: FeedbackFormStudentUncheckedCreateNestedManyWithoutFormInput
+  }
+
+  export type FeedbackFormCreateOrConnectWithoutFeedbackFormGroupInput = {
+    where: FeedbackFormWhereUniqueInput
+    create: XOR<FeedbackFormCreateWithoutFeedbackFormGroupInput, FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput>
+  }
+
+  export type FeedbackFormCreateManyFeedbackFormGroupInputEnvelope = {
+    data: FeedbackFormCreateManyFeedbackFormGroupInput | FeedbackFormCreateManyFeedbackFormGroupInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeedbackCategoryUpsertWithoutFeedbackFormGroupsInput = {
+    update: XOR<FeedbackCategoryUpdateWithoutFeedbackFormGroupsInput, FeedbackCategoryUncheckedUpdateWithoutFeedbackFormGroupsInput>
+    create: XOR<FeedbackCategoryCreateWithoutFeedbackFormGroupsInput, FeedbackCategoryUncheckedCreateWithoutFeedbackFormGroupsInput>
+    where?: FeedbackCategoryWhereInput
+  }
+
+  export type FeedbackCategoryUpdateToOneWithWhereWithoutFeedbackFormGroupsInput = {
+    where?: FeedbackCategoryWhereInput
+    data: XOR<FeedbackCategoryUpdateWithoutFeedbackFormGroupsInput, FeedbackCategoryUncheckedUpdateWithoutFeedbackFormGroupsInput>
+  }
+
+  export type FeedbackCategoryUpdateWithoutFeedbackFormGroupsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: FeedbackQuestionUpdateManyWithoutCategoryNestedInput
+    forms?: FeedbackFormUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type FeedbackCategoryUncheckedUpdateWithoutFeedbackFormGroupsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: FeedbackQuestionUncheckedUpdateManyWithoutCategoryNestedInput
+    forms?: FeedbackFormUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type FeedbackFormUpsertWithWhereUniqueWithoutFeedbackFormGroupInput = {
+    where: FeedbackFormWhereUniqueInput
+    update: XOR<FeedbackFormUpdateWithoutFeedbackFormGroupInput, FeedbackFormUncheckedUpdateWithoutFeedbackFormGroupInput>
+    create: XOR<FeedbackFormCreateWithoutFeedbackFormGroupInput, FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput>
+  }
+
+  export type FeedbackFormUpdateWithWhereUniqueWithoutFeedbackFormGroupInput = {
+    where: FeedbackFormWhereUniqueInput
+    data: XOR<FeedbackFormUpdateWithoutFeedbackFormGroupInput, FeedbackFormUncheckedUpdateWithoutFeedbackFormGroupInput>
+  }
+
+  export type FeedbackFormUpdateManyWithWhereWithoutFeedbackFormGroupInput = {
+    where: FeedbackFormScalarWhereInput
+    data: XOR<FeedbackFormUpdateManyMutationInput, FeedbackFormUncheckedUpdateManyWithoutFeedbackFormGroupInput>
+  }
+
   export type FeedbackFormCreateWithoutStudentsInput = {
     id?: string
     title: string
@@ -47751,6 +49741,7 @@ export namespace Prisma {
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
     responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
+    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutStudentsInput = {
@@ -47770,6 +49761,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
     responses?: FeedbackResponseUncheckedCreateNestedManyWithoutFormInput
   }
 
@@ -47898,6 +49890,7 @@ export namespace Prisma {
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
     responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
+    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutStudentsInput = {
@@ -47917,6 +49910,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     responses?: FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput
   }
 
@@ -48035,6 +50029,7 @@ export namespace Prisma {
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
     students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
+    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutResponsesInput = {
@@ -48054,6 +50049,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
     students?: FeedbackFormStudentUncheckedCreateNestedManyWithoutFormInput
   }
 
@@ -48208,6 +50204,7 @@ export namespace Prisma {
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
     students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
+    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutResponsesInput = {
@@ -48227,6 +50224,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     students?: FeedbackFormStudentUncheckedUpdateManyWithoutFormNestedInput
   }
 
@@ -48692,6 +50690,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
   }
 
   export type ProgramUpdateWithoutDepartmentInput = {
@@ -48993,6 +50992,7 @@ export namespace Prisma {
     responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
+    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutDepartmentInput = {
@@ -49011,6 +51011,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     responses?: FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUncheckedUpdateManyWithoutFormNestedInput
   }
@@ -49031,6 +51032,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CourseCreateManyProgramInput = {
@@ -49374,6 +51376,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
   }
 
   export type SectionUpdateWithoutCourseInput = {
@@ -49601,6 +51604,7 @@ export namespace Prisma {
     responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
+    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutCourseInput = {
@@ -49619,6 +51623,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     responses?: FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUncheckedUpdateManyWithoutFormNestedInput
   }
@@ -49639,6 +51644,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StudentSubjectCreateManySubjectInput = {
@@ -49667,6 +51673,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
   }
 
   export type SectionSubjectCreateManySubjectInput = {
@@ -49725,6 +51732,7 @@ export namespace Prisma {
     responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
+    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutSubjectInput = {
@@ -49743,6 +51751,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     responses?: FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUncheckedUpdateManyWithoutFormNestedInput
   }
@@ -49763,6 +51772,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SectionSubjectUpdateWithoutSubjectInput = {
@@ -49859,6 +51869,7 @@ export namespace Prisma {
     subject_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
   }
 
   export type SectionSubjectCreateManySectionInput = {
@@ -50059,6 +52070,7 @@ export namespace Prisma {
     responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
+    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutSectionInput = {
@@ -50077,6 +52089,7 @@ export namespace Prisma {
     subject_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     responses?: FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUncheckedUpdateManyWithoutFormNestedInput
   }
@@ -50097,6 +52110,7 @@ export namespace Prisma {
     subject_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SectionSubjectUpdateWithoutSectionInput = {
@@ -50295,6 +52309,7 @@ export namespace Prisma {
     subject_id?: string | null
     section_id?: string | null
     group_id?: string | null
+    feedbackFormGroupId?: string | null
   }
 
   export type SpecialGroupMemberUpdateWithoutGroupInput = {
@@ -50333,6 +52348,7 @@ export namespace Prisma {
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
     responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
+    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutSpecialGroupInput = {
@@ -50351,6 +52367,7 @@ export namespace Prisma {
     subject_id?: NullableStringFieldUpdateOperationsInput | string | null
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     responses?: FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUncheckedUpdateManyWithoutFormNestedInput
   }
@@ -50371,6 +52388,7 @@ export namespace Prisma {
     subject_id?: NullableStringFieldUpdateOperationsInput | string | null
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FacultyGroupMemberCreateManyGroupInput = {
@@ -50418,6 +52436,7 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
   }
 
   export type SectionSubjectCreateManyFacultyInput = {
@@ -50476,6 +52495,7 @@ export namespace Prisma {
     responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
+    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutFacultyInput = {
@@ -50494,6 +52514,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     responses?: FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUncheckedUpdateManyWithoutFormNestedInput
   }
@@ -50514,6 +52535,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SectionSubjectUpdateWithoutFacultyInput = {
@@ -50618,6 +52640,18 @@ export namespace Prisma {
     section_id?: string | null
     group_id?: string | null
     specialGroupId?: string | null
+    feedbackFormGroupId?: string | null
+  }
+
+  export type FeedbackFormGroupCreateManyCategoryInput = {
+    id?: string
+    name: string
+    description?: string | null
+    start_date: Date | string
+    end_date: Date | string
+    is_active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type FeedbackQuestionUpdateWithoutCategoryInput = {
@@ -50667,6 +52701,7 @@ export namespace Prisma {
     responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
+    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutCategoryInput = {
@@ -50685,6 +52720,7 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     responses?: FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUncheckedUpdateManyWithoutFormNestedInput
   }
@@ -50705,6 +52741,42 @@ export namespace Prisma {
     section_id?: NullableStringFieldUpdateOperationsInput | string | null
     group_id?: NullableStringFieldUpdateOperationsInput | string | null
     specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackFormGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FeedbackFormGroupUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feedbackForms?: FeedbackFormUpdateManyWithoutFeedbackFormGroupNestedInput
+  }
+
+  export type FeedbackFormGroupUncheckedUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feedbackForms?: FeedbackFormUncheckedUpdateManyWithoutFeedbackFormGroupNestedInput
+  }
+
+  export type FeedbackFormGroupUncheckedUpdateManyWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeedbackAnswerCreateManyQuestionInput = {
@@ -50779,6 +52851,86 @@ export namespace Prisma {
 
   export type FeedbackFormStudentUncheckedUpdateManyWithoutFormInput = {
     student_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FeedbackFormCreateManyFeedbackFormGroupInput = {
+    id?: string
+    category_id: string
+    title: string
+    is_active?: boolean
+    action_taken?: string | null
+    start_date: Date | string
+    end_date: Date | string
+    all_students?: boolean
+    batch_year?: number | null
+    department_id?: string | null
+    course_id?: string | null
+    faculty_id?: string | null
+    subject_id?: string | null
+    section_id?: string | null
+    group_id?: string | null
+    specialGroupId?: string | null
+  }
+
+  export type FeedbackFormUpdateWithoutFeedbackFormGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    action_taken?: NullableStringFieldUpdateOperationsInput | string | null
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    all_students?: BoolFieldUpdateOperationsInput | boolean
+    batch_year?: NullableIntFieldUpdateOperationsInput | number | null
+    group_id?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: FeedbackCategoryUpdateOneRequiredWithoutFormsNestedInput
+    department?: DepartmentUpdateOneWithoutFeedbackFormsNestedInput
+    course?: CourseUpdateOneWithoutFeedbackFormsNestedInput
+    faculty?: FacultyUpdateOneWithoutFeedbackFormsNestedInput
+    subject?: SubjectUpdateOneWithoutFeedbackFormsNestedInput
+    section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
+    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
+    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
+    specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
+  }
+
+  export type FeedbackFormUncheckedUpdateWithoutFeedbackFormGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category_id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    action_taken?: NullableStringFieldUpdateOperationsInput | string | null
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    all_students?: BoolFieldUpdateOperationsInput | boolean
+    batch_year?: NullableIntFieldUpdateOperationsInput | number | null
+    department_id?: NullableStringFieldUpdateOperationsInput | string | null
+    course_id?: NullableStringFieldUpdateOperationsInput | string | null
+    faculty_id?: NullableStringFieldUpdateOperationsInput | string | null
+    subject_id?: NullableStringFieldUpdateOperationsInput | string | null
+    section_id?: NullableStringFieldUpdateOperationsInput | string | null
+    group_id?: NullableStringFieldUpdateOperationsInput | string | null
+    specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    responses?: FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput
+    students?: FeedbackFormStudentUncheckedUpdateManyWithoutFormNestedInput
+  }
+
+  export type FeedbackFormUncheckedUpdateManyWithoutFeedbackFormGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category_id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    action_taken?: NullableStringFieldUpdateOperationsInput | string | null
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    all_students?: BoolFieldUpdateOperationsInput | boolean
+    batch_year?: NullableIntFieldUpdateOperationsInput | number | null
+    department_id?: NullableStringFieldUpdateOperationsInput | string | null
+    course_id?: NullableStringFieldUpdateOperationsInput | string | null
+    faculty_id?: NullableStringFieldUpdateOperationsInput | string | null
+    subject_id?: NullableStringFieldUpdateOperationsInput | string | null
+    section_id?: NullableStringFieldUpdateOperationsInput | string | null
+    group_id?: NullableStringFieldUpdateOperationsInput | string | null
+    specialGroupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FeedbackAnswerCreateManyResponseInput = {

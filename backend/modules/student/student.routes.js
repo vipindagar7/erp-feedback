@@ -40,6 +40,8 @@ router.patch("/:id", authenticate, authorize(...ADMIN), validate(updateStudentSc
 router.delete("/:id", authenticate, authorize(...ADMIN), c.remove);
 router.patch("/:id/block", authenticate, authorize(...ADMIN), c.toggleBlock);
 router.post("/:id/promote", authenticate, authorize(...ADMIN, "FACULTY"), c.promote);
+router.post("/:id/demote", authenticate, authorize(...ADMIN), c.demote);
+router.post("/bulk-demote", authenticate, authorize(...ADMIN), c.bulkDemote);
 router.patch("/:id/section", authenticate, authorize(...ADMIN, "FACULTY"), c.changeSection);
 
 export default router;

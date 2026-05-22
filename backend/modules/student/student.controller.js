@@ -236,3 +236,21 @@ export const bulkEnrollmentStatus = async (req, res, next) => {
     res.json({ success: true, message: `${results.updated.length} updated`, data: results });
   } catch (e) { next(e); }
 };
+
+// ── Demote single student ─────────────────────────────────────
+export const demote = async (req, res, next) => {
+  try {
+    const student = await svc.demoteStudent(req.params.id);
+    res.json({ success: true, message: "Student demoted", data: student });
+  } catch (e) { next(e); }
+};
+
+// ── Bulk demote ───────────────────────────────────────────────
+export const bulkDemote = async (req, res, next) => {
+  try {
+    const { ids } = req.body;
+    if (!ids?.length) return res.status(400).json({ success: false, message: "ids required" });
+    const results = await svc.bulkDemoteStudents(ids);
+    res.json({ success: true, message: `${results.updated.length} demoted`, data: results });
+  } catch (e) { next(e); }
+};

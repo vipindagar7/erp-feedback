@@ -150,7 +150,12 @@ export const EP = {
   },
 
   // ── Feedback ──────────────────────────────────────────────
-  // ── Feedback ──────────────────────────────────────────────
+  feedbackGroups: {
+    list: "/groups",
+    byId: (id) => `/groups/${id}`,
+    create: "/groups",
+  },
+
   feedback: {
     // Categories
     categories: "/feedback/categories",
@@ -177,8 +182,12 @@ export const EP = {
     bulkSubmit: (formId) => `/feedback/forms/${formId}/bulk-submit`,
     bulkTemplate: (formId) => `/feedback/forms/${formId}/bulk-template`,
     formQuestions: (formId) => `/feedback/forms/${formId}/questions`,
+    groups: "/feedback/groups",
+    groupById: (id) => `/feedback/groups/${id}`,
+    groupExport: (id) => `/feedback/groups/${id}/export`,
+    teachingReport: "/feedback/teaching-report",
+    exportLevel: "/feedback/export-level",
   },
-
 
   // ── Special Groups ────────────────────────────────────────
   groups: {

@@ -131,12 +131,12 @@ export const listForms = async (req, res, next) => {
 // POST /feedback/forms
 export const createForm = async (req, res, next) => {
   try {
-    // Use the new multi-type createForms if form_type is present, otherwise legacy createForm
+    const data = req.validatedData ?? req.body;
     let r;
-    if (req.body.form_type) {
-      r = await svc.createForm(req.body, req.user.id);
+    if (data.form_type) {
+      r = await svc.createForms(data, req.user.id);
     } else {
-      r = await svc.createForm(req.body);
+      r = await svc.createForm(data);
     }
     res.status(201).json({ success: true, message: "Form(s) created", data: r });
   } catch (e) { fail(res, e, next); }
@@ -250,5 +250,37 @@ export const submitFeedback = async (req, res, next) => {
       return res.status(422).json({ success: false, message: "answers array is required" });
     }
     ok(res, await svc.submitFeedback(req.params.formId, student_id, answers), "Feedback submitted", 201);
+  } catch (e) { fail(res, e, next); }
+};
+
+// GET /feedback/teaching-report
+export const getTeachingReport = async (req, res, next) => {
+  try { ok(res, await svc.getTeachingReport({ category_id: req.query.category_id })); }
+  catch (e) { fail(res, e, next); }
+};
+
+// GET /feedback/export-level?level=dept|course|section&id=X&category_id=Y
+export const exportLevelReport = async (req, res, next) => {
+  try {
+    const { level, id, category_id } = req.query;
+    if (!level || !id) return res.status(400).json({ success: false, message: "level and id are required" });
+    const { buffer, filename } = await svc.exportLevelReport({ level, id, category_id });
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.send(buffer);
+  } catch (e) { fail(res, e, next); }
+};
+
+// ── Form Group CRUD ──────────────────────────────────────────────────────────
+export const listFormGroups = async (req, res, next) => { try { ok(res, await svc.listFormGroups(req.query)); } catch (e) { fail(res, e, next); } };
+export const getFormGroup = async (req, res, next) => { try { ok(res, await svc.getFormGroup(req.params.groupId)); } catch (e) { fail(res, e, next); } };
+export const updateFormGroup = async (req, res, next) => { try { ok(res, await svc.updateFormGroup(req.params.groupId, req.body)); } catch (e) { fail(res, e, next); } };
+export const deleteFormGroup = async (req, res, next) => { try { ok(res, await svc.deleteFormGroup(req.params.groupId)); } catch (e) { fail(res, e, next); } };
+export const exportGroupResults = async (req, res, next) => {
+  try {
+    const { buffer, filename } = await svc.exportGroupResults(req.params.groupId);
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.send(buffer);
   } catch (e) { fail(res, e, next); }
 };

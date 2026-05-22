@@ -69,7 +69,7 @@ export const updateQuestionSchema = z.object({
 // ── Form schemas ───────────────────────────────────────────────
 export const createFormSchema = z.object({
   // Multi-type creation (new)
-  form_type: z.enum(["TEACHING", "GENERAL", "GROUP"]).optional(),
+  form_type: z.string().optional(),
   section_ids: z.array(z.string().uuid()).optional(),
   group_id: z.string().uuid().optional(),
   question_ids: z.array(z.string().uuid()).optional(),

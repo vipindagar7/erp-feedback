@@ -32,6 +32,7 @@ export const ADMIN_NAV = [
     { key: "fb-qs", label: "Questions", path: "/admin/feedback/questions", icon: HelpCircle, permission: "manage_feedback" },
     { key: "fb-forms", label: "Forms", path: "/admin/feedback/forms", icon: ClipboardList, permission: "manage_feedback" },
     { key: "fb-results", label: "Results", path: "/admin/feedback/results", icon: BarChart3, permission: "manage_feedback" },
+    { key: "fb-teaching", label: "Teaching Results", path: "/admin/feedback/teaching", icon: BarChart3, permission: "manage_feedback" },
 
     // { key: "g4", group: "System" },
     // { key: "reports", label: "Reports", path: "/admin/reports", icon: FileText },

@@ -361,7 +361,20 @@ exports.Prisma.FeedbackFormScalarFieldEnum = {
   subject_id: 'subject_id',
   section_id: 'section_id',
   group_id: 'group_id',
-  specialGroupId: 'specialGroupId'
+  specialGroupId: 'specialGroupId',
+  feedbackFormGroupId: 'feedbackFormGroupId'
+};
+
+exports.Prisma.FeedbackFormGroupScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  category_id: 'category_id',
+  start_date: 'start_date',
+  end_date: 'end_date',
+  is_active: 'is_active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.FeedbackFormStudentScalarFieldEnum = {
@@ -454,6 +467,7 @@ exports.Prisma.ModelName = {
   FeedbackCategory: 'FeedbackCategory',
   FeedbackQuestion: 'FeedbackQuestion',
   FeedbackForm: 'FeedbackForm',
+  FeedbackFormGroup: 'FeedbackFormGroup',
   FeedbackFormStudent: 'FeedbackFormStudent',
   FeedbackResponse: 'FeedbackResponse',
   FeedbackAnswer: 'FeedbackAnswer',

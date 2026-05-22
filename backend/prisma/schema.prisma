@@ -370,8 +370,9 @@ model FeedbackCategory {
   is_active Boolean  @default(true)
   createdAt DateTime @default(now())
 
-  questions FeedbackQuestion[]
-  forms     FeedbackForm[]
+  questions          FeedbackQuestion[]
+  forms              FeedbackForm[]
+  feedbackFormGroups FeedbackFormGroup[]
 }
 
 model FeedbackQuestion {
@@ -408,19 +409,38 @@ model FeedbackForm {
   section_id String?
   group_id   String?
 
-  category       FeedbackCategory      @relation(fields: [category_id], references: [id])
-  department     Department?           @relation(fields: [department_id], references: [id])
-  course         Course?               @relation(fields: [course_id], references: [id])
-  faculty        Faculty?              @relation(fields: [faculty_id], references: [id])
-  subject        Subject?              @relation(fields: [subject_id], references: [id])
-  section        Section?              @relation(fields: [section_id], references: [id])
-  responses      FeedbackResponse[]
-  students       FeedbackFormStudent[]
-  specialGroup   SpecialGroup?         @relation(fields: [specialGroupId], references: [id])
-  specialGroupId String?
+  category            FeedbackCategory      @relation(fields: [category_id], references: [id])
+  department          Department?           @relation(fields: [department_id], references: [id])
+  course              Course?               @relation(fields: [course_id], references: [id])
+  faculty             Faculty?              @relation(fields: [faculty_id], references: [id])
+  subject             Subject?              @relation(fields: [subject_id], references: [id])
+  section             Section?              @relation(fields: [section_id], references: [id])
+  responses           FeedbackResponse[]
+  students            FeedbackFormStudent[]
+  specialGroup        SpecialGroup?         @relation(fields: [specialGroupId], references: [id])
+  specialGroupId      String?
+  feedbackFormGroup   FeedbackFormGroup?    @relation(fields: [feedbackFormGroupId], references: [id])
+  feedbackFormGroupId String?
 }
 
+// ── Feedback Form Groups (Teaching bundles) ─────────────────────────────────
+// ── Feedback Form Groups (Teaching bundles) ─────────────────────────────────
+model FeedbackFormGroup {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  category_id String
+  start_date  DateTime
+  end_date    DateTime
+  is_active   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
+  category      FeedbackCategory @relation(fields: [category_id], references: [id])
+  feedbackForms FeedbackForm[]
+
+  @@index([category_id])
+}
 
 model FeedbackFormStudent {
   form_id    String

@@ -1,4 +1,4 @@
-import xlsx from "xlsx";
+
 import prisma from "../../utils/prisma.js";
 const masterClient = prisma;
 const replicaClient = prisma;
@@ -752,6 +752,86 @@ const safeSheetName = (s) =>
   `${s.course?.name || ""}–${s.name} Sem${s.semester}`
     .replace(/[\\/*?:[\]]/g, "")
     .substring(0, 31);
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ENROLLMENT STATUS — update status on current enrollment
+// Valid statuses: ACTIVE | DETAINED | PASSED | PROMOTED | RE_DETAINED
+// ═══════════════════════════════════════════════════════════════════════════════
+export const updateEnrollmentStatus = async (id, { status, remarks }) => {
+  const VALID = ["ACTIVE", "DETAINED", "PASSED", "PROMOTED", "RE_DETAINED"];
+  if (!VALID.includes(status)) {
+    const e = new Error(`Invalid status "${status}". Must be one of: ${VALID.join(", ")}`);
+    e.statusCode = 400; throw e;
+  }
+  const student = await replicaClient.student.findUnique({
+    where: { id },
+    include: { enrollments: { where: { is_current: true }, orderBy: { enrolled_at: "desc" }, take: 1 } },
+  });
+  if (!student) { const e = new Error("Student not found"); e.statusCode = 404; throw e; }
+  const enrollment = student.enrollments[0];
+  if (!enrollment) { const e = new Error("No current enrollment found"); e.statusCode = 400; throw e; }
+  return masterClient.studentEnrollment.update({
+    where: { id: enrollment.id },
+    data: { status, ...(remarks !== undefined && { remarks }) },
+  });
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DEMOTE — move student back one semester
+// ═══════════════════════════════════════════════════════════════════════════════
+export const demoteStudent = async (id) => {
+  const student = await replicaClient.student.findUnique({
+    where: { id },
+    include: { enrollments: { where: { is_current: true }, orderBy: { enrolled_at: "desc" }, take: 1 } },
+  });
+  if (!student) { const e = new Error("Student not found"); e.statusCode = 404; throw e; }
+  const enrollment = student.enrollments[0];
+  if (!enrollment) { const e = new Error("No current enrollment found"); e.statusCode = 400; throw e; }
+  if (enrollment.semester <= 1) { const e = new Error("Already at Semester 1 — cannot demote further"); e.statusCode = 400; throw e; }
+
+  const prevSem = enrollment.semester - 1;
+  // If going from odd to even, roll back academic year
+  const [y1, y2] = enrollment.academic_year.split("-").map(Number);
+  const prevYear = enrollment.semester % 2 === 1 ? `${y1 - 1}-${y2 - 1}` : enrollment.academic_year;
+
+  return masterClient.$transaction(async (tx) => {
+    await tx.studentEnrollment.update({ where: { id: enrollment.id }, data: { status: "COMPLETED", is_current: false } });
+    await tx.studentEnrollment.create({
+      data: {
+        student_id: student.id,
+        section_id: student.section_id,
+        dept_id: enrollment.dept_id,
+        course_id: enrollment.course_id,
+        program_id: enrollment.program_id,
+        academic_year: prevYear,
+        semester: prevSem,
+        batch_year: enrollment.batch_year ?? 0,
+        status: "ACTIVE",
+        is_current: true,
+        remarks: "Demoted by admin",
+      },
+    });
+    return replicaClient.student.findUnique({ where: { id }, include: studentInclude });
+  });
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// BULK DEMOTE — demote multiple students
+// ═══════════════════════════════════════════════════════════════════════════════
+export const bulkDemoteStudents = async (ids) => {
+  const results = { updated: [], skipped: [], failed: [] };
+  for (const id of ids) {
+    try {
+      await demoteStudent(id);
+      results.updated.push(id);
+    } catch (e) {
+      if (e.statusCode === 400) results.skipped.push({ id, reason: e.message });
+      else results.failed.push({ id, reason: e.message });
+    }
+  }
+  return results;
+};
 
 export const generateStudentTemplate = async () => {
   const sections = await prisma.section.findMany({

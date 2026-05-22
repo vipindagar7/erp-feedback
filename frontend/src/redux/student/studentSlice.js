@@ -23,11 +23,13 @@ export const bulkSetStatus = createAsyncThunk("student/bulkStatus", async ({ ids
 export const bulkEnrollmentStatus = bulkSetStatus; // alias
 
 export const promoteStudent = createAsyncThunk("student/promote", async ({ id }, { rejectWithValue }) => { try { return await api("post", `/students/${id}/promote`); } catch (e) { return rejectWithValue(e.response?.data?.message || e.message); } });
-export const demoteStudent = createAsyncThunk("student/demote", async ({ id }, { rejectWithValue }) => { try { return await api("post", `/students/${id}/demote`); } catch (e) { return rejectWithValue(e.response?.data?.message || e.message); } });
+export const demoteStudent = createAsyncThunk("student/demote",      async ({ id }, { rejectWithValue })         => { try { return await api("post",   `/students/${id}/demote`);                                    } catch (e) { return rejectWithValue(e.response?.data?.message || e.message); } });
 export const bulkPromoteStudents = createAsyncThunk("student/bulkPromote", async ({ ids }, { rejectWithValue }) => { try { return await api("post", "/students/bulk-promote/section", { ids }); } catch (e) { return rejectWithValue(e.response?.data?.message || e.message); } });
 
 export const changeSection = createAsyncThunk("student/changeSection", async ({ id, new_section_id, remarks }, { rejectWithValue }) => { try { return await api("patch", `/students/${id}/section`, { section_id: new_section_id, remarks }); } catch (e) { return rejectWithValue(e.response?.data?.message || e.message); } });
 export const changeStudentSection = changeSection; // alias
+export const bulkDemoteStudents = createAsyncThunk("student/bulkDemote", async ({ ids }, { rejectWithValue }) => { try { return await api("post", "/students/bulk-demote", { ids }); } catch (e) { return rejectWithValue(e.response?.data?.message || e.message); } });
+
 export const bulkChangeSection = createAsyncThunk("student/bulkSection", async ({ ids, new_section_id, remarks }, { rejectWithValue }) => { try { return await api("post", "/students/bulk-change-section", { ids, section_id: new_section_id, remarks }); } catch (e) { return rejectWithValue(e.response?.data?.message || e.message); } });
 
 export const bulkPromoteSection = createAsyncThunk("student/bulkSection2", async (data, { rejectWithValue }) => { try { return await api("post", "/students/bulk-promote/section", data); } catch (e) { return rejectWithValue(e.response?.data?.message || e.message); } });
