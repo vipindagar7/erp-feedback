@@ -1,3 +1,4 @@
+import { fmtSection, sectionOption } from "../../lib/formatSection.js";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,7 +10,6 @@ import {
 import { fetchDepartments, fetchPrograms, fetchCourses, fetchSections } from "../../redux/academic/academicSlice.js";
 import { fetchMyForms, submitFeedback } from "../../redux/feedback/feedbackSlice.js";
 import axiosInstance from "../../lib/axios.js";
-
 import { BulkActionsMenu, InstituteWidePromoteModal } from "../../components/StudentsBulkModals.jsx";
 // import PromoteModal from "../../components/StudentsBulkModals.jsx";
 import { notify } from "../../hooks/notify.js";
@@ -242,7 +242,7 @@ function StepEnrollment({ form, set, errors, sections }) {
           <option value="">Select section…</option>
           {sections.map((s) => (
             <option key={s.id} value={s.id}>
-              {s.course?.program?.name} › {s.course?.name} › Sec {s.name} · Sem {s.semester} · {s.batch || ""}
+              {sectionOption(s)}
             </option>
           ))}
         </select>
@@ -702,7 +702,7 @@ function ChangeSectionModal({ open, onClose, onSuccess, student, selectedStudent
             <option value="">Select section…</option>
             {(sections||[]).map((s) => (
               <option key={s.id} value={s.id}>
-                {s.course?.program?.name} › {s.course?.name} › Sec {s.name} · Sem {s.semester} · {s.batch || ""}
+                {sectionOption(s)}
               </option>
             ))}
           </select>
@@ -769,7 +769,7 @@ function StudentFilters({ filters, onChange, sections, departments, programs, co
                 <option value="">All Sections</option>
                 {sections.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.course?.program?.name} › {s.course?.name} › Sec {s.name} · Sem {s.semester} · {s.batch || ""}
+                    {sectionOption(s)}
                   </option>
                 ))}
               </select>
@@ -1139,7 +1139,7 @@ export default function StudentsPage() {
                 {filters.dept_id      && <Chip label={departments.find((d) => d.id===filters.dept_id)?.name || "Dept"} onRemove={() => setFilters((f) => { const n={...f}; delete n.dept_id;      return n; })} />}
                 {filters.program_id   && <Chip label={programs.find((p) => p.id===filters.program_id)?.name || "Program"} onRemove={() => setFilters((f) => { const n={...f}; delete n.program_id;  return n; })} />}
                 {filters.course_id    && <Chip label={courses.find((c) => c.id===filters.course_id)?.name || "Course"} onRemove={() => setFilters((f) => { const n={...f}; delete n.course_id;   return n; })} />}
-                {filters.section_id   && <Chip label={`Sec ${sections.find((s) => s.id===filters.section_id)?.name || ""}`} onRemove={() => setFilters((f) => { const n={...f}; delete n.section_id;  return n; })} />}
+                {filters.section_id   && <Chip label={fmtSection(sections.find((s) => s.id === filters.section_id))} onRemove={() => setFilters((f) => { const n={...f}; delete n.section_id;  return n; })} />}
                 {filters.status       && <Chip label={filters.status}       onRemove={() => setFilters((f) => { const n={...f}; delete n.status;       return n; })} />}
                 {filters.gender       && <Chip label={filters.gender}       onRemove={() => setFilters((f) => { const n={...f}; delete n.gender;       return n; })} />}
                 {filters.semester     && <Chip label={`Sem ${filters.semester}`} onRemove={() => setFilters((f) => { const n={...f}; delete n.semester;     return n; })} />}
@@ -1211,7 +1211,7 @@ export default function StudentsPage() {
                               <td className="px-3 py-3 text-xs">
                                 <p className="font-medium text-foreground">
                                   {[s.section?.course?.program?.name, s.section?.course?.name].filter(Boolean).join(" › ")}
-                                  {" › "}<span className="text-primary">Sec {s.section?.name}</span>
+                                  {" › "}<span className="text-primary">{fmtSection(s.section, "short")}</span>
                                 </p>
                                 <p className="text-muted-foreground">Sem {s.section?.semester} · {s.section?.batch || s.batch_year || "—"}</p>
                               </td>

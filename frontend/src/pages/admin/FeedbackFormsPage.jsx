@@ -1,3 +1,4 @@
+import { fmtSection, sectionOption } from "../../lib/formatSection.js";
 import { useEffect, useState, useCallback, useRef } from "react";
 import axiosInstance from "../../lib/axios.js";
 import { EP } from "../../config/api.config.js";
@@ -19,8 +20,7 @@ import {
   HelpCircle, ArrowLeft, ArrowRight, Loader2, RefreshCw, ExternalLink,
   Calendar, BookOpen, Pencil, Filter, Building2, ChevronUp,
 } from "lucide-react";
-import { notify } from "../../hooks/notify.js";
-
+import {notify} from "../../hooks/notify.js"
 
 // ── Constants ──────────────────────────────────────────────────
 const FORM_TYPES = [
@@ -350,7 +350,7 @@ function FormModal({ open, onClose, onSaved, editData = null }) {
                         value={form.section_ids}
                         onChange={(v) => set("section_ids", v)}
                         placeholder="Select one or more sections…"
-                        labelFn={(s) => `Sec ${s.name}${s.course?.name ? ` · ${s.course.name}` : ""}${s.semester ? ` (Sem ${s.semester})` : ""}`}
+                        labelFn={(s) => sectionOption(s)}
                         descFn={(s) => [s.course?.program?.department?.name, s.course?.program?.name].filter(Boolean).join(" › ")}
                       />
                       <SectionPreview sections={refData.sections} selectedIds={form.section_ids} />

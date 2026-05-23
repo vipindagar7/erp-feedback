@@ -1,10 +1,27 @@
 import { useState } from "react";
 import { cn } from "../lib/utils.js";
 
-// Format: B.tech › CSE › Sec B · Sem 1 · 2024-2028
-export const formatSection = (s) => {
-  const parts = [s.course?.program?.name, s.course?.name].filter(Boolean).join(" › ");
-  return `${parts ? parts + " › " : ""}Sec ${s.name} · Sem ${s.semester}${s.batch ? " · " + s.batch : ""}`;
+// Format: "BTech CSE Sem4 A"  (compact, no overflow)
+export const formatSection = (s, { compact = false } = {}) => {
+  const prog  = s.course?.program?.name || "";
+  const course = s.course?.name || "";
+  const sem   = s.semester ? `Sem ${s.semester}` : "";
+  const sec   = `Sec ${s.name}`;
+  if (compact) {
+    // "BTech CSE Sem4 A" — no punctuation, fits filter chips
+    return [prog, course, sem, sec].filter(Boolean).join(" ");
+  }
+  // Full: "BTech › CSE › Sem 4 › Sec A · 2023-2027"
+  const parts = [prog, course, sem, sec].filter(Boolean).join(" › ");
+  return s.batch ? `${parts} · ${s.batch}` : parts;
+};
+
+// Short label for chips/badges: "CSE Sem4 A"
+export const shortSection = (s) => {
+  const course = s.course?.name || "";
+  const sem    = s.semester ? `Sem ${s.semester}` : "";
+  const sec    = `Sec ${s.name}`;
+  return [course, sem, sec].filter(Boolean).join(" ");
 };
 
 export default function MultiSectionPicker({ sections = [], selected = new Set(), onChange, maxHeight = "max-h-72", groupByCourse = true }) {
