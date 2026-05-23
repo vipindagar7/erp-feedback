@@ -1,9 +1,8 @@
-
+import xlsx from "xlsx";
 import prisma from "../../utils/prisma.js";
-const masterClient = prisma;
+const masterClient  = prisma;
 const replicaClient = prisma;
 import bcrypt from "bcryptjs";
-import xlsx from "xlsx";
 
 // ── Shared include ────────────────────────────────────────────────────────────
 const studentInclude = {
@@ -75,36 +74,36 @@ export const getAllStudents = async ({
   status, is_hosteller, is_using_transport,
   isBlocked, batch,
 } = {}) => {
-  const _page = parseInt(page) || 1;
+  const _page  = parseInt(page)  || 1;
   const _limit = parseInt(limit) || 10;
-  const skip = (_page - 1) * _limit;
+  const skip   = (_page - 1) * _limit;
 
   // Parse multi-value — accept comma-separated string or array
   const parseMulti = (v) => !v ? null : Array.isArray(v) ? v : v.split(",").map((s) => s.trim()).filter(Boolean);
 
-  const deptFilter = parseMulti(dept_ids) || (dept_id ? [dept_id] : null);
+  const deptFilter    = parseMulti(dept_ids)    || (dept_id    ? [dept_id]    : null);
   const sectionFilter = parseMulti(section_ids) || (section_id ? [section_id] : null);
-  const courseFilter = parseMulti(course_ids) || (course_id ? [course_id] : null);
+  const courseFilter  = parseMulti(course_ids)  || (course_id  ? [course_id]  : null);
   const programFilter = parseMulti(program_ids) || (program_id ? [program_id] : null);
 
   const where = {
-    ...(deptFilter && { dept_id: { in: deptFilter } }),
+    ...(deptFilter    && { dept_id:    { in: deptFilter    } }),
     ...(sectionFilter && { section_id: { in: sectionFilter } }),
-    ...(courseFilter && { course_id: { in: courseFilter } }),
+    ...(courseFilter  && { course_id:  { in: courseFilter  } }),
     ...(programFilter && { program_id: { in: programFilter } }),
-    ...(gender && { gender }),
+    ...(gender     && { gender }),
     ...(batch_year && { batch_year: parseInt(batch_year) }),
     ...(batch && { section: { batch } }),
-    ...(is_hosteller !== undefined && { is_hosteller: is_hosteller === "true" || is_hosteller === true }),
+    ...(is_hosteller      !== undefined && { is_hosteller:       is_hosteller      === "true" || is_hosteller      === true }),
     ...(is_using_transport !== undefined && { is_using_transport: is_using_transport === "true" || is_using_transport === true }),
     ...(isBlocked !== undefined && { user: { isBlocked: isBlocked === "true" || isBlocked === true } }),
     ...(search && {
       OR: [
-        { name: { contains: search, mode: "insensitive" } },
-        { roll_no: { contains: search, mode: "insensitive" } },
+        { name:          { contains: search, mode: "insensitive" } },
+        { roll_no:       { contains: search, mode: "insensitive" } },
         { enrollment_no: { contains: search, mode: "insensitive" } },
-        { group_no: { contains: search, mode: "insensitive" } },
-        { phone: { contains: search, mode: "insensitive" } },
+        { group_no:      { contains: search, mode: "insensitive" } },
+        { phone:         { contains: search, mode: "insensitive" } },
         { user: { email: { contains: search, mode: "insensitive" } } },
       ],
     }),
@@ -112,9 +111,9 @@ export const getAllStudents = async ({
       enrollments: {
         some: {
           ...(academic_year && { academic_year }),
-          ...(semester && { semester: parseInt(semester) }),
-          ...(session && { session }),
-          ...(status && { status }),
+          ...(semester      && { semester: parseInt(semester) }),
+          ...(session       && { session }),
+          ...(status        && { status }),
           is_current: true,
         },
       },
@@ -165,9 +164,9 @@ export const createStudent = async (data) => {
   });
   if (!section) { const e = new Error("Section not found"); e.statusCode = 404; throw e; }
 
-  const course_id = section.course_id;
-  const program_id = section.course.program_id;
-  const dept_id = section.course.program.dept_id;
+  const course_id   = section.course_id;
+  const program_id  = section.course.program_id;
+  const dept_id     = section.course.program.dept_id;
 
   // Uniqueness checks
   const [existEmail, existRoll] = await Promise.all([
@@ -175,7 +174,7 @@ export const createStudent = async (data) => {
     replicaClient.student.findUnique({ where: { roll_no: roll_number } }),
   ]);
   if (existEmail) { const e = new Error("Email already registered"); e.statusCode = 409; throw e; }
-  if (existRoll) { const e = new Error("Roll number already taken"); e.statusCode = 409; throw e; }
+  if (existRoll)  { const e = new Error("Roll number already taken"); e.statusCode = 409; throw e; }
 
   const passwordHash = await bcrypt.hash(password, 10);
 
@@ -189,7 +188,7 @@ export const createStudent = async (data) => {
         user_id: user.id,
         name: name || `${first_name} ${last_name}`,
         first_name: first_name || name.split(" ")[0],
-        last_name: last_name || name.split(" ").slice(1).join(" ") || "N/A",
+        last_name:  last_name  || name.split(" ").slice(1).join(" ") || "N/A",
         roll_no: roll_number,
         enrollment_no: enrollment_no || null,
         father_name: father_name || "",
@@ -244,54 +243,54 @@ export const updateStudent = async (id, data) => {
   const u = {};
 
   // Name fields
-  if (data.first_name !== undefined) u.first_name = data.first_name;
-  if (data.last_name !== undefined) u.last_name = data.last_name;
-  if (data.name !== undefined) u.name = data.name;
+  if (data.first_name   !== undefined) u.first_name   = data.first_name;
+  if (data.last_name    !== undefined) u.last_name    = data.last_name;
+  if (data.name         !== undefined) u.name         = data.name;
   else if (data.first_name || data.last_name)
     u.name = `${data.first_name ?? existing.first_name} ${data.last_name ?? existing.last_name}`;
 
   // Identity — map frontend field names → DB field names
-  if (data.roll_number !== undefined) u.roll_no = data.roll_number || null;
-  if (data.enrollment_no !== undefined) u.enrollment_no = data.enrollment_no || null;
-  if (data.biometric_id !== undefined) u.biometric_id = data.biometric_id || null;
-  if (data.group_no !== undefined) u.group_no = data.group_no || null;
+  if (data.roll_number  !== undefined) u.roll_no       = data.roll_number || null;
+  if (data.enrollment_no!== undefined) u.enrollment_no = data.enrollment_no || null;
+  if (data.biometric_id !== undefined) u.biometric_id  = data.biometric_id || null;
+  if (data.group_no     !== undefined) u.group_no      = data.group_no || null;
 
   // Contact
-  if (data.contact_number !== undefined) u.phone = data.contact_number || null;
+  if (data.contact_number     !== undefined) u.phone            = data.contact_number || null;
   if (data.alt_contact_number !== undefined) u.alt_contact_number = data.alt_contact_number || null;
-  if (data.personal_email !== undefined) u.personal_email = data.personal_email || null;
+  if (data.personal_email     !== undefined) u.personal_email   = data.personal_email || null;
 
   // Parents
-  if (data.father_name !== undefined) u.father_name = data.father_name || null;
+  if (data.father_name   !== undefined) u.father_name  = data.father_name || null;
   if (data.father_mobile !== undefined) u.father_phone = data.father_mobile || null;
-  if (data.mother_name !== undefined) u.mother_name = data.mother_name || null;
+  if (data.mother_name   !== undefined) u.mother_name  = data.mother_name || null;
   if (data.mother_mobile !== undefined) u.mother_phone = data.mother_mobile || null;
 
   // Personal
-  if (data.gender !== undefined) u.gender = data.gender || null;
-  if (data.dob !== undefined) u.dob = data.dob ? new Date(data.dob) : null;
-  if (data.aadhar_no !== undefined) u.aadhar_no = data.aadhar_no || null;
-  if (data.pan_no !== undefined) u.pan_no = data.pan_no || null;
-  if (data.religion !== undefined) u.religion = data.religion || null;
-  if (data.category !== undefined) u.category = data.category || null;
+  if (data.gender          !== undefined) u.gender          = data.gender || null;
+  if (data.dob             !== undefined) u.dob             = data.dob ? new Date(data.dob) : null;
+  if (data.aadhar_no       !== undefined) u.aadhar_no       = data.aadhar_no || null;
+  if (data.pan_no          !== undefined) u.pan_no          = data.pan_no || null;
+  if (data.religion        !== undefined) u.religion        = data.religion || null;
+  if (data.category        !== undefined) u.category        = data.category || null;
 
   // Admission
   if (data.mode_of_admission !== undefined) u.mode_of_admission = data.mode_of_admission || null;
-  if (data.admission_year !== undefined) u.admission_year = data.admission_year ? parseInt(data.admission_year) : null;
-  if (data.batch_year !== undefined) u.batch_year = data.batch_year ? parseInt(data.batch_year) : null;
-  if (data.session !== undefined) u.session = data.session || null;
-  if (data.is_hosteller !== undefined) u.is_hosteller = Boolean(data.is_hosteller);
-  if (data.is_using_transport !== undefined) u.is_using_transport = Boolean(data.is_using_transport);
+  if (data.admission_year    !== undefined) u.admission_year    = data.admission_year ? parseInt(data.admission_year) : null;
+  if (data.batch_year        !== undefined) u.batch_year        = data.batch_year ? parseInt(data.batch_year) : null;
+  if (data.session           !== undefined) u.session           = data.session || null;
+  if (data.is_hosteller      !== undefined) u.is_hosteller      = Boolean(data.is_hosteller);
+  if (data.is_using_transport!== undefined) u.is_using_transport = Boolean(data.is_using_transport);
 
   // Address — map local_address_* → address, city, state, pincode
-  if (data.local_address !== undefined) u.address = data.local_address || null;
-  if (data.local_address_city !== undefined) u.city = data.local_address_city || null;
-  if (data.local_address_state !== undefined) u.state = data.local_address_state || null;
+  if (data.local_address         !== undefined) u.address = data.local_address || null;
+  if (data.local_address_city    !== undefined) u.city    = data.local_address_city || null;
+  if (data.local_address_state   !== undefined) u.state   = data.local_address_state || null;
   if (data.local_address_zipcode !== undefined) u.pincode = data.local_address_zipcode || null;
   // Also accept direct DB field names
   if (data.address !== undefined) u.address = data.address || null;
-  if (data.city !== undefined) u.city = data.city || null;
-  if (data.state !== undefined) u.state = data.state || null;
+  if (data.city    !== undefined) u.city    = data.city || null;
+  if (data.state   !== undefined) u.state   = data.state || null;
   if (data.pincode !== undefined) u.pincode = data.pincode || null;
 
   // Permanent address (schema doesn't have these — skip silently)
@@ -302,10 +301,10 @@ export const updateStudent = async (id, data) => {
       include: { course: { include: { program: { include: { department: true } } } } },
     });
     if (!section) { const e = new Error("Section not found"); e.statusCode = 404; throw e; }
-    u.section_id = data.section_id;
-    u.course_id = section.course_id;
-    u.program_id = section.course.program_id;
-    u.dept_id = section.course.program.dept_id;
+    u.section_id  = data.section_id;
+    u.course_id   = section.course_id;
+    u.program_id  = section.course.program_id;
+    u.dept_id     = section.course.program.dept_id;
   }
 
   return masterClient.student.update({
@@ -385,16 +384,16 @@ export const promoteStudent = async (id) => {
     // Create new enrollment — same section, next sem/year
     await tx.studentEnrollment.create({
       data: {
-        student_id: student.id,
-        section_id: student.section_id,
-        dept_id: activeEnrollment.dept_id,
-        course_id: activeEnrollment.course_id,
-        program_id: activeEnrollment.program_id,
+        student_id:    student.id,
+        section_id:    student.section_id,
+        dept_id:       activeEnrollment.dept_id,
+        course_id:     activeEnrollment.course_id,
+        program_id:    activeEnrollment.program_id,
         academic_year: next.academic_year,
-        semester: next.semester,
-        batch_year: activeEnrollment.batch_year ?? 0,
-        status: "ACTIVE",
-        is_current: true,
+        semester:      next.semester,
+        batch_year:    activeEnrollment.batch_year ?? 0,
+        status:        "ACTIVE",
+        is_current:    true,
       },
     });
     // Mark old enrollment as not current
@@ -474,16 +473,16 @@ export const bulkPromoteSection = async (section_id, parity) => {
         });
         await tx.studentEnrollment.create({
           data: {
-            student_id: student.id,
-            section_id: student.section_id,
-            dept_id: activeEnrollment.dept_id,
-            course_id: activeEnrollment.course_id,
-            program_id: activeEnrollment.program_id,
+            student_id:    student.id,
+            section_id:    student.section_id,
+            dept_id:       activeEnrollment.dept_id,
+            course_id:     activeEnrollment.course_id,
+            program_id:    activeEnrollment.program_id,
             academic_year: next.academic_year,
-            semester: next.semester,
-            batch_year: activeEnrollment.batch_year ?? 0,
-            status: "ACTIVE",
-            is_current: true,
+            semester:      next.semester,
+            batch_year:    activeEnrollment.batch_year ?? 0,
+            status:        "ACTIVE",
+            is_current:    true,
           },
         });
       });
@@ -492,7 +491,7 @@ export const bulkPromoteSection = async (section_id, parity) => {
         id: student.id, name: student.name,
         roll_number: student.roll_no,
         from: { semester: activeEnrollment.semester, academic_year: activeEnrollment.academic_year },
-        to: { semester: next.semester, academic_year: next.academic_year },
+        to:   { semester: next.semester,             academic_year: next.academic_year },
       });
     } catch (err) {
       results.failed.push({ id: student.id, name: student.name, reason: err.message });
@@ -575,22 +574,22 @@ export const bulkPromoteInstitution = async (fromParity, section_ids = []) => {
         });
         await tx.studentEnrollment.create({
           data: {
-            student_id: enrollment.student.id,
-            section_id: enrollment.student.section_id,
+            student_id:    enrollment.student.id,
+            section_id:    enrollment.student.section_id,
             academic_year: next.academic_year,
-            semester: next.semester,
-            session: `${next.academic_year} SEM ${next.semester}`,
-            status: "ACTIVE",
+            semester:      next.semester,
+            session:       `${next.academic_year} SEM ${next.semester}`,
+            status:        "ACTIVE",
           },
         });
       });
 
       results.promoted.push({
-        id: enrollment.student.id,
-        name: enrollment.student.name,
+        id:          enrollment.student.id,
+        name:        enrollment.student.name,
         roll_number: enrollment.student.roll_no,
         from: { semester: enrollment.semester, academic_year: enrollment.academic_year },
-        to: { semester: next.semester, academic_year: next.academic_year },
+        to:   { semester: next.semester,       academic_year: next.academic_year },
       });
     } catch (err) {
       results.failed.push({ id: enrollment.student.id, name: enrollment.student.name, reason: err.message });
@@ -623,12 +622,12 @@ export const changeStudentSection = async (student_id, new_section_id) => {
     }),
   ]);
 
-  if (!student) { const e = new Error("Student not found"); e.statusCode = 404; throw e; }
-  if (!newSection) { const e = new Error("Section not found"); e.statusCode = 404; throw e; }
+  if (!student)    { const e = new Error("Student not found");  e.statusCode = 404; throw e; }
+  if (!newSection) { const e = new Error("Section not found");  e.statusCode = 404; throw e; }
 
-  const course_id = newSection.course_id;
+  const course_id  = newSection.course_id;
   const program_id = newSection.course.program_id;
-  const dept_id = newSection.course.program.dept_id;
+  const dept_id    = newSection.course.program.dept_id;
 
   return masterClient.$transaction(async (tx) => {
     // Update student
@@ -661,9 +660,9 @@ export const bulkChangeSection = async (student_ids, new_section_id) => {
   });
   if (!newSection) { const e = new Error("Target section not found"); e.statusCode = 404; throw e; }
 
-  const course_id = newSection.course_id;
+  const course_id  = newSection.course_id;
   const program_id = newSection.course.program_id;
-  const dept_id = newSection.course.program.dept_id;
+  const dept_id    = newSection.course.program.dept_id;
 
   const results = { success: [], failed: [], total: student_ids.length };
 
@@ -706,53 +705,71 @@ export const bulkChangeSection = async (student_ids, new_section_id) => {
 
 // ── Column definitions (shared between template and parser) ──────
 const STUDENT_COLS = [
-  { key: "email*", field: "email", required: true },
-  { key: "password", field: "password", required: false },
-  { key: "first_name*", field: "first_name", required: true },
-  { key: "last_name*", field: "last_name", required: true },
-  { key: "roll_number*", field: "roll_number", required: true },
-  { key: "enrollment_no", field: "enrollment_no", required: false },
-  { key: "group_no", field: "group_no", required: false },
-  { key: "contact_number*", field: "contact_number", required: true },
-  { key: "alt_contact_number", field: "alt_contact_number", required: false },
-  { key: "personal_email", field: "personal_email", required: false },
-  { key: "father_name*", field: "father_name", required: true },
-  { key: "mother_name*", field: "mother_name", required: true },
-  { key: "father_mobile", field: "father_mobile", required: false },
-  { key: "mother_mobile", field: "mother_mobile", required: false },
-  { key: "gender (MALE/FEMALE/OTHER)", field: "gender", required: false },
-  { key: "dob (YYYY-MM-DD)", field: "dob", required: false },
-  { key: "batch_year", field: "batch_year", required: false },
-  { key: "session", field: "session", required: false },
-  { key: "mode_of_admission", field: "mode_of_admission", required: false },
-  { key: "admission_year", field: "admission_year", required: false },
-  { key: "admission_date (YYYY-MM-DD)", field: "admission_date", required: false },
-  { key: "is_hosteller (true/false)", field: "is_hosteller", required: false },
-  { key: "is_using_transport (true/false)", field: "is_using_transport", required: false },
-  { key: "nick_name", field: "nick_name", required: false },
-  { key: "category", field: "category", required: false },
-  { key: "religion", field: "religion", required: false },
-  { key: "biometric_id", field: "biometric_id", required: false },
-  { key: "local_address", field: "local_address", required: false },
-  { key: "local_address_city", field: "local_address_city", required: false },
-  { key: "local_address_state", field: "local_address_state", required: false },
-  { key: "local_address_zipcode", field: "local_address_zipcode", required: false },
-  { key: "permanent_address", field: "permanent_address", required: false },
-  { key: "permanent_address_city", field: "permanent_address_city", required: false },
-  { key: "permanent_address_state", field: "permanent_address_state", required: false },
-  { key: "permanent_address_zipcode", field: "permanent_address_zipcode", required: false },
-  { key: "aadhar_no", field: "aadhar_no", required: false },
-  { key: "pan_no", field: "pan_no", required: false },
+  { key: "email*",                         field: "email",              required: true  },
+  { key: "password",                       field: "password",           required: false },
+  { key: "first_name*",                    field: "first_name",         required: true  },
+  { key: "last_name*",                     field: "last_name",          required: true  },
+  { key: "roll_number*",                   field: "roll_number",        required: true  },
+  { key: "enrollment_no",                  field: "enrollment_no",      required: false },
+  { key: "group_no",                       field: "group_no",           required: false },
+  { key: "contact_number*",               field: "contact_number",     required: true  },
+  { key: "alt_contact_number",             field: "alt_contact_number", required: false },
+  { key: "personal_email",                 field: "personal_email",     required: false },
+  { key: "father_name*",                   field: "father_name",        required: true  },
+  { key: "mother_name*",                   field: "mother_name",        required: true  },
+  { key: "father_mobile",                  field: "father_mobile",      required: false },
+  { key: "mother_mobile",                  field: "mother_mobile",      required: false },
+  { key: "gender (MALE/FEMALE/OTHER)",     field: "gender",             required: false },
+  { key: "dob (YYYY-MM-DD)",              field: "dob",                required: false },
+  { key: "batch_year",                     field: "batch_year",         required: false },
+  { key: "session",                        field: "session",            required: false },
+  { key: "mode_of_admission",             field: "mode_of_admission",  required: false },
+  { key: "admission_year",                 field: "admission_year",     required: false },
+  { key: "admission_date (YYYY-MM-DD)",   field: "admission_date",     required: false },
+  { key: "is_hosteller (true/false)",     field: "is_hosteller",       required: false },
+  { key: "is_using_transport (true/false)",field:"is_using_transport",  required: false },
+  { key: "nick_name",                      field: "nick_name",          required: false },
+  { key: "category",                       field: "category",           required: false },
+  { key: "religion",                       field: "religion",           required: false },
+  { key: "biometric_id",                   field: "biometric_id",       required: false },
+  { key: "local_address",                  field: "local_address",      required: false },
+  { key: "local_address_city",             field: "local_address_city", required: false },
+  { key: "local_address_state",            field: "local_address_state",required: false },
+  { key: "local_address_zipcode",          field: "local_address_zipcode",required:false},
+  { key: "permanent_address",              field: "permanent_address",  required: false },
+  { key: "permanent_address_city",         field: "permanent_address_city",required:false},
+  { key: "permanent_address_state",        field: "permanent_address_state",required:false},
+  { key: "permanent_address_zipcode",      field: "permanent_address_zipcode",required:false},
+  { key: "aadhar_no",                      field: "aadhar_no",          required: false },
+  { key: "pan_no",                         field: "pan_no",             required: false },
 ];
 
 // Section-specific locked columns (not editable by user, pre-filled)
 const LOCKED_COLS = ["section_id", "academic_year*", "semester*", "section_name", "course", "program", "batch"];
 
 // Safe sheet name (Excel limit: 31 chars, no special chars)
-const safeSheetName = (s) =>
-  `${s.course?.name || ""}–${s.name} Sem${s.semester}`
-    .replace(/[\\/*?:[\]]/g, "")
-    .substring(0, 31);
+const safeSheetName = (() => {
+  const _used = new Set();
+  return (s) => {
+    // Include prog + course + sem + section to avoid collisions
+    const prog   = s.course?.program?.name || "";
+    const course = s.course?.name          || "";
+    const sem    = s.semester ? `Sem${s.semester}` : "";
+    const sec    = s.name || "";
+    let base = [prog, course, sem, sec].filter(Boolean).join(" ")
+      .replace(/[\\/*?:[\]]/g, "").trim();
+    let name = base.substring(0, 31);
+    if (_used.has(name)) {
+      let i = 2;
+      while (_used.has(name)) {
+        const suffix = `(${i++})`;
+        name = base.substring(0, 31 - suffix.length) + suffix;
+      }
+    }
+    _used.add(name);
+    return name;
+  };
+})();
 
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -794,23 +811,23 @@ export const demoteStudent = async (id) => {
   const prevSem = enrollment.semester - 1;
   // If going from odd to even, roll back academic year
   const [y1, y2] = enrollment.academic_year.split("-").map(Number);
-  const prevYear = enrollment.semester % 2 === 1 ? `${y1 - 1}-${y2 - 1}` : enrollment.academic_year;
+  const prevYear = enrollment.semester % 2 === 1 ? `${y1-1}-${y2-1}` : enrollment.academic_year;
 
   return masterClient.$transaction(async (tx) => {
     await tx.studentEnrollment.update({ where: { id: enrollment.id }, data: { status: "COMPLETED", is_current: false } });
     await tx.studentEnrollment.create({
       data: {
-        student_id: student.id,
-        section_id: student.section_id,
-        dept_id: enrollment.dept_id,
-        course_id: enrollment.course_id,
-        program_id: enrollment.program_id,
+        student_id:    student.id,
+        section_id:    student.section_id,
+        dept_id:       enrollment.dept_id,
+        course_id:     enrollment.course_id,
+        program_id:    enrollment.program_id,
         academic_year: prevYear,
-        semester: prevSem,
-        batch_year: enrollment.batch_year ?? 0,
-        status: "ACTIVE",
-        is_current: true,
-        remarks: "Demoted by admin",
+        semester:      prevSem,
+        batch_year:    enrollment.batch_year ?? 0,
+        status:        "ACTIVE",
+        is_current:    true,
+        remarks:       "Demoted by admin",
       },
     });
     return replicaClient.student.findUnique({ where: { id }, include: studentInclude });
@@ -864,7 +881,7 @@ export const generateStudentTemplate = async () => {
       "batch",
     ];
     const dataHeaders = STUDENT_COLS.map((c) => c.key);
-    const allHeaders = [...lockedHeaders, ...dataHeaders];
+    const allHeaders  = [...lockedHeaders, ...dataHeaders];
 
     // Example row — locked cols pre-filled, data cols empty
     const year = (() => {
@@ -876,10 +893,10 @@ export const generateStudentTemplate = async () => {
       year,
       sec.semester,
       sec.name,
-      sec.course?.name || "",
+      sec.course?.name        || "",
       sec.course?.program?.name || "",
       sec.course?.program?.department?.name || "",
-      sec.batch || "",
+      sec.batch               || "",
     ];
     const exampleValues = [
       "student@college.edu", "Student@123",
@@ -959,14 +976,14 @@ export const bulkCreateStudents = async (buffer) => {
     if (SKIP_SHEETS.has(sheetName.toLowerCase())) continue;
 
     const sheet = wb.Sheets[sheetName];
-    const rows = xlsx.utils.sheet_to_json(sheet, { defval: "" });
+    const rows  = xlsx.utils.sheet_to_json(sheet, { defval: "" });
     if (!rows.length) continue;
 
     // Detect if this is a section sheet by checking for section_id column (locked)
     const firstRow = rows[0];
     const sectionIdVal =
       firstRow["🔒 section_id"] || firstRow["section_id"] ||
-      firstRow["section_id*"] || "";
+      firstRow["section_id*"]   || "";
 
     for (const row of rows) {
       // Skip example/header-looking rows
@@ -983,9 +1000,9 @@ export const bulkCreateStudents = async (buffer) => {
       // Extract academic_year + semester from locked cols
       const academic_year = String(
         row["🔒 academic_year* (e.g. 2024-2025)"] ||
-        row["academic_year* (e.g. 2024-2025)"] ||
-        row["academic_year*"] ||
-        row["academic_year"] || ""
+        row["academic_year* (e.g. 2024-2025)"]    ||
+        row["academic_year*"]                      ||
+        row["academic_year"]                       || ""
       ).trim();
 
       const semester_raw = String(
@@ -1001,25 +1018,25 @@ export const bulkCreateStudents = async (buffer) => {
   for (let i = 0; i < allRows.length; i++) {
     const { row, sheetName, section_id, academic_year, semester_raw } = allRows[i];
 
-    const email = String(row["email*"] || row["email"] || "").trim();
-    const first_name = String(row["first_name*"] || row["first_name"] || "").trim();
-    const last_name = String(row["last_name*"] || row["last_name"] || "").trim();
-    const roll_number = String(row["roll_number*"] || row["roll_number"] || "").trim();
+    const email        = String(row["email*"]       || row["email"]       || "").trim();
+    const first_name   = String(row["first_name*"]  || row["first_name"]  || "").trim();
+    const last_name    = String(row["last_name*"]   || row["last_name"]   || "").trim();
+    const roll_number  = String(row["roll_number*"] || row["roll_number"] || "").trim();
     const contact_number = String(row["contact_number*"] || row["contact_number"] || "").trim();
-    const father_name = String(row["father_name*"] || row["father_name"] || "").trim();
-    const mother_name = String(row["mother_name*"] || row["mother_name"] || "").trim();
+    const father_name  = String(row["father_name*"] || row["father_name"] || "").trim();
+    const mother_name  = String(row["mother_name*"] || row["mother_name"] || "").trim();
 
     const rowLabel = `Sheet "${sheetName}" row ${i + 2}`;
 
-    if (!email) { results.failed.push({ row: rowLabel, reason: "email required" }); continue; }
-    if (!first_name) { results.failed.push({ row: rowLabel, reason: "first_name required" }); continue; }
-    if (!last_name) { results.failed.push({ row: rowLabel, reason: "last_name required" }); continue; }
-    if (!roll_number) { results.failed.push({ row: rowLabel, reason: "roll_number required" }); continue; }
-    if (!section_id) { results.failed.push({ row: rowLabel, reason: "section_id missing — check locked column" }); continue; }
-    if (!academic_year) { results.failed.push({ row: rowLabel, reason: "academic_year missing" }); continue; }
+    if (!email)          { results.failed.push({ row: rowLabel, reason: "email required" });          continue; }
+    if (!first_name)     { results.failed.push({ row: rowLabel, reason: "first_name required" });     continue; }
+    if (!last_name)      { results.failed.push({ row: rowLabel, reason: "last_name required" });      continue; }
+    if (!roll_number)    { results.failed.push({ row: rowLabel, reason: "roll_number required" });    continue; }
+    if (!section_id)     { results.failed.push({ row: rowLabel, reason: "section_id missing — check locked column" }); continue; }
+    if (!academic_year)  { results.failed.push({ row: rowLabel, reason: "academic_year missing" });   continue; }
     if (!contact_number) { results.failed.push({ row: rowLabel, reason: "contact_number required" }); continue; }
-    if (!father_name) { results.failed.push({ row: rowLabel, reason: "father_name required" }); continue; }
-    if (!mother_name) { results.failed.push({ row: rowLabel, reason: "mother_name required" }); continue; }
+    if (!father_name)    { results.failed.push({ row: rowLabel, reason: "father_name required" });    continue; }
+    if (!mother_name)    { results.failed.push({ row: rowLabel, reason: "mother_name required" });    continue; }
 
     const semester = parseInt(semester_raw);
     if (!semester || semester < 1 || semester > 8) {
@@ -1037,41 +1054,41 @@ export const bulkCreateStudents = async (buffer) => {
     try {
       const student = await createStudent({
         email,
-        password: str(["password"]) || "Student@123",
+        password:       str(["password"])                          || "Student@123",
         first_name, last_name,
-        name: `${first_name} ${last_name}`,
-        roll_number, section_id, academic_year, semester,
-        enrollment_no: str(["enrollment_no"]),
-        group_no: str(["group_no"]),
+        name:           `${first_name} ${last_name}`,
+        roll_number,    section_id, academic_year, semester,
+        enrollment_no:  str(["enrollment_no"]),
+        group_no:       str(["group_no"]),
         contact_number,
         alt_contact_number: str(["alt_contact_number"]),
         personal_email: str(["personal_email"]),
         father_name, mother_name,
-        father_mobile: str(["father_mobile"]),
-        mother_mobile: str(["mother_mobile"]),
-        gender: str(["gender (MALE/FEMALE/OTHER)", "gender"])?.toUpperCase() || null,
-        dob: str(["dob (YYYY-MM-DD)", "dob"]),
-        batch_year: str(["batch_year"]),
-        session: str(["session"]),
+        father_mobile:  str(["father_mobile"]),
+        mother_mobile:  str(["mother_mobile"]),
+        gender:         str(["gender (MALE/FEMALE/OTHER)", "gender"])?.toUpperCase() || null,
+        dob:            str(["dob (YYYY-MM-DD)", "dob"]),
+        batch_year:     str(["batch_year"]),
+        session:        str(["session"]),
         mode_of_admission: str(["mode_of_admission"]),
         admission_year: str(["admission_year"]),
         admission_date: str(["admission_date (YYYY-MM-DD)", "admission_date"]),
-        is_hosteller: str(["is_hosteller (true/false)", "is_hosteller"]) === "true",
+        is_hosteller:   str(["is_hosteller (true/false)", "is_hosteller"]) === "true",
         is_using_transport: str(["is_using_transport (true/false)", "is_using_transport"]) === "true",
-        nick_name: str(["nick_name"]),
-        category: str(["category"]),
-        religion: str(["religion"]),
-        biometric_id: str(["biometric_id"]),
-        local_address: str(["local_address"]),
-        local_address_city: str(["local_address_city"]),
+        nick_name:      str(["nick_name"]),
+        category:       str(["category"]),
+        religion:       str(["religion"]),
+        biometric_id:   str(["biometric_id"]),
+        local_address:  str(["local_address"]),
+        local_address_city:  str(["local_address_city"]),
         local_address_state: str(["local_address_state"]),
         local_address_zipcode: str(["local_address_zipcode"]),
         permanent_address: str(["permanent_address"]),
-        permanent_address_city: str(["permanent_address_city"]),
+        permanent_address_city:  str(["permanent_address_city"]),
         permanent_address_state: str(["permanent_address_state"]),
         permanent_address_zipcode: str(["permanent_address_zipcode"]),
         aadhar_no: str(["aadhar_no"]),
-        pan_no: str(["pan_no"]),
+        pan_no:    str(["pan_no"]),
       });
       results.created.push({ row: rowLabel, id: student.id, name: student.name, roll_number: student.roll_no });
     } catch (err) {
