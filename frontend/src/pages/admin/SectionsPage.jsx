@@ -6,6 +6,7 @@ import {
   fetchCourses, fetchSubjects, fetchPrograms, fetchDepartments,
 } from "../../redux/academic/academicSlice.js";
 import axiosInstance from "../../lib/axios.js";
+
 import { Layers, ChevronRight, Plus, X, Pencil, Trash2, Upload, Download, UserCheck, ArrowUp, Users, Search, Zap, Loader2 } from "lucide-react";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ConfirmModal, Spinner, ResultsModal } from "../AcademicPage.jsx";
 import { PromoteSectionsModal, SectionBulkStatusModal } from "../../components/SectionPromoteModal.jsx";
 import { cn } from "../../lib/utils.js";
@@ -21,6 +23,14 @@ import { notify } from "../../hooks/notify.js";
 
 const TYPES = ["REGULAR", "ELECTIVE", "COMBINED", "TRAINING", "OTHER"];
 const STATUSES = ["ACTIVE", "COMPLETED", "REMOVED"];
+const SEC_STATUSES = ["ACTIVE", "COMPLETED", "ARCHIVED", "ALUMNI", "SUSPENDED"];
+const SEC_STATUS_META = {
+  ACTIVE: { label: "Active", cls: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" },
+  COMPLETED: { label: "Completed", cls: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" },
+  ARCHIVED: { label: "Archived", cls: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300" },
+  ALUMNI: { label: "Alumni", cls: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400" },
+  SUSPENDED: { label: "Suspended", cls: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" },
+};
 const TYPE_COLOR = {
   REGULAR: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
   ELECTIVE: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
@@ -36,7 +46,7 @@ const STATUS_COLOR = {
 
 // ── Section modal ───────────────────────────────────────────────
 function SectionModal({ open, onClose, onSubmit, initialData, loading, courses, faculty }) {
-  const BLANK = { name: "", course_id: "", semester: "1", batch: "", room_no: "", class_coordinator_id: "none" };
+  const BLANK = { name: "", course_id: "", semester: "1", batch: "", room_no: "", class_coordinator_id: "none", status: "ACTIVE" };
   const [form, setForm] = useState(BLANK);
 
   useEffect(() => {
@@ -48,6 +58,7 @@ function SectionModal({ open, onClose, onSubmit, initialData, loading, courses, 
       batch: initialData?.batch || "",
       room_no: initialData?.room_no || "",
       class_coordinator_id: initialData?.class_coordinator_id || initialData?.class_coordinator?.id || "none",
+      status: initialData?.status || "ACTIVE",
     });
   }, [open, initialData]);
 
@@ -62,6 +73,7 @@ function SectionModal({ open, onClose, onSubmit, initialData, loading, courses, 
       course_id: form.course_id,
       semester: parseInt(form.semester),
       batch: form.batch.trim(),
+      status: form.status || "ACTIVE",
       room_no: form.room_no.trim() || null,
       class_coordinator_id: form.class_coordinator_id === "none" ? null : form.class_coordinator_id,
     });
@@ -86,6 +98,22 @@ function SectionModal({ open, onClose, onSubmit, initialData, loading, courses, 
                   : courses.map((c) => (
                     <SelectItem key={c.id} value={c.id}>{c.name} — {c.program?.name}</SelectItem>
                   ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Status</Label>
+            <Select value={form.status} onValueChange={(v) => setForm((f) => ({ ...f, status: v }))}>
+              <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {SEC_STATUSES.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    <span className="flex items-center gap-2">
+                      <span className={cn("w-2 h-2 rounded-full inline-block", SEC_STATUS_META[s]?.cls.split(" ")[0])} />
+                      {SEC_STATUS_META[s]?.label}
+                    </span>
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -342,6 +370,135 @@ function SubjectRow({ ss, faculty, onUpdate, onRemove, loading }) {
   );
 }
 
+
+// ── Bulk Section Status Modal ──────────────────────────────────
+function BulkSectionStatusModal({ open, onClose, onSuccess }) {
+  const [status, setStatus] = useState("COMPLETED");
+  const [selected, setSelected] = useState(new Set());
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState(null);
+  const [search, setSearch] = useState("");
+  const [sections, setSections] = useState([]);
+
+  useEffect(() => {
+    if (!open) return;
+    setSelected(new Set()); setResults(null); setSearch(""); setStatus("COMPLETED");
+    // Fetch ALL sections (not filtered by status) for bulk management
+    axiosInstance.get("/sections", { params: { limit: 500 } })
+      .then((r) => setSections(r.data?.data?.sections || []))
+      .catch(() => { });
+  }, [open]);
+
+  const filtered = sections.filter((s) =>
+    !search || s.name.toLowerCase().includes(search.toLowerCase()) ||
+    s.course?.name?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const toggleAll = () => {
+    if (selected.size === filtered.length) setSelected(new Set());
+    else setSelected(new Set(filtered.map((s) => s.id)));
+  };
+
+  const handle = async () => {
+    if (!selected.size) { notify.error("Select at least one section"); return; }
+    setLoading(true);
+    try {
+      await Promise.all([...selected].map((id) =>
+        axiosInstance.patch(`/sections/${id}`, { status })
+      ));
+      setResults({ updated: selected.size, status });
+      notify.success(`${selected.size} section(s) marked as ${status}`);
+      onSuccess();
+    } catch (e) { notify.error(e.response?.data?.message || "Failed"); }
+    finally { setLoading(false); }
+  };
+
+  if (!open) return null;
+  return (
+    <Dialog open onOpenChange={(v) => { if (!v) onClose(); }}>
+      <DialogContent className="sm:max-w-lg max-h-[85vh] flex flex-col p-0 gap-0">
+        <div className="px-6 pt-6 pb-4 border-b border-border">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Layers size={16} /> Bulk Update Section Status
+            </DialogTitle>
+            <DialogDescription>Select sections and set their status.</DialogDescription>
+          </DialogHeader>
+        </div>
+        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+          {results ? (
+            <div className="p-4 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-xl text-center space-y-1">
+              <p className="text-2xl font-bold text-green-700 dark:text-green-400">{results.updated}</p>
+              <p className="text-sm text-green-600 dark:text-green-400">sections marked as <strong>{results.status}</strong></p>
+            </div>
+          ) : (
+            <>
+              <div className="space-y-1.5">
+                <Label>New Status</Label>
+                <div className="flex gap-2 flex-wrap">
+                  {SEC_STATUSES.map((s) => (
+                    <button key={s} onClick={() => setStatus(s)}
+                      className={cn("px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors",
+                        status === s
+                          ? SEC_STATUS_META[s]?.cls + " border-transparent"
+                          : "border-border bg-background text-muted-foreground hover:bg-muted")}>
+                      {SEC_STATUS_META[s]?.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label>Select Sections ({selected.size} selected)</Label>
+                  <button onClick={toggleAll} className="text-xs text-primary hover:underline">
+                    {selected.size === filtered.length ? "Deselect all" : "Select all"}
+                  </button>
+                </div>
+                <div className="relative">
+                  <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                  <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Filter sections…"
+                    className="w-full h-8 pl-7 pr-3 text-sm border border-input rounded-lg bg-background outline-none focus:ring-2 focus:ring-ring" />
+                </div>
+                <div className="max-h-64 overflow-y-auto border border-border rounded-xl divide-y divide-border">
+                  {filtered.map((s) => (
+                    <label key={s.id} className="flex items-center gap-3 px-3 py-2.5 hover:bg-muted/30 cursor-pointer">
+                      <Checkbox
+                        checked={selected.has(s.id)}
+                        onCheckedChange={(v) => setSelected((p) => { const n = new Set(p); v ? n.add(s.id) : n.delete(s.id); return n; })}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground truncate">
+                          {s.course?.program?.name} {s.course?.name} — Sec {s.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">Sem {s.semester} · {s.batch}</p>
+                      </div>
+                      <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0",
+                        SEC_STATUS_META[s.status || "ACTIVE"]?.cls)}>
+                        {SEC_STATUS_META[s.status || "ACTIVE"]?.label}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+        <div className="px-6 py-4 border-t border-border bg-muted/20 flex gap-3 justify-end">
+          {results
+            ? <Button onClick={onClose}>Close</Button>
+            : (<>
+              <Button variant="outline" onClick={onClose}>Cancel</Button>
+              <Button onClick={handle} disabled={loading || !selected.size}>
+                {loading && <Loader2 size={13} className="mr-1.5 animate-spin" />}
+                Update {selected.size} Section{selected.size !== 1 ? "s" : ""}
+              </Button>
+            </>)}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 // ── Section row (collapsible) ───────────────────────────────────
 function SectionRow({ section, allSubjects, allFaculty, onEdit, onDelete, onPromote, onBulkStatus, onRefresh }) {
   const dispatch = useDispatch();
@@ -399,6 +556,12 @@ function SectionRow({ section, allSubjects, allFaculty, onEdit, onDelete, onProm
         </td>
         <td className="px-3 py-3 text-sm text-muted-foreground hidden md:table-cell">Sem {section.semester}</td>
         <td className="px-3 py-3 text-sm text-muted-foreground hidden md:table-cell">{section.batch}</td>
+        <td className="px-3 py-3 hidden sm:table-cell">
+          <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap",
+            SEC_STATUS_META[section.status || "ACTIVE"]?.cls || "bg-muted text-muted-foreground")}>
+            {SEC_STATUS_META[section.status || "ACTIVE"]?.label || section.status || "Active"}
+          </span>
+        </td>
         <td className="px-3 py-3 text-sm hidden lg:table-cell">
           {section.class_coordinator ? (
             <span className="flex items-center gap-1.5 text-foreground">
@@ -442,7 +605,7 @@ function SectionRow({ section, allSubjects, allFaculty, onEdit, onDelete, onProm
 
       {expanded && (
         <tr>
-          <td colSpan={8} className="bg-muted/10 border-b border-border">
+          <td colSpan={9} className="bg-muted/10 border-b border-border">
             <div className="px-6 py-4">
               <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
@@ -528,12 +691,14 @@ export default function SectionsPage() {
   const [search, setSearch] = useState("");
   const [filterCourse, setFC] = useState("all");
   const [filterSem, setFS] = useState("all");
+  const [filterStatus, setFStatus] = useState("ACTIVE");
   const [filterDept, setFD] = useState("all");
   const [page, setPage] = useState(1);
   const [modal, setModal] = useState(null);
   const [del, setDel] = useState(null);
   const [results, setResults] = useState(null);
   const [promoteModal, setPromoteModal] = useState(false);
+  const [bulkStatusOpen, setBulkStatusOpen] = useState(false);
   const [promoteInit, setPromoteInit] = useState(null); // pre-selected section ids
   const [statusModal, setStatusModal] = useState(null); // section object
   const fileRef = useRef();
@@ -545,9 +710,10 @@ export default function SectionsPage() {
       ...(search && { search }),
       ...(filterCourse !== "all" && { course_id: filterCourse }),
       ...(filterSem !== "all" && { semester: filterSem }),
+      ...(filterStatus !== "all" && { status: filterStatus }),
       ...(filterDept !== "all" && { dept_id: filterDept }),
     }));
-  }, [page, search, filterCourse, filterSem, filterDept, dispatch]);
+  }, [page, search, filterCourse, filterSem, filterDept, filterStatus, dispatch]);
 
   useEffect(() => { load(); }, [load]);
   useEffect(() => {
@@ -618,7 +784,15 @@ export default function SectionsPage() {
             <h1 className="text-xl font-semibold text-foreground flex items-center gap-2">
               <Layers size={19} className="text-muted-foreground" /> Sections
             </h1>
-            <p className="text-sm text-muted-foreground mt-0.5">{pagination.total} sections</p>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {pagination.total} section{pagination.total !== 1 ? "s" : ""}
+              {filterStatus !== "all" && (
+                <span className={cn("ml-1.5 text-xs font-semibold px-1.5 py-0.5 rounded-full",
+                  SEC_STATUS_META[filterStatus]?.cls)}>
+                  {SEC_STATUS_META[filterStatus]?.label}
+                </span>
+              )}
+            </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <input ref={fileRef} type="file" accept=".xlsx" className="sr-only"
@@ -642,6 +816,10 @@ export default function SectionsPage() {
             </Button>
             <Button variant="outline" size="sm" onClick={() => subFileRef.current?.click()}>
               <Upload size={13} className="mr-1.5" /> Bulk Assign
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setBulkStatusOpen(true)}
+              className="text-blue-700 border-blue-200 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-800">
+              <Layers size={13} className="mr-1.5" /> Bulk Status
             </Button>
             <Button variant="outline" size="sm" onClick={() => { setPromoteInit(null); setPromoteModal(true); }}
               className="text-green-700 border-green-200 hover:bg-green-50 dark:text-green-400 dark:border-green-800">
@@ -684,6 +862,24 @@ export default function SectionsPage() {
               {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => <SelectItem key={n} value={String(n)}>Sem {n}</SelectItem>)}
             </SelectContent>
           </Select>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <button onClick={() => { setFStatus("all"); setPage(1); }}
+              className={cn("h-8 px-3 rounded-lg text-xs font-medium border transition-colors",
+                filterStatus === "all"
+                  ? "bg-foreground text-background border-transparent"
+                  : "border-border bg-background text-muted-foreground hover:text-foreground hover:bg-muted")}>
+              All
+            </button>
+            {SEC_STATUSES.map((s) => (
+              <button key={s} onClick={() => { setFStatus(s); setPage(1); }}
+                className={cn("h-8 px-3 rounded-lg text-xs font-semibold border transition-colors",
+                  filterStatus === s
+                    ? SEC_STATUS_META[s]?.cls + " border-transparent"
+                    : "border-border bg-background text-muted-foreground hover:text-foreground hover:bg-muted")}>
+                {SEC_STATUS_META[s]?.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Table */}
@@ -693,7 +889,7 @@ export default function SectionsPage() {
               <thead className="border-b border-border bg-muted/30">
                 <tr>
                   <th className="w-8 px-2 py-3" />
-                  {["Section", "Course", "Sem", "Batch", "Coordinator", "Subjects", "Actions"].map((h, i) => (
+                  {["Section", "Course", "Sem", "Batch", "Status", "Coordinator", "Subjects", "Actions"].map((h, i) => (
                     <th key={h} className={cn(
                       "px-3 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wide",
                       i < 6 ? "text-left" : "text-right",
@@ -706,11 +902,11 @@ export default function SectionsPage() {
               </thead>
               <tbody>
                 {loading && list.length === 0 ? (
-                  <tr><td colSpan={8} className="text-center py-12">
+                  <tr><td colSpan={9} className="text-center py-12">
                     <Spinner size={20} className="mx-auto text-muted-foreground" />
                   </td></tr>
                 ) : list.length === 0 ? (
-                  <tr><td colSpan={8} className="text-center py-12 text-sm text-muted-foreground">
+                  <tr><td colSpan={9} className="text-center py-12 text-sm text-muted-foreground">
                     No sections found. Add one or upload in bulk.
                   </td></tr>
                 ) : list.map((section) => (
@@ -757,6 +953,12 @@ export default function SectionsPage() {
         sections={list}
         initialSelected={promoteInit}
         onSuccess={load} />
+
+      <BulkSectionStatusModal
+        open={bulkStatusOpen}
+        onClose={() => setBulkStatusOpen(false)}
+        onSuccess={load}
+      />
 
       <SectionBulkStatusModal
         open={!!statusModal}

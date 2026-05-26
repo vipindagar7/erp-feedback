@@ -187,6 +187,7 @@ exports.Prisma.SectionScalarFieldEnum = {
   course_id: 'course_id',
   semester: 'semester',
   batch: 'batch',
+  status: 'status',
   room_no: 'room_no',
   class_coordinator_id: 'class_coordinator_id'
 };

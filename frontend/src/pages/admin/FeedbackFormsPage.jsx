@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { notify } from "../../hooks/notify.js";
 
+
 // ── Constants ──────────────────────────────────────────────────
 const FORM_TYPES = [
   { value: "TEACHING", label: "Teaching", icon: GraduationCap, color: "blue", desc: "Per subject×faculty for selected sections — creates a group" },
@@ -187,7 +188,7 @@ function FormModal({ open, onClose, onSaved, editData = null }) {
     }
     Promise.all([
       axiosInstance.get(EP.feedback.categories),
-      axiosInstance.get(EP.sections?.list || "/sections", { params: { limit: 200 } }),
+      axiosInstance.get(EP.sections?.list || "/sections", { params: { limit: 200, status: "ACTIVE" } }),
       axiosInstance.get("/groups").catch(() => ({ data: { data: { groups: [] } } })),
     ]).then(([cat, sec, grp]) => setRefData({
       categories: extractList(cat.data, "categories"),

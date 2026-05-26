@@ -119,24 +119,22 @@ model Subject {
 
 // ─── Section ───────────────────────────────────────────────────
 model Section {
-  id        String  @id @default(uuid())
-  name      String
-  course_id String
-  semester  Int
-  batch     String
-  room_no   String?
-
+  id                   String  @id @default(uuid())
+  name                 String
+  course_id            String
+  semester             Int
+  batch                String // mandatory e.g. "2023-2027"
+  status               String  @default("ACTIVE") // ACTIVE | COMPLETED | ARCHIVED | ALUMNI | SUSPENDED
+  room_no              String?
   class_coordinator_id String?
 
-  course            Course   @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  course            Course   @relation(fields: [course_id], references: [id])
   class_coordinator Faculty? @relation("SectionCoordinator", fields: [class_coordinator_id], references: [id])
 
   students        Student[]
   enrollments     StudentEnrollment[]
   feedbackForms   FeedbackForm[]
   sectionSubjects SectionSubject[]
-
-  @@index([course_id])
 }
 
 model SectionSubject {
@@ -398,8 +396,7 @@ model FeedbackForm {
   is_active    Boolean  @default(true)
   action_taken String?
   start_date   DateTime
-
-  end_date DateTime
+  end_date     DateTime
 
   // Type-specific targeting
   all_students  Boolean @default(false)
@@ -412,21 +409,22 @@ model FeedbackForm {
   section_id String?
   group_id   String?
 
-  category            FeedbackCategory      @relation(fields: [category_id], references: [id])
-  department          Department?           @relation(fields: [department_id], references: [id])
-  course              Course?               @relation(fields: [course_id], references: [id])
-  faculty             Faculty?              @relation(fields: [faculty_id], references: [id])
-  subject             Subject?              @relation(fields: [subject_id], references: [id])
-  section             Section?              @relation(fields: [section_id], references: [id])
-  responses           FeedbackResponse[]
-  students            FeedbackFormStudent[]
-  specialGroup        SpecialGroup?         @relation(fields: [specialGroupId], references: [id])
   specialGroupId      String?
-  feedbackFormGroup   FeedbackFormGroup?    @relation(fields: [feedbackFormGroupId], references: [id])
   feedbackFormGroupId String?
+
+  category          FeedbackCategory   @relation(fields: [category_id], references: [id])
+  department        Department?        @relation(fields: [department_id], references: [id])
+  course            Course?            @relation(fields: [course_id], references: [id])
+  faculty           Faculty?           @relation(fields: [faculty_id], references: [id])
+  subject           Subject?           @relation(fields: [subject_id], references: [id])
+  section           Section?           @relation(fields: [section_id], references: [id])
+  specialGroup      SpecialGroup?      @relation(fields: [specialGroupId], references: [id])
+  feedbackFormGroup FeedbackFormGroup? @relation(fields: [feedbackFormGroupId], references: [id], onDelete: SetNull)
+
+  responses FeedbackResponse[]
+  students  FeedbackFormStudent[]
 }
 
-// ── Feedback Form Groups (Teaching bundles) ─────────────────────────────────
 // ── Feedback Form Groups (Teaching bundles) ─────────────────────────────────
 model FeedbackFormGroup {
   id          String   @id @default(uuid())
@@ -533,3 +531,7 @@ model CurriculumSubject {
   @@index([program_id])
   @@index([course_id, semester])
 }
+
+// ── Feedback Form Groups migration helper ────────────────────────────────────
+// Run this SQL if FeedbackFormGroup table doesn't exist yet:
+// psql $DATABASE_URL -f migrations/add_feedback_form_group.sql

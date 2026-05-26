@@ -37,7 +37,7 @@ export const deleteSubject = t("subj/delete", (id) => axiosInstance.delete(EP.su
 export const bulkUploadSubjects = t("subj/bulkUpload", (fd) => axiosInstance.post(`${EP.subjects.list}/bulk-upload`, fd, { headers: { "Content-Type": "multipart/form-data" } }));
 
 // ── Section thunks ─────────────────────────────────────────────
-export const fetchSections = t("sec/fetchAll", (p) => axiosInstance.get(EP.sections.list, { params: p }));
+export const fetchSections = t("sec/fetchAll", (p) => axiosInstance.get(EP.sections.list, { params: { status: "ACTIVE", ...p } }));
 export const createSection = t("sec/create", (d) => axiosInstance.post(EP.sections.create, d));
 export const updateSection = t("sec/update", ({ id, data }) => axiosInstance.patch(EP.sections.update(id), data));
 export const deleteSection = t("sec/delete", (id) => axiosInstance.delete(EP.sections.delete(id)));

@@ -12173,6 +12173,7 @@ export namespace Prisma {
     course_id: string | null
     semester: number | null
     batch: string | null
+    status: string | null
     room_no: string | null
     class_coordinator_id: string | null
   }
@@ -12183,6 +12184,7 @@ export namespace Prisma {
     course_id: string | null
     semester: number | null
     batch: string | null
+    status: string | null
     room_no: string | null
     class_coordinator_id: string | null
   }
@@ -12193,6 +12195,7 @@ export namespace Prisma {
     course_id: number
     semester: number
     batch: number
+    status: number
     room_no: number
     class_coordinator_id: number
     _all: number
@@ -12213,6 +12216,7 @@ export namespace Prisma {
     course_id?: true
     semester?: true
     batch?: true
+    status?: true
     room_no?: true
     class_coordinator_id?: true
   }
@@ -12223,6 +12227,7 @@ export namespace Prisma {
     course_id?: true
     semester?: true
     batch?: true
+    status?: true
     room_no?: true
     class_coordinator_id?: true
   }
@@ -12233,6 +12238,7 @@ export namespace Prisma {
     course_id?: true
     semester?: true
     batch?: true
+    status?: true
     room_no?: true
     class_coordinator_id?: true
     _all?: true
@@ -12330,6 +12336,7 @@ export namespace Prisma {
     course_id: string
     semester: number
     batch: string
+    status: string
     room_no: string | null
     class_coordinator_id: string | null
     _count: SectionCountAggregateOutputType | null
@@ -12359,6 +12366,7 @@ export namespace Prisma {
     course_id?: boolean
     semester?: boolean
     batch?: boolean
+    status?: boolean
     room_no?: boolean
     class_coordinator_id?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
@@ -12376,6 +12384,7 @@ export namespace Prisma {
     course_id?: boolean
     semester?: boolean
     batch?: boolean
+    status?: boolean
     room_no?: boolean
     class_coordinator_id?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
@@ -12388,6 +12397,7 @@ export namespace Prisma {
     course_id?: boolean
     semester?: boolean
     batch?: boolean
+    status?: boolean
     room_no?: boolean
     class_coordinator_id?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
@@ -12400,11 +12410,12 @@ export namespace Prisma {
     course_id?: boolean
     semester?: boolean
     batch?: boolean
+    status?: boolean
     room_no?: boolean
     class_coordinator_id?: boolean
   }
 
-  export type SectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "course_id" | "semester" | "batch" | "room_no" | "class_coordinator_id", ExtArgs["result"]["section"]>
+  export type SectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "course_id" | "semester" | "batch" | "status" | "room_no" | "class_coordinator_id", ExtArgs["result"]["section"]>
   export type SectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     class_coordinator?: boolean | Section$class_coordinatorArgs<ExtArgs>
@@ -12439,6 +12450,7 @@ export namespace Prisma {
       course_id: string
       semester: number
       batch: string
+      status: string
       room_no: string | null
       class_coordinator_id: string | null
     }, ExtArgs["result"]["section"]>
@@ -12875,6 +12887,7 @@ export namespace Prisma {
     readonly course_id: FieldRef<"Section", 'String'>
     readonly semester: FieldRef<"Section", 'Int'>
     readonly batch: FieldRef<"Section", 'String'>
+    readonly status: FieldRef<"Section", 'String'>
     readonly room_no: FieldRef<"Section", 'String'>
     readonly class_coordinator_id: FieldRef<"Section", 'String'>
   }
@@ -27919,10 +27932,10 @@ export namespace Prisma {
     faculty?: boolean | FeedbackForm$facultyArgs<ExtArgs>
     subject?: boolean | FeedbackForm$subjectArgs<ExtArgs>
     section?: boolean | FeedbackForm$sectionArgs<ExtArgs>
-    responses?: boolean | FeedbackForm$responsesArgs<ExtArgs>
-    students?: boolean | FeedbackForm$studentsArgs<ExtArgs>
     specialGroup?: boolean | FeedbackForm$specialGroupArgs<ExtArgs>
     feedbackFormGroup?: boolean | FeedbackForm$feedbackFormGroupArgs<ExtArgs>
+    responses?: boolean | FeedbackForm$responsesArgs<ExtArgs>
+    students?: boolean | FeedbackForm$studentsArgs<ExtArgs>
     _count?: boolean | FeedbackFormCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feedbackForm"]>
 
@@ -28010,10 +28023,10 @@ export namespace Prisma {
     faculty?: boolean | FeedbackForm$facultyArgs<ExtArgs>
     subject?: boolean | FeedbackForm$subjectArgs<ExtArgs>
     section?: boolean | FeedbackForm$sectionArgs<ExtArgs>
-    responses?: boolean | FeedbackForm$responsesArgs<ExtArgs>
-    students?: boolean | FeedbackForm$studentsArgs<ExtArgs>
     specialGroup?: boolean | FeedbackForm$specialGroupArgs<ExtArgs>
     feedbackFormGroup?: boolean | FeedbackForm$feedbackFormGroupArgs<ExtArgs>
+    responses?: boolean | FeedbackForm$responsesArgs<ExtArgs>
+    students?: boolean | FeedbackForm$studentsArgs<ExtArgs>
     _count?: boolean | FeedbackFormCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FeedbackFormIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -28046,10 +28059,10 @@ export namespace Prisma {
       faculty: Prisma.$FacultyPayload<ExtArgs> | null
       subject: Prisma.$SubjectPayload<ExtArgs> | null
       section: Prisma.$SectionPayload<ExtArgs> | null
-      responses: Prisma.$FeedbackResponsePayload<ExtArgs>[]
-      students: Prisma.$FeedbackFormStudentPayload<ExtArgs>[]
       specialGroup: Prisma.$SpecialGroupPayload<ExtArgs> | null
       feedbackFormGroup: Prisma.$FeedbackFormGroupPayload<ExtArgs> | null
+      responses: Prisma.$FeedbackResponsePayload<ExtArgs>[]
+      students: Prisma.$FeedbackFormStudentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -28469,10 +28482,10 @@ export namespace Prisma {
     faculty<T extends FeedbackForm$facultyArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$facultyArgs<ExtArgs>>): Prisma__FacultyClient<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     subject<T extends FeedbackForm$subjectArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$subjectArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     section<T extends FeedbackForm$sectionArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$sectionArgs<ExtArgs>>): Prisma__SectionClient<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    responses<T extends FeedbackForm$responsesArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$responsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    students<T extends FeedbackForm$studentsArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackFormStudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     specialGroup<T extends FeedbackForm$specialGroupArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$specialGroupArgs<ExtArgs>>): Prisma__SpecialGroupClient<$Result.GetResult<Prisma.$SpecialGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     feedbackFormGroup<T extends FeedbackForm$feedbackFormGroupArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$feedbackFormGroupArgs<ExtArgs>>): Prisma__FeedbackFormGroupClient<$Result.GetResult<Prisma.$FeedbackFormGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    responses<T extends FeedbackForm$responsesArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$responsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    students<T extends FeedbackForm$studentsArgs<ExtArgs> = {}>(args?: Subset<T, FeedbackForm$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackFormStudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -29015,6 +29028,44 @@ export namespace Prisma {
   }
 
   /**
+   * FeedbackForm.specialGroup
+   */
+  export type FeedbackForm$specialGroupArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpecialGroup
+     */
+    select?: SpecialGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpecialGroup
+     */
+    omit?: SpecialGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SpecialGroupInclude<ExtArgs> | null
+    where?: SpecialGroupWhereInput
+  }
+
+  /**
+   * FeedbackForm.feedbackFormGroup
+   */
+  export type FeedbackForm$feedbackFormGroupArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackFormGroup
+     */
+    select?: FeedbackFormGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackFormGroup
+     */
+    omit?: FeedbackFormGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedbackFormGroupInclude<ExtArgs> | null
+    where?: FeedbackFormGroupWhereInput
+  }
+
+  /**
    * FeedbackForm.responses
    */
   export type FeedbackForm$responsesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -29060,44 +29111,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FeedbackFormStudentScalarFieldEnum | FeedbackFormStudentScalarFieldEnum[]
-  }
-
-  /**
-   * FeedbackForm.specialGroup
-   */
-  export type FeedbackForm$specialGroupArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SpecialGroup
-     */
-    select?: SpecialGroupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SpecialGroup
-     */
-    omit?: SpecialGroupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SpecialGroupInclude<ExtArgs> | null
-    where?: SpecialGroupWhereInput
-  }
-
-  /**
-   * FeedbackForm.feedbackFormGroup
-   */
-  export type FeedbackForm$feedbackFormGroupArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedbackFormGroup
-     */
-    select?: FeedbackFormGroupSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the FeedbackFormGroup
-     */
-    omit?: FeedbackFormGroupOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedbackFormGroupInclude<ExtArgs> | null
-    where?: FeedbackFormGroupWhereInput
   }
 
   /**
@@ -35901,6 +35914,7 @@ export namespace Prisma {
     course_id: 'course_id',
     semester: 'semester',
     batch: 'batch',
+    status: 'status',
     room_no: 'room_no',
     class_coordinator_id: 'class_coordinator_id'
   };
@@ -36821,6 +36835,7 @@ export namespace Prisma {
     course_id?: StringFilter<"Section"> | string
     semester?: IntFilter<"Section"> | number
     batch?: StringFilter<"Section"> | string
+    status?: StringFilter<"Section"> | string
     room_no?: StringNullableFilter<"Section"> | string | null
     class_coordinator_id?: StringNullableFilter<"Section"> | string | null
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
@@ -36837,6 +36852,7 @@ export namespace Prisma {
     course_id?: SortOrder
     semester?: SortOrder
     batch?: SortOrder
+    status?: SortOrder
     room_no?: SortOrderInput | SortOrder
     class_coordinator_id?: SortOrderInput | SortOrder
     course?: CourseOrderByWithRelationInput
@@ -36856,6 +36872,7 @@ export namespace Prisma {
     course_id?: StringFilter<"Section"> | string
     semester?: IntFilter<"Section"> | number
     batch?: StringFilter<"Section"> | string
+    status?: StringFilter<"Section"> | string
     room_no?: StringNullableFilter<"Section"> | string | null
     class_coordinator_id?: StringNullableFilter<"Section"> | string | null
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
@@ -36872,6 +36889,7 @@ export namespace Prisma {
     course_id?: SortOrder
     semester?: SortOrder
     batch?: SortOrder
+    status?: SortOrder
     room_no?: SortOrderInput | SortOrder
     class_coordinator_id?: SortOrderInput | SortOrder
     _count?: SectionCountOrderByAggregateInput
@@ -36890,6 +36908,7 @@ export namespace Prisma {
     course_id?: StringWithAggregatesFilter<"Section"> | string
     semester?: IntWithAggregatesFilter<"Section"> | number
     batch?: StringWithAggregatesFilter<"Section"> | string
+    status?: StringWithAggregatesFilter<"Section"> | string
     room_no?: StringNullableWithAggregatesFilter<"Section"> | string | null
     class_coordinator_id?: StringNullableWithAggregatesFilter<"Section"> | string | null
   }
@@ -37969,10 +37988,10 @@ export namespace Prisma {
     faculty?: XOR<FacultyNullableScalarRelationFilter, FacultyWhereInput> | null
     subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
     section?: XOR<SectionNullableScalarRelationFilter, SectionWhereInput> | null
-    responses?: FeedbackResponseListRelationFilter
-    students?: FeedbackFormStudentListRelationFilter
     specialGroup?: XOR<SpecialGroupNullableScalarRelationFilter, SpecialGroupWhereInput> | null
     feedbackFormGroup?: XOR<FeedbackFormGroupNullableScalarRelationFilter, FeedbackFormGroupWhereInput> | null
+    responses?: FeedbackResponseListRelationFilter
+    students?: FeedbackFormStudentListRelationFilter
   }
 
   export type FeedbackFormOrderByWithRelationInput = {
@@ -37999,10 +38018,10 @@ export namespace Prisma {
     faculty?: FacultyOrderByWithRelationInput
     subject?: SubjectOrderByWithRelationInput
     section?: SectionOrderByWithRelationInput
-    responses?: FeedbackResponseOrderByRelationAggregateInput
-    students?: FeedbackFormStudentOrderByRelationAggregateInput
     specialGroup?: SpecialGroupOrderByWithRelationInput
     feedbackFormGroup?: FeedbackFormGroupOrderByWithRelationInput
+    responses?: FeedbackResponseOrderByRelationAggregateInput
+    students?: FeedbackFormStudentOrderByRelationAggregateInput
   }
 
   export type FeedbackFormWhereUniqueInput = Prisma.AtLeast<{
@@ -38032,10 +38051,10 @@ export namespace Prisma {
     faculty?: XOR<FacultyNullableScalarRelationFilter, FacultyWhereInput> | null
     subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
     section?: XOR<SectionNullableScalarRelationFilter, SectionWhereInput> | null
-    responses?: FeedbackResponseListRelationFilter
-    students?: FeedbackFormStudentListRelationFilter
     specialGroup?: XOR<SpecialGroupNullableScalarRelationFilter, SpecialGroupWhereInput> | null
     feedbackFormGroup?: XOR<FeedbackFormGroupNullableScalarRelationFilter, FeedbackFormGroupWhereInput> | null
+    responses?: FeedbackResponseListRelationFilter
+    students?: FeedbackFormStudentListRelationFilter
   }, "id">
 
   export type FeedbackFormOrderByWithAggregationInput = {
@@ -39019,6 +39038,7 @@ export namespace Prisma {
     name: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     course: CourseCreateNestedOneWithoutSectionsInput
     class_coordinator?: FacultyCreateNestedOneWithoutCoordinating_sectionsInput
@@ -39034,6 +39054,7 @@ export namespace Prisma {
     course_id: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     class_coordinator_id?: string | null
     students?: StudentUncheckedCreateNestedManyWithoutSectionInput
@@ -39047,6 +39068,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     course?: CourseUpdateOneRequiredWithoutSectionsNestedInput
     class_coordinator?: FacultyUpdateOneWithoutCoordinating_sectionsNestedInput
@@ -39062,6 +39084,7 @@ export namespace Prisma {
     course_id?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     class_coordinator_id?: NullableStringFieldUpdateOperationsInput | string | null
     students?: StudentUncheckedUpdateManyWithoutSectionNestedInput
@@ -39076,6 +39099,7 @@ export namespace Prisma {
     course_id: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     class_coordinator_id?: string | null
   }
@@ -39085,6 +39109,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -39094,6 +39119,7 @@ export namespace Prisma {
     course_id?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     class_coordinator_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -40236,10 +40262,10 @@ export namespace Prisma {
     faculty?: FacultyCreateNestedOneWithoutFeedbackFormsInput
     subject?: SubjectCreateNestedOneWithoutFeedbackFormsInput
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
-    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
-    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
     feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
+    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
+    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
   }
 
   export type FeedbackFormUncheckedCreateInput = {
@@ -40280,10 +40306,10 @@ export namespace Prisma {
     faculty?: FacultyUpdateOneWithoutFeedbackFormsNestedInput
     subject?: SubjectUpdateOneWithoutFeedbackFormsNestedInput
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
-    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
-    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
     feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
+    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
+    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateInput = {
@@ -41268,6 +41294,7 @@ export namespace Prisma {
     course_id?: SortOrder
     semester?: SortOrder
     batch?: SortOrder
+    status?: SortOrder
     room_no?: SortOrder
     class_coordinator_id?: SortOrder
   }
@@ -41282,6 +41309,7 @@ export namespace Prisma {
     course_id?: SortOrder
     semester?: SortOrder
     batch?: SortOrder
+    status?: SortOrder
     room_no?: SortOrder
     class_coordinator_id?: SortOrder
   }
@@ -41292,6 +41320,7 @@ export namespace Prisma {
     course_id?: SortOrder
     semester?: SortOrder
     batch?: SortOrder
+    status?: SortOrder
     room_no?: SortOrder
     class_coordinator_id?: SortOrder
   }
@@ -44738,6 +44767,18 @@ export namespace Prisma {
     connect?: SectionWhereUniqueInput
   }
 
+  export type SpecialGroupCreateNestedOneWithoutFeedbackFormsInput = {
+    create?: XOR<SpecialGroupCreateWithoutFeedbackFormsInput, SpecialGroupUncheckedCreateWithoutFeedbackFormsInput>
+    connectOrCreate?: SpecialGroupCreateOrConnectWithoutFeedbackFormsInput
+    connect?: SpecialGroupWhereUniqueInput
+  }
+
+  export type FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput = {
+    create?: XOR<FeedbackFormGroupCreateWithoutFeedbackFormsInput, FeedbackFormGroupUncheckedCreateWithoutFeedbackFormsInput>
+    connectOrCreate?: FeedbackFormGroupCreateOrConnectWithoutFeedbackFormsInput
+    connect?: FeedbackFormGroupWhereUniqueInput
+  }
+
   export type FeedbackResponseCreateNestedManyWithoutFormInput = {
     create?: XOR<FeedbackResponseCreateWithoutFormInput, FeedbackResponseUncheckedCreateWithoutFormInput> | FeedbackResponseCreateWithoutFormInput[] | FeedbackResponseUncheckedCreateWithoutFormInput[]
     connectOrCreate?: FeedbackResponseCreateOrConnectWithoutFormInput | FeedbackResponseCreateOrConnectWithoutFormInput[]
@@ -44750,18 +44791,6 @@ export namespace Prisma {
     connectOrCreate?: FeedbackFormStudentCreateOrConnectWithoutFormInput | FeedbackFormStudentCreateOrConnectWithoutFormInput[]
     createMany?: FeedbackFormStudentCreateManyFormInputEnvelope
     connect?: FeedbackFormStudentWhereUniqueInput | FeedbackFormStudentWhereUniqueInput[]
-  }
-
-  export type SpecialGroupCreateNestedOneWithoutFeedbackFormsInput = {
-    create?: XOR<SpecialGroupCreateWithoutFeedbackFormsInput, SpecialGroupUncheckedCreateWithoutFeedbackFormsInput>
-    connectOrCreate?: SpecialGroupCreateOrConnectWithoutFeedbackFormsInput
-    connect?: SpecialGroupWhereUniqueInput
-  }
-
-  export type FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput = {
-    create?: XOR<FeedbackFormGroupCreateWithoutFeedbackFormsInput, FeedbackFormGroupUncheckedCreateWithoutFeedbackFormsInput>
-    connectOrCreate?: FeedbackFormGroupCreateOrConnectWithoutFeedbackFormsInput
-    connect?: FeedbackFormGroupWhereUniqueInput
   }
 
   export type FeedbackResponseUncheckedCreateNestedManyWithoutFormInput = {
@@ -44836,6 +44865,26 @@ export namespace Prisma {
     update?: XOR<XOR<SectionUpdateToOneWithWhereWithoutFeedbackFormsInput, SectionUpdateWithoutFeedbackFormsInput>, SectionUncheckedUpdateWithoutFeedbackFormsInput>
   }
 
+  export type SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput = {
+    create?: XOR<SpecialGroupCreateWithoutFeedbackFormsInput, SpecialGroupUncheckedCreateWithoutFeedbackFormsInput>
+    connectOrCreate?: SpecialGroupCreateOrConnectWithoutFeedbackFormsInput
+    upsert?: SpecialGroupUpsertWithoutFeedbackFormsInput
+    disconnect?: SpecialGroupWhereInput | boolean
+    delete?: SpecialGroupWhereInput | boolean
+    connect?: SpecialGroupWhereUniqueInput
+    update?: XOR<XOR<SpecialGroupUpdateToOneWithWhereWithoutFeedbackFormsInput, SpecialGroupUpdateWithoutFeedbackFormsInput>, SpecialGroupUncheckedUpdateWithoutFeedbackFormsInput>
+  }
+
+  export type FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput = {
+    create?: XOR<FeedbackFormGroupCreateWithoutFeedbackFormsInput, FeedbackFormGroupUncheckedCreateWithoutFeedbackFormsInput>
+    connectOrCreate?: FeedbackFormGroupCreateOrConnectWithoutFeedbackFormsInput
+    upsert?: FeedbackFormGroupUpsertWithoutFeedbackFormsInput
+    disconnect?: FeedbackFormGroupWhereInput | boolean
+    delete?: FeedbackFormGroupWhereInput | boolean
+    connect?: FeedbackFormGroupWhereUniqueInput
+    update?: XOR<XOR<FeedbackFormGroupUpdateToOneWithWhereWithoutFeedbackFormsInput, FeedbackFormGroupUpdateWithoutFeedbackFormsInput>, FeedbackFormGroupUncheckedUpdateWithoutFeedbackFormsInput>
+  }
+
   export type FeedbackResponseUpdateManyWithoutFormNestedInput = {
     create?: XOR<FeedbackResponseCreateWithoutFormInput, FeedbackResponseUncheckedCreateWithoutFormInput> | FeedbackResponseCreateWithoutFormInput[] | FeedbackResponseUncheckedCreateWithoutFormInput[]
     connectOrCreate?: FeedbackResponseCreateOrConnectWithoutFormInput | FeedbackResponseCreateOrConnectWithoutFormInput[]
@@ -44862,26 +44911,6 @@ export namespace Prisma {
     update?: FeedbackFormStudentUpdateWithWhereUniqueWithoutFormInput | FeedbackFormStudentUpdateWithWhereUniqueWithoutFormInput[]
     updateMany?: FeedbackFormStudentUpdateManyWithWhereWithoutFormInput | FeedbackFormStudentUpdateManyWithWhereWithoutFormInput[]
     deleteMany?: FeedbackFormStudentScalarWhereInput | FeedbackFormStudentScalarWhereInput[]
-  }
-
-  export type SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput = {
-    create?: XOR<SpecialGroupCreateWithoutFeedbackFormsInput, SpecialGroupUncheckedCreateWithoutFeedbackFormsInput>
-    connectOrCreate?: SpecialGroupCreateOrConnectWithoutFeedbackFormsInput
-    upsert?: SpecialGroupUpsertWithoutFeedbackFormsInput
-    disconnect?: SpecialGroupWhereInput | boolean
-    delete?: SpecialGroupWhereInput | boolean
-    connect?: SpecialGroupWhereUniqueInput
-    update?: XOR<XOR<SpecialGroupUpdateToOneWithWhereWithoutFeedbackFormsInput, SpecialGroupUpdateWithoutFeedbackFormsInput>, SpecialGroupUncheckedUpdateWithoutFeedbackFormsInput>
-  }
-
-  export type FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput = {
-    create?: XOR<FeedbackFormGroupCreateWithoutFeedbackFormsInput, FeedbackFormGroupUncheckedCreateWithoutFeedbackFormsInput>
-    connectOrCreate?: FeedbackFormGroupCreateOrConnectWithoutFeedbackFormsInput
-    upsert?: FeedbackFormGroupUpsertWithoutFeedbackFormsInput
-    disconnect?: FeedbackFormGroupWhereInput | boolean
-    delete?: FeedbackFormGroupWhereInput | boolean
-    connect?: FeedbackFormGroupWhereUniqueInput
-    update?: XOR<XOR<FeedbackFormGroupUpdateToOneWithWhereWithoutFeedbackFormsInput, FeedbackFormGroupUpdateWithoutFeedbackFormsInput>, FeedbackFormGroupUncheckedUpdateWithoutFeedbackFormsInput>
   }
 
   export type FeedbackResponseUncheckedUpdateManyWithoutFormNestedInput = {
@@ -46278,10 +46307,10 @@ export namespace Prisma {
     faculty?: FacultyCreateNestedOneWithoutFeedbackFormsInput
     subject?: SubjectCreateNestedOneWithoutFeedbackFormsInput
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
-    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
-    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
     feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
+    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
+    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutDepartmentInput = {
@@ -46911,6 +46940,7 @@ export namespace Prisma {
     name: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     class_coordinator?: FacultyCreateNestedOneWithoutCoordinating_sectionsInput
     students?: StudentCreateNestedManyWithoutSectionInput
@@ -46924,6 +46954,7 @@ export namespace Prisma {
     name: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     class_coordinator_id?: string | null
     students?: StudentUncheckedCreateNestedManyWithoutSectionInput
@@ -47095,10 +47126,10 @@ export namespace Prisma {
     faculty?: FacultyCreateNestedOneWithoutFeedbackFormsInput
     subject?: SubjectCreateNestedOneWithoutFeedbackFormsInput
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
-    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
-    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
     feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
+    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
+    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutCourseInput = {
@@ -47226,6 +47257,7 @@ export namespace Prisma {
     course_id?: StringFilter<"Section"> | string
     semester?: IntFilter<"Section"> | number
     batch?: StringFilter<"Section"> | string
+    status?: StringFilter<"Section"> | string
     room_no?: StringNullableFilter<"Section"> | string | null
     class_coordinator_id?: StringNullableFilter<"Section"> | string | null
   }
@@ -47349,10 +47381,10 @@ export namespace Prisma {
     course?: CourseCreateNestedOneWithoutFeedbackFormsInput
     faculty?: FacultyCreateNestedOneWithoutFeedbackFormsInput
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
-    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
-    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
     feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
+    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
+    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutSubjectInput = {
@@ -47803,10 +47835,10 @@ export namespace Prisma {
     course?: CourseCreateNestedOneWithoutFeedbackFormsInput
     faculty?: FacultyCreateNestedOneWithoutFeedbackFormsInput
     subject?: SubjectCreateNestedOneWithoutFeedbackFormsInput
-    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
-    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
     feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
+    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
+    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutSectionInput = {
@@ -48039,6 +48071,7 @@ export namespace Prisma {
     name: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     course: CourseCreateNestedOneWithoutSectionsInput
     class_coordinator?: FacultyCreateNestedOneWithoutCoordinating_sectionsInput
@@ -48053,6 +48086,7 @@ export namespace Prisma {
     course_id: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     class_coordinator_id?: string | null
     students?: StudentUncheckedCreateNestedManyWithoutSectionInput
@@ -48177,6 +48211,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     course?: CourseUpdateOneRequiredWithoutSectionsNestedInput
     class_coordinator?: FacultyUpdateOneWithoutCoordinating_sectionsNestedInput
@@ -48191,6 +48226,7 @@ export namespace Prisma {
     course_id?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     class_coordinator_id?: NullableStringFieldUpdateOperationsInput | string | null
     students?: StudentUncheckedUpdateManyWithoutSectionNestedInput
@@ -48373,6 +48409,7 @@ export namespace Prisma {
     name: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     course: CourseCreateNestedOneWithoutSectionsInput
     class_coordinator?: FacultyCreateNestedOneWithoutCoordinating_sectionsInput
@@ -48387,6 +48424,7 @@ export namespace Prisma {
     course_id: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     class_coordinator_id?: string | null
     enrollments?: StudentEnrollmentUncheckedCreateNestedManyWithoutSectionInput
@@ -48671,6 +48709,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     course?: CourseUpdateOneRequiredWithoutSectionsNestedInput
     class_coordinator?: FacultyUpdateOneWithoutCoordinating_sectionsNestedInput
@@ -48685,6 +48724,7 @@ export namespace Prisma {
     course_id?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     class_coordinator_id?: NullableStringFieldUpdateOperationsInput | string | null
     enrollments?: StudentEnrollmentUncheckedUpdateManyWithoutSectionNestedInput
@@ -49224,6 +49264,7 @@ export namespace Prisma {
     name: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     course: CourseCreateNestedOneWithoutSectionsInput
     class_coordinator?: FacultyCreateNestedOneWithoutCoordinating_sectionsInput
@@ -49238,6 +49279,7 @@ export namespace Prisma {
     course_id: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     class_coordinator_id?: string | null
     students?: StudentUncheckedCreateNestedManyWithoutSectionInput
@@ -49446,6 +49488,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     course?: CourseUpdateOneRequiredWithoutSectionsNestedInput
     class_coordinator?: FacultyUpdateOneWithoutCoordinating_sectionsNestedInput
@@ -49460,6 +49503,7 @@ export namespace Prisma {
     course_id?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     class_coordinator_id?: NullableStringFieldUpdateOperationsInput | string | null
     students?: StudentUncheckedUpdateManyWithoutSectionNestedInput
@@ -49606,9 +49650,9 @@ export namespace Prisma {
     faculty?: FacultyCreateNestedOneWithoutFeedbackFormsInput
     subject?: SubjectCreateNestedOneWithoutFeedbackFormsInput
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
+    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
     responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
-    feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutSpecialGroupInput = {
@@ -50255,10 +50299,10 @@ export namespace Prisma {
     course?: CourseCreateNestedOneWithoutFeedbackFormsInput
     subject?: SubjectCreateNestedOneWithoutFeedbackFormsInput
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
-    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
-    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
     feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
+    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
+    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutFacultyInput = {
@@ -50323,6 +50367,7 @@ export namespace Prisma {
     name: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     course: CourseCreateNestedOneWithoutSectionsInput
     students?: StudentCreateNestedManyWithoutSectionInput
@@ -50337,6 +50382,7 @@ export namespace Prisma {
     course_id: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     students?: StudentUncheckedCreateNestedManyWithoutSectionInput
     enrollments?: StudentEnrollmentUncheckedCreateNestedManyWithoutSectionInput
@@ -50779,10 +50825,10 @@ export namespace Prisma {
     faculty?: FacultyCreateNestedOneWithoutFeedbackFormsInput
     subject?: SubjectCreateNestedOneWithoutFeedbackFormsInput
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
-    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
-    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
     feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
+    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
+    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutCategoryInput = {
@@ -51218,6 +51264,7 @@ export namespace Prisma {
     name: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     course: CourseCreateNestedOneWithoutSectionsInput
     class_coordinator?: FacultyCreateNestedOneWithoutCoordinating_sectionsInput
@@ -51232,6 +51279,7 @@ export namespace Prisma {
     course_id: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     class_coordinator_id?: string | null
     students?: StudentUncheckedCreateNestedManyWithoutSectionInput
@@ -51242,48 +51290,6 @@ export namespace Prisma {
   export type SectionCreateOrConnectWithoutFeedbackFormsInput = {
     where: SectionWhereUniqueInput
     create: XOR<SectionCreateWithoutFeedbackFormsInput, SectionUncheckedCreateWithoutFeedbackFormsInput>
-  }
-
-  export type FeedbackResponseCreateWithoutFormInput = {
-    id?: string
-    submittedAt?: Date | string
-    student: StudentCreateNestedOneWithoutFeedbackResponsesInput
-    answers?: FeedbackAnswerCreateNestedManyWithoutResponseInput
-  }
-
-  export type FeedbackResponseUncheckedCreateWithoutFormInput = {
-    id?: string
-    student_id: string
-    submittedAt?: Date | string
-    answers?: FeedbackAnswerUncheckedCreateNestedManyWithoutResponseInput
-  }
-
-  export type FeedbackResponseCreateOrConnectWithoutFormInput = {
-    where: FeedbackResponseWhereUniqueInput
-    create: XOR<FeedbackResponseCreateWithoutFormInput, FeedbackResponseUncheckedCreateWithoutFormInput>
-  }
-
-  export type FeedbackResponseCreateManyFormInputEnvelope = {
-    data: FeedbackResponseCreateManyFormInput | FeedbackResponseCreateManyFormInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type FeedbackFormStudentCreateWithoutFormInput = {
-    student: StudentCreateNestedOneWithoutFeedbackFormsInput
-  }
-
-  export type FeedbackFormStudentUncheckedCreateWithoutFormInput = {
-    student_id: string
-  }
-
-  export type FeedbackFormStudentCreateOrConnectWithoutFormInput = {
-    where: FeedbackFormStudentWhereUniqueInput
-    create: XOR<FeedbackFormStudentCreateWithoutFormInput, FeedbackFormStudentUncheckedCreateWithoutFormInput>
-  }
-
-  export type FeedbackFormStudentCreateManyFormInputEnvelope = {
-    data: FeedbackFormStudentCreateManyFormInput | FeedbackFormStudentCreateManyFormInput[]
-    skipDuplicates?: boolean
   }
 
   export type SpecialGroupCreateWithoutFeedbackFormsInput = {
@@ -51340,6 +51346,48 @@ export namespace Prisma {
   export type FeedbackFormGroupCreateOrConnectWithoutFeedbackFormsInput = {
     where: FeedbackFormGroupWhereUniqueInput
     create: XOR<FeedbackFormGroupCreateWithoutFeedbackFormsInput, FeedbackFormGroupUncheckedCreateWithoutFeedbackFormsInput>
+  }
+
+  export type FeedbackResponseCreateWithoutFormInput = {
+    id?: string
+    submittedAt?: Date | string
+    student: StudentCreateNestedOneWithoutFeedbackResponsesInput
+    answers?: FeedbackAnswerCreateNestedManyWithoutResponseInput
+  }
+
+  export type FeedbackResponseUncheckedCreateWithoutFormInput = {
+    id?: string
+    student_id: string
+    submittedAt?: Date | string
+    answers?: FeedbackAnswerUncheckedCreateNestedManyWithoutResponseInput
+  }
+
+  export type FeedbackResponseCreateOrConnectWithoutFormInput = {
+    where: FeedbackResponseWhereUniqueInput
+    create: XOR<FeedbackResponseCreateWithoutFormInput, FeedbackResponseUncheckedCreateWithoutFormInput>
+  }
+
+  export type FeedbackResponseCreateManyFormInputEnvelope = {
+    data: FeedbackResponseCreateManyFormInput | FeedbackResponseCreateManyFormInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeedbackFormStudentCreateWithoutFormInput = {
+    student: StudentCreateNestedOneWithoutFeedbackFormsInput
+  }
+
+  export type FeedbackFormStudentUncheckedCreateWithoutFormInput = {
+    student_id: string
+  }
+
+  export type FeedbackFormStudentCreateOrConnectWithoutFormInput = {
+    where: FeedbackFormStudentWhereUniqueInput
+    create: XOR<FeedbackFormStudentCreateWithoutFormInput, FeedbackFormStudentUncheckedCreateWithoutFormInput>
+  }
+
+  export type FeedbackFormStudentCreateManyFormInputEnvelope = {
+    data: FeedbackFormStudentCreateManyFormInput | FeedbackFormStudentCreateManyFormInput[]
+    skipDuplicates?: boolean
   }
 
   export type FeedbackCategoryUpsertWithoutFormsInput = {
@@ -51565,6 +51613,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     course?: CourseUpdateOneRequiredWithoutSectionsNestedInput
     class_coordinator?: FacultyUpdateOneWithoutCoordinating_sectionsNestedInput
@@ -51579,43 +51628,12 @@ export namespace Prisma {
     course_id?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     class_coordinator_id?: NullableStringFieldUpdateOperationsInput | string | null
     students?: StudentUncheckedUpdateManyWithoutSectionNestedInput
     enrollments?: StudentEnrollmentUncheckedUpdateManyWithoutSectionNestedInput
     sectionSubjects?: SectionSubjectUncheckedUpdateManyWithoutSectionNestedInput
-  }
-
-  export type FeedbackResponseUpsertWithWhereUniqueWithoutFormInput = {
-    where: FeedbackResponseWhereUniqueInput
-    update: XOR<FeedbackResponseUpdateWithoutFormInput, FeedbackResponseUncheckedUpdateWithoutFormInput>
-    create: XOR<FeedbackResponseCreateWithoutFormInput, FeedbackResponseUncheckedCreateWithoutFormInput>
-  }
-
-  export type FeedbackResponseUpdateWithWhereUniqueWithoutFormInput = {
-    where: FeedbackResponseWhereUniqueInput
-    data: XOR<FeedbackResponseUpdateWithoutFormInput, FeedbackResponseUncheckedUpdateWithoutFormInput>
-  }
-
-  export type FeedbackResponseUpdateManyWithWhereWithoutFormInput = {
-    where: FeedbackResponseScalarWhereInput
-    data: XOR<FeedbackResponseUpdateManyMutationInput, FeedbackResponseUncheckedUpdateManyWithoutFormInput>
-  }
-
-  export type FeedbackFormStudentUpsertWithWhereUniqueWithoutFormInput = {
-    where: FeedbackFormStudentWhereUniqueInput
-    update: XOR<FeedbackFormStudentUpdateWithoutFormInput, FeedbackFormStudentUncheckedUpdateWithoutFormInput>
-    create: XOR<FeedbackFormStudentCreateWithoutFormInput, FeedbackFormStudentUncheckedCreateWithoutFormInput>
-  }
-
-  export type FeedbackFormStudentUpdateWithWhereUniqueWithoutFormInput = {
-    where: FeedbackFormStudentWhereUniqueInput
-    data: XOR<FeedbackFormStudentUpdateWithoutFormInput, FeedbackFormStudentUncheckedUpdateWithoutFormInput>
-  }
-
-  export type FeedbackFormStudentUpdateManyWithWhereWithoutFormInput = {
-    where: FeedbackFormStudentScalarWhereInput
-    data: XOR<FeedbackFormStudentUpdateManyMutationInput, FeedbackFormStudentUncheckedUpdateManyWithoutFormInput>
   }
 
   export type SpecialGroupUpsertWithoutFeedbackFormsInput = {
@@ -51686,6 +51704,38 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FeedbackResponseUpsertWithWhereUniqueWithoutFormInput = {
+    where: FeedbackResponseWhereUniqueInput
+    update: XOR<FeedbackResponseUpdateWithoutFormInput, FeedbackResponseUncheckedUpdateWithoutFormInput>
+    create: XOR<FeedbackResponseCreateWithoutFormInput, FeedbackResponseUncheckedCreateWithoutFormInput>
+  }
+
+  export type FeedbackResponseUpdateWithWhereUniqueWithoutFormInput = {
+    where: FeedbackResponseWhereUniqueInput
+    data: XOR<FeedbackResponseUpdateWithoutFormInput, FeedbackResponseUncheckedUpdateWithoutFormInput>
+  }
+
+  export type FeedbackResponseUpdateManyWithWhereWithoutFormInput = {
+    where: FeedbackResponseScalarWhereInput
+    data: XOR<FeedbackResponseUpdateManyMutationInput, FeedbackResponseUncheckedUpdateManyWithoutFormInput>
+  }
+
+  export type FeedbackFormStudentUpsertWithWhereUniqueWithoutFormInput = {
+    where: FeedbackFormStudentWhereUniqueInput
+    update: XOR<FeedbackFormStudentUpdateWithoutFormInput, FeedbackFormStudentUncheckedUpdateWithoutFormInput>
+    create: XOR<FeedbackFormStudentCreateWithoutFormInput, FeedbackFormStudentUncheckedCreateWithoutFormInput>
+  }
+
+  export type FeedbackFormStudentUpdateWithWhereUniqueWithoutFormInput = {
+    where: FeedbackFormStudentWhereUniqueInput
+    data: XOR<FeedbackFormStudentUpdateWithoutFormInput, FeedbackFormStudentUncheckedUpdateWithoutFormInput>
+  }
+
+  export type FeedbackFormStudentUpdateManyWithWhereWithoutFormInput = {
+    where: FeedbackFormStudentScalarWhereInput
+    data: XOR<FeedbackFormStudentUpdateManyMutationInput, FeedbackFormStudentUncheckedUpdateManyWithoutFormInput>
+  }
+
   export type FeedbackCategoryCreateWithoutFeedbackFormGroupsInput = {
     id?: string
     name: string
@@ -51727,9 +51777,9 @@ export namespace Prisma {
     faculty?: FacultyCreateNestedOneWithoutFeedbackFormsInput
     subject?: SubjectCreateNestedOneWithoutFeedbackFormsInput
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
+    specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
     responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
-    specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutFeedbackFormGroupInput = {
@@ -51826,9 +51876,9 @@ export namespace Prisma {
     faculty?: FacultyCreateNestedOneWithoutFeedbackFormsInput
     subject?: SubjectCreateNestedOneWithoutFeedbackFormsInput
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
-    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
     feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
+    responses?: FeedbackResponseCreateNestedManyWithoutFormInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutStudentsInput = {
@@ -51975,9 +52025,9 @@ export namespace Prisma {
     faculty?: FacultyUpdateOneWithoutFeedbackFormsNestedInput
     subject?: SubjectUpdateOneWithoutFeedbackFormsNestedInput
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
-    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
     feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
+    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutStudentsInput = {
@@ -52114,9 +52164,9 @@ export namespace Prisma {
     faculty?: FacultyCreateNestedOneWithoutFeedbackFormsInput
     subject?: SubjectCreateNestedOneWithoutFeedbackFormsInput
     section?: SectionCreateNestedOneWithoutFeedbackFormsInput
-    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
     specialGroup?: SpecialGroupCreateNestedOneWithoutFeedbackFormsInput
     feedbackFormGroup?: FeedbackFormGroupCreateNestedOneWithoutFeedbackFormsInput
+    students?: FeedbackFormStudentCreateNestedManyWithoutFormInput
   }
 
   export type FeedbackFormUncheckedCreateWithoutResponsesInput = {
@@ -52289,9 +52339,9 @@ export namespace Prisma {
     faculty?: FacultyUpdateOneWithoutFeedbackFormsNestedInput
     subject?: SubjectUpdateOneWithoutFeedbackFormsNestedInput
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
-    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
     feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
+    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutResponsesInput = {
@@ -53274,10 +53324,10 @@ export namespace Prisma {
     faculty?: FacultyUpdateOneWithoutFeedbackFormsNestedInput
     subject?: SubjectUpdateOneWithoutFeedbackFormsNestedInput
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
-    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
-    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
     feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
+    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
+    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutDepartmentInput = {
@@ -53641,6 +53691,7 @@ export namespace Prisma {
     name: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
     class_coordinator_id?: string | null
   }
@@ -53736,6 +53787,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     class_coordinator?: FacultyUpdateOneWithoutCoordinating_sectionsNestedInput
     students?: StudentUpdateManyWithoutSectionNestedInput
@@ -53749,6 +53801,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     class_coordinator_id?: NullableStringFieldUpdateOperationsInput | string | null
     students?: StudentUncheckedUpdateManyWithoutSectionNestedInput
@@ -53762,6 +53815,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     class_coordinator_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -53953,10 +54007,10 @@ export namespace Prisma {
     faculty?: FacultyUpdateOneWithoutFeedbackFormsNestedInput
     subject?: SubjectUpdateOneWithoutFeedbackFormsNestedInput
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
-    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
-    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
     feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
+    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
+    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutCourseInput = {
@@ -54133,10 +54187,10 @@ export namespace Prisma {
     course?: CourseUpdateOneWithoutFeedbackFormsNestedInput
     faculty?: FacultyUpdateOneWithoutFeedbackFormsNestedInput
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
-    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
-    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
     feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
+    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
+    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutSubjectInput = {
@@ -54510,10 +54564,10 @@ export namespace Prisma {
     course?: CourseUpdateOneWithoutFeedbackFormsNestedInput
     faculty?: FacultyUpdateOneWithoutFeedbackFormsNestedInput
     subject?: SubjectUpdateOneWithoutFeedbackFormsNestedInput
-    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
-    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
     feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
+    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
+    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutSectionInput = {
@@ -54789,9 +54843,9 @@ export namespace Prisma {
     faculty?: FacultyUpdateOneWithoutFeedbackFormsNestedInput
     subject?: SubjectUpdateOneWithoutFeedbackFormsNestedInput
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
+    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
     responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
-    feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutSpecialGroupInput = {
@@ -54896,6 +54950,7 @@ export namespace Prisma {
     course_id: string
     semester: number
     batch: string
+    status?: string
     room_no?: string | null
   }
 
@@ -54935,10 +54990,10 @@ export namespace Prisma {
     course?: CourseUpdateOneWithoutFeedbackFormsNestedInput
     subject?: SubjectUpdateOneWithoutFeedbackFormsNestedInput
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
-    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
-    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
     feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
+    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
+    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutFacultyInput = {
@@ -55010,6 +55065,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     course?: CourseUpdateOneRequiredWithoutSectionsNestedInput
     students?: StudentUpdateManyWithoutSectionNestedInput
@@ -55024,6 +55080,7 @@ export namespace Prisma {
     course_id?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
     students?: StudentUncheckedUpdateManyWithoutSectionNestedInput
     enrollments?: StudentEnrollmentUncheckedUpdateManyWithoutSectionNestedInput
@@ -55037,6 +55094,7 @@ export namespace Prisma {
     course_id?: StringFieldUpdateOperationsInput | string
     semester?: IntFieldUpdateOperationsInput | number
     batch?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
     room_no?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -55141,10 +55199,10 @@ export namespace Prisma {
     faculty?: FacultyUpdateOneWithoutFeedbackFormsNestedInput
     subject?: SubjectUpdateOneWithoutFeedbackFormsNestedInput
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
-    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
-    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
     specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
     feedbackFormGroup?: FeedbackFormGroupUpdateOneWithoutFeedbackFormsNestedInput
+    responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
+    students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutCategoryInput = {
@@ -55331,9 +55389,9 @@ export namespace Prisma {
     faculty?: FacultyUpdateOneWithoutFeedbackFormsNestedInput
     subject?: SubjectUpdateOneWithoutFeedbackFormsNestedInput
     section?: SectionUpdateOneWithoutFeedbackFormsNestedInput
+    specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
     responses?: FeedbackResponseUpdateManyWithoutFormNestedInput
     students?: FeedbackFormStudentUpdateManyWithoutFormNestedInput
-    specialGroup?: SpecialGroupUpdateOneWithoutFeedbackFormsNestedInput
   }
 
   export type FeedbackFormUncheckedUpdateWithoutFeedbackFormGroupInput = {

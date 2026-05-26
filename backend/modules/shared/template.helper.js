@@ -92,11 +92,12 @@ export const sectionSubjectTemplate = async () => {
   ]);
 
   const wb = xlsx.utils.book_new();
-  // Sheet name matches student template: "CourseName–SecName SemX"
+  // Sheet name: "Program Course–Sec SemX" — includes program to avoid collisions
   const usedNames = new Set();
   const safeSheet = (sec) => {
+    const prog = sec.course?.program?.name || "";
     const course = sec.course?.name || "";
-    const base = `${course}–${sec.name} Sem${sec.semester}`.replace(/[\[\]:*?/\\]/g, "").slice(0, 31);
+    const base = `${prog} ${course}–${sec.name} Sem${sec.semester}`.replace(/[\[\]:*?/\\]/g, "").trim().slice(0, 31);
     let n = base;
     if (usedNames.has(n)) { let i = 2; while (usedNames.has(n)) { const s = `(${i++})`; n = base.slice(0, 31 - s.length) + s; } }
     usedNames.add(n); return n;
@@ -106,13 +107,14 @@ export const sectionSubjectTemplate = async () => {
   for (const sec of sections) {
     const prog = sec.course?.program?.name || "";
     const course = sec.course?.name || "";
+    const dept = sec.course?.program?.department?.name || "";
     const sheetName = safeSheet(sec);
 
-    // Header rows — section info
+    // Header rows — full section info
     const infoRows = [
       ["SECTION SUBJECT ASSIGNMENT"],
-      [`Section: ${sec.name}`, `Course: ${course}`, `Program: ${prog}`, `Sem: ${sec.semester}`, `Batch: ${sec.batch || ""}`],
-      [`Dept: ${sec.course?.program?.department?.name || ""}`],
+      [`Program: ${prog}`, `Course: ${course}`, `Section: ${sec.name}`, `Sem: ${sec.semester}`, `Batch: ${sec.batch || ""}`],
+      [`Dept: ${dept}`],
       [],
       // Column headers
       ["Subject Code *", "Faculty Email", "Type", "Status", "— Subject Name (auto info)", "— Faculty Name (auto info)"],

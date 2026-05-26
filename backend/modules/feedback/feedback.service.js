@@ -873,11 +873,12 @@ export const getGroupBulkTemplate = async (groupId) => {
 
   const wb = xlsx.utils.book_new();
 
-  // Sheet name = "CourseName–SecName SemX" (matches student template)
+  // Sheet name: "Program Course–Sec SemX" — consistent with subject template
   const usedNames = new Set();
   const safeSheet = (sec) => {
+    const prog = sec?.course?.program?.name || "";
     const course = sec?.course?.name || "";
-    const base = `${course}–${sec.name} Sem${sec.semester}`.replace(/[\[\]:*?/\\]/g, "").slice(0, 31);
+    const base = `${prog} ${course}–${sec.name} Sem${sec.semester}`.replace(/[\[\]:*?/\\]/g, "").trim().slice(0, 31);
     let n = base;
     if (usedNames.has(n)) { let i = 2; while (usedNames.has(n)) { const s = `(${i++})`; n = base.slice(0, 31 - s.length) + s; } }
     usedNames.add(n); return n;

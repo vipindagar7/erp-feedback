@@ -2,7 +2,10 @@ import xlsx from "xlsx";
 import { sectionTemplate, sectionSubjectTemplate } from "../shared/template.helper.js";
 import prisma from "../../utils/prisma.js";
 
+
 // ── Includes ───────────────────────────────────────────────────
+const STATUS_SORT = { ACTIVE: 0, COMPLETED: 1, ARCHIVED: 2, ALUMNI: 3, SUSPENDED: 4 };
+
 const sectionInclude = {
   course: {
     include: {
@@ -26,7 +29,7 @@ const sectionInclude = {
 // CRUD
 // ══════════════════════════════════════════════════════════════
 export const getAllSections = async ({
-  page = 1, limit = 20, search, course_id, program_id, dept_id, semester,
+  page = 1, limit = 20, search, course_id, program_id, dept_id, semester, status,
 } = {}) => {
   const _page = parseInt(page) || 1;
   const _limit = parseInt(limit) || 20;
@@ -34,6 +37,7 @@ export const getAllSections = async ({
   const where = {
     ...(course_id && { course_id }),
     ...(semester && { semester: parseInt(semester) }),
+    ...(status && status !== "all" && { status }),
     ...(program_id && { course: { program_id } }),
     ...(dept_id && { course: { program: { dept_id } } }),
     ...(search && {
@@ -45,9 +49,21 @@ export const getAllSections = async ({
     }),
   };
   const [sections, total] = await Promise.all([
-    prisma.section.findMany({ where, skip, take: _limit, orderBy: [{ semester: "asc" }, { name: "asc" }], include: sectionInclude }),
+    prisma.section.findMany({
+      where, skip, take: _limit,
+      // ACTIVE first, then by semester, then by name
+      orderBy: [{ semester: "asc" }, { name: "asc" }],
+      include: sectionInclude
+    }),
     prisma.section.count({ where }),
   ]);
+  sections.sort((a, b) => {
+    const sa = STATUS_SORT[a.status] ?? 99;
+    const sb = STATUS_SORT[b.status] ?? 99;
+    if (sa !== sb) return sa - sb;
+    if (a.semester !== b.semester) return a.semester - b.semester;
+    return a.name.localeCompare(b.name);
+  });
   return { sections, pagination: { total, page: _page, limit: _limit, pages: Math.ceil(total / _limit) } };
 };
 
@@ -61,25 +77,25 @@ export const createSection = (data) =>
       course_id: data.course_id,
       semester: data.semester,
       batch: data.batch,
+      status: data.status || "ACTIVE",
       room_no: data.room_no || null,
       class_coordinator_id: data.class_coordinator_id || null,
     },
     include: sectionInclude,
   });
 
-export const updateSection = (id, data) =>
-  prisma.section.update({
-    where: { id },
-    data: {
-      name: data.name,
-      course_id: data.course_id,
-      semester: data.semester,
-      batch: data.batch,
-      room_no: data.room_no ?? undefined,
-      class_coordinator_id: data.class_coordinator_id ?? undefined,
-    },
-    include: sectionInclude,
-  });
+export const updateSection = (id, data) => {
+  // Only include fields that are explicitly provided — safe for partial updates (status-only, etc.)
+  const update = {};
+  if (data.name !== undefined) update.name = data.name;
+  if (data.course_id !== undefined) update.course_id = data.course_id;
+  if (data.semester !== undefined) update.semester = data.semester;
+  if (data.batch !== undefined) update.batch = data.batch;
+  if (data.status !== undefined) update.status = data.status;
+  if (data.room_no !== undefined) update.room_no = data.room_no || null;
+  if (data.class_coordinator_id !== undefined) update.class_coordinator_id = data.class_coordinator_id || null;
+  return prisma.section.update({ where: { id }, data: update, include: sectionInclude });
+};
 
 export const deleteSection = async (id) => {
   const count = await prisma.sectionSubject.count({ where: { section_id: id } });
@@ -220,8 +236,9 @@ export const bulkAssignSubjects = async (buffer) => {
   // Map each sheet name to a section (match on sheet name = generated template sheet name)
   const usedNames = new Set();
   const safeSheet = (sec) => {
+    const prog = sec.course?.program?.name || "";
     const course = sec.course?.name || "";
-    const base = `${course}–${sec.name} Sem${sec.semester}`.replace(/[\[\]:*?/\\]/g, "").slice(0, 31);
+    const base = `${prog} ${course}–${sec.name} Sem${sec.semester}`.replace(/[\[\]:*?/\\]/g, "").trim().slice(0, 31);
     let n = base;
     if (usedNames.has(n)) { let i = 2; while (usedNames.has(n)) { const s = `(${i++})`; n = base.slice(0, 31 - s.length) + s; } }
     usedNames.add(n); return n;

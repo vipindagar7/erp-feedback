@@ -65,7 +65,12 @@ export const sectionListSchema = pagination.extend({
   program_id: z.string().uuid().optional(),
   dept_id: z.string().uuid().optional(),
   semester: z.coerce.number().int().min(1).max(8).optional(),
+  status: z.string().optional(), // "all" returns all statuses
 });
+// Backwards compat — old routes still import sectionPaginationSchema
+export const sectionPaginationSchema = sectionListSchema;
+
+const SECTION_STATUSES = ["ACTIVE", "COMPLETED", "ARCHIVED", "ALUMNI", "SUSPENDED"];
 export const createSectionSchema = z.object({
   name: z.string().min(1, "Name required"),
   course_id: z.string().uuid("Valid course required"),
@@ -73,6 +78,7 @@ export const createSectionSchema = z.object({
   batch: z.string().min(1, "Batch required"),
   room_no: z.string().optional(),
   class_coordinator_id: z.string().uuid().optional().nullable(),
+  status: z.enum(SECTION_STATUSES).optional(),
 });
 export const updateSectionSchema = createSectionSchema.partial();
 
@@ -102,22 +108,18 @@ export const bulkAssignSchema = z.object({
   })).min(1),
 });
 
+// ── Section promote / status / counts ───────────────────────────
 const promoteSchema = z.object({
   remarks: z.string().optional(),
 });
 
 const multiPromoteSchema = z.object({
-  section_ids: z.array(z.string().uuid()).min(1),
+  section_ids: z.array(z.string().uuid()).min(1, "At least one section required"),
   remarks: z.string().optional(),
 });
 
 const statusSchema = z.object({
-  status: z.enum([
-    "ACTIVE",
-    "DETAINED",
-    "PASSED",
-    "LEFT",
-  ]),
+  status: z.enum(["ACTIVE", "DETAINED", "PASSED", "LEFT"]),
   remarks: z.string().optional(),
 });
 
@@ -125,14 +127,9 @@ const countsSchema = z.object({
   section_ids: z.array(z.string().uuid()).min(1),
 });
 
-export const validatePromote =
-  validate(promoteSchema);
-
-export const validateMultiPromote =
-  validate(multiPromoteSchema);
-
-export const validateStatus =
-  validate(statusSchema);
-
-export const validateCounts =
-  validate(countsSchema);
+// Pre-applied middleware — use directly in router without calling validate()
+// e.g.  router.post("/promote", validatePromote, c.promote)
+export const validatePromote = validate(promoteSchema);
+export const validateMultiPromote = validate(multiPromoteSchema);
+export const validateStatus = validate(statusSchema);
+export const validateCounts = validate(countsSchema);

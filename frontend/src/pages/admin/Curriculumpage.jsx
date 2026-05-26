@@ -332,7 +332,7 @@ export default function CurriculumPage() {
     useEffect(() => {
         dispatch(fetchPrograms({ limit: 200 }));
         dispatch(fetchCourses({ limit: 200 }));
-        dispatch(fetchSections({ limit: 500 }));
+        dispatch(fetchSections({ limit: 500, status: "ACTIVE" }));
         axiosInstance.get("/subjects", { params: { limit: 300 } })
             .then((r) => setSubjects(r.data?.data?.subjects || r.data?.data || []))
             .catch(() => { });

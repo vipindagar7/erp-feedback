@@ -1,16 +1,16 @@
 import * as svc from "./section.service.js";
 
-const ok   = (res, data, msg = "OK", status = 200) => res.status(status).json({ success: true, message: msg, data });
+const ok = (res, data, msg = "OK", status = 200) => res.status(status).json({ success: true, message: msg, data });
 const fail = (res, e, next) => {
   if (e.status || e.statusCode) return res.status(e.status || e.statusCode).json({ success: false, message: e.message });
   next(e);
 };
 
-export const getAll    = async (req, res, next) => { try { ok(res, await svc.getAllSections(req.validatedData ?? req.query)); } catch (e) { fail(res, e, next); } };
-export const getById   = async (req, res, next) => { try { const r = await svc.getSectionById(req.params.id); if (!r) return res.status(404).json({ success: false, message: "Section not found" }); ok(res, r); } catch (e) { fail(res, e, next); } };
-export const create    = async (req, res, next) => { try { ok(res, await svc.createSection(req.validatedData), "Section created", 201); } catch (e) { fail(res, e, next); } };
-export const update    = async (req, res, next) => { try { ok(res, await svc.updateSection(req.params.id, req.validatedData), "Section updated"); } catch (e) { fail(res, e, next); } };
-export const remove    = async (req, res, next) => { try { await svc.deleteSection(req.params.id); ok(res, null, "Section deleted"); } catch (e) { fail(res, e, next); } };
+export const getAll = async (req, res, next) => { try { ok(res, await svc.getAllSections(req.validatedData ?? req.query)); } catch (e) { fail(res, e, next); } };
+export const getById = async (req, res, next) => { try { const r = await svc.getSectionById(req.params.id); if (!r) return res.status(404).json({ success: false, message: "Section not found" }); ok(res, r); } catch (e) { fail(res, e, next); } };
+export const create = async (req, res, next) => { try { ok(res, await svc.createSection(req.validatedData), "Section created", 201); } catch (e) { fail(res, e, next); } };
+export const update = async (req, res, next) => { try { ok(res, await svc.updateSection(req.params.id, req.validatedData ?? req.body), "Section updated"); } catch (e) { fail(res, e, next); } };
+export const remove = async (req, res, next) => { try { await svc.deleteSection(req.params.id); ok(res, null, "Section deleted"); } catch (e) { fail(res, e, next); } };
 
 export const assignSubjectToSection = async (req, res, next) => {
   try {
