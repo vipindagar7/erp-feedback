@@ -1,7 +1,6 @@
 import prisma from "../../utils/prisma.js";
 import * as svc from "./feedback.service.js";
 
-
 const ok = (res, data, msg, status = 200) => res.status(status).json({ success: true, message: msg, data });
 const fail = (res, e, next) => { if (e.statusCode) return res.status(e.statusCode).json({ success: false, message: e.message }); next(e); };
 const xlsx_res = (res, buf, name) => {
@@ -282,5 +281,24 @@ export const exportGroupResults = async (req, res, next) => {
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
     res.send(buffer);
+  } catch (e) { fail(res, e, next); }
+};
+
+// ── Group bulk template download ─────────────────────────────
+export const getGroupBulkTemplate = async (req, res, next) => {
+  try {
+    const { buffer, filename } = await svc.getGroupBulkTemplate(req.params.groupId);
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.send(buffer);
+  } catch (e) { fail(res, e, next); }
+};
+
+// ── Group bulk submit responses ───────────────────────────────
+export const bulkSubmitGroupResponses = async (req, res, next) => {
+  try {
+    if (!req.file) return res.status(400).json({ success: false, message: "Excel file required" });
+    const results = await svc.bulkSubmitGroupResponses(req.params.groupId, req.file.buffer);
+    ok(res, results, `${results.submitted} submitted, ${results.updated} updated, ${results.failed.length} failed`);
   } catch (e) { fail(res, e, next); }
 };

@@ -1,174 +1,82 @@
 import * as svc from "./section.service.js";
 
-export const getAll = async (req, res, next) => {
-  try { return res.json({ success: true, data: await svc.getAllSections(req.validatedData) }); }
-  catch (e) { next(e); }
-};
-export const getById = async (req, res, next) => {
-  try {
-    const s = await svc.getSectionById(req.params.id);
-    if (!s) return res.status(404).json({ success: false, message: "Section not found" });
-    return res.json({ success: true, data: s });
-  } catch (e) { next(e); }
-};
-export const create = async (req, res, next) => {
-  try { return res.status(201).json({ success: true, message: "Section created", data: await svc.createSection(req.validatedData) }); }
-  catch (e) { next(e); }
-};
-export const update = async (req, res, next) => {
-  try { return res.json({ success: true, message: "Updated", data: await svc.updateSection(req.params.id, req.validatedData) }); }
-  catch (e) { next(e); }
-};
-export const remove = async (req, res, next) => {
-  try { await svc.deleteSection(req.params.id); return res.json({ success: true, message: "Deleted" }); }
-  catch (e) { next(e); }
+const ok   = (res, data, msg = "OK", status = 200) => res.status(status).json({ success: true, message: msg, data });
+const fail = (res, e, next) => {
+  if (e.status || e.statusCode) return res.status(e.status || e.statusCode).json({ success: false, message: e.message });
+  next(e);
 };
 
-// ── Subject assignment ─────────────────────────────────────────
-export const assignSubject = async (req, res, next) => {
+export const getAll    = async (req, res, next) => { try { ok(res, await svc.getAllSections(req.validatedData ?? req.query)); } catch (e) { fail(res, e, next); } };
+export const getById   = async (req, res, next) => { try { const r = await svc.getSectionById(req.params.id); if (!r) return res.status(404).json({ success: false, message: "Section not found" }); ok(res, r); } catch (e) { fail(res, e, next); } };
+export const create    = async (req, res, next) => { try { ok(res, await svc.createSection(req.validatedData), "Section created", 201); } catch (e) { fail(res, e, next); } };
+export const update    = async (req, res, next) => { try { ok(res, await svc.updateSection(req.params.id, req.validatedData), "Section updated"); } catch (e) { fail(res, e, next); } };
+export const remove    = async (req, res, next) => { try { await svc.deleteSection(req.params.id); ok(res, null, "Section deleted"); } catch (e) { fail(res, e, next); } };
+
+export const assignSubjectToSection = async (req, res, next) => {
   try {
-    const { subject_id, faculty_id, type, status } = req.validatedData;
-    const result = await svc.assignSubjectToSection(req.params.id, subject_id, faculty_id || null, type, status);
-    return res.json({ success: true, message: "Subject assigned", data: result });
-  } catch (e) { next(e); }
+    const { subject_id, faculty_id, type, status } = req.validatedData ?? req.body;
+    const r = await svc.assignSubjectToSection(req.params.id, subject_id, faculty_id || null, type, status);
+    ok(res, r, "Subject assigned");
+  } catch (e) { fail(res, e, next); }
 };
-export const updateSubjectAssignment = async (req, res, next) => {
+
+export const updateSectionSubjectFaculty = async (req, res, next) => {
   try {
-    const result = await svc.updateSectionSubject(req.params.id, req.params.subject_id, req.validatedData);
-    return res.json({ success: true, message: "Updated", data: result });
-  } catch (e) { next(e); }
+    const r = await svc.updateSectionSubject(req.params.id, req.params.subject_id, req.validatedData ?? req.body);
+    ok(res, r, "Subject assignment updated");
+  } catch (e) { fail(res, e, next); }
 };
+
 export const removeSubject = async (req, res, next) => {
   try {
-    const result = await svc.removeSubjectFromSection(req.params.id, req.params.subject_id);
-    return res.json({ success: true, message: "Subject removed", data: result });
-  } catch (e) { next(e); }
+    const r = await svc.removeSubjectFromSection(req.params.id, req.params.subject_id);
+    ok(res, r, "Subject removed");
+  } catch (e) { fail(res, e, next); }
 };
 
-// ── Bulk upload ────────────────────────────────────────────────
-export const bulkUpload = async (req, res, next) => {
+export const promote = async (req, res, next) => {
   try {
-    if (!req.file) return res.status(400).json({ success: false, message: "No file" });
-    const r = await svc.bulkCreateSections(req.file.buffer);
-    return res.json({ success: true, message: `${r.created.length} created, ${r.failed.length} failed`, data: r });
-  } catch (e) { next(e); }
+    const { remarks } = req.validatedData ?? req.body;
+    ok(res, await svc.promoteSection(req.params.id, remarks), "Section promoted");
+  } catch (e) { fail(res, e, next); }
 };
+
+export const promoteMultiple = async (req, res, next) => {
+  try {
+    const { section_ids, remarks } = req.validatedData ?? req.body;
+    ok(res, await svc.promoteMultipleSections(section_ids, remarks), "Sections promoted");
+  } catch (e) { fail(res, e, next); }
+};
+
+export const bulkStatus = async (req, res, next) => {
+  try {
+    const { status, remarks } = req.validatedData ?? req.body;
+    ok(res, await svc.setSectionStatus(req.params.id, status, remarks), "Status updated");
+  } catch (e) { fail(res, e, next); }
+};
+
+export const getStudentCounts = async (req, res, next) => {
+  try {
+    const { section_ids } = req.validatedData ?? req.body;
+    ok(res, await svc.getSectionStudentCounts(section_ids));
+  } catch (e) { fail(res, e, next); }
+};
+
+// ── Subject template download ─────────────────────────────────
+export const getSubjectTemplate = async (req, res, next) => {
+  try {
+    const { buffer, filename } = await svc.getSectionSubjectTemplate();
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.send(buffer);
+  } catch (e) { fail(res, e, next); }
+};
+
+// ── Bulk assign subjects from Excel ──────────────────────────
 export const bulkAssignSubjects = async (req, res, next) => {
   try {
-    if (!req.file) return res.status(400).json({ success: false, message: "No file" });
-    const r = await svc.bulkAssignSubjects(req.file.buffer);
-    return res.json({ success: true, message: `${r.created.length} assigned, ${r.failed.length} failed`, data: r });
-  } catch (e) { next(e); }
-};
-
-// ── Templates ──────────────────────────────────────────────────
-export const downloadTemplate = async (req, res, next) => {
-  try {
-    const buf = await svc.getSectionTemplate();
-    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-    res.setHeader("Content-Disposition", "attachment; filename=section_template.xlsx");
-    return res.send(buf);
-  } catch (e) { next(e); }
-};
-export const downloadSubjectTemplate = async (req, res, next) => {
-  try {
-    const buf = await svc.getSectionSubjectTemplate();
-    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-    res.setHeader("Content-Disposition", "attachment; filename=section_subject_template.xlsx");
-    return res.send(buf);
-  } catch (e) { next(e); }
-};
-
-export const promoteSectionController = async (req, res, next) => {
-  try {
-    const result = await svc.promoteSection(
-      req.params.id,
-      req.body.remarks
-    );
-
-    return res.json({
-      success: true,
-      message: `${result.promoted.length} promoted, ${result.skipped.length} skipped, ${result.failed.length} failed`,
-      data: result,
-    });
-  } catch (e) {
-    next(e);
-  }
-};
-
-export const promoteMultipleSectionsController = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    const { section_ids, remarks } = req.body;
-
-    const results = await svc.promoteMultipleSections(
-      section_ids,
-      remarks
-    );
-
-    const totalPromoted = results.reduce(
-      (s, r) => s + r.promoted.length,
-      0
-    );
-
-    const totalSkipped = results.reduce(
-      (s, r) => s + r.skipped.length,
-      0
-    );
-
-    return res.json({
-      success: true,
-      message: `${totalPromoted} promoted, ${totalSkipped} skipped across ${results.length} sections`,
-      data: results,
-    });
-  } catch (e) {
-    next(e);
-  }
-};
-
-export const setSectionStatusController = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    const { status, remarks } = req.body;
-
-    const result = await svc.setSectionStatus(
-      req.params.id,
-      status,
-      remarks
-    );
-
-    return res.json({
-      success: true,
-      message: `${result.updated.length} student(s) marked ${status.toLowerCase()}`,
-      data: result,
-    });
-  } catch (e) {
-    next(e);
-  }
-};
-
-export const getSectionStudentCountsController = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    const counts = await svc.getSectionStudentCounts(
-      req.body.section_ids
-
-    );
-
-    return res.json({
-      success: true,
-      data: counts,
-    });
-  } catch (e) {
-    next(e);
-  }
+    if (!req.file) return res.status(400).json({ success: false, message: "Excel file required" });
+    const results = await svc.bulkAssignSubjects(req.file.buffer);
+    ok(res, results, `${results.created.length} assigned, ${results.updated?.length || 0} updated, ${results.failed.length} failed`);
+  } catch (e) { fail(res, e, next); }
 };

@@ -185,6 +185,8 @@ export const EP = {
     groups: "/feedback/groups",
     groupById: (id) => `/feedback/groups/${id}`,
     groupExport: (id) => `/feedback/groups/${id}/export`,
+    groupBulkTemplate: (id) => `/feedback/groups/${id}/bulk-template`,
+    groupBulkSubmit: (id) => `/feedback/groups/${id}/bulk-submit`,
     teachingReport: "/feedback/teaching-report",
     exportLevel: "/feedback/export-level",
   },

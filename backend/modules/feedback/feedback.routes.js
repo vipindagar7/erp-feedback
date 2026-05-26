@@ -54,6 +54,8 @@ router.get("/groups/:groupId", authenticate, authorize(...ADMIN), c.getFormGroup
 router.patch("/groups/:groupId", authenticate, authorize(...ADMIN), c.updateFormGroup);
 router.delete("/groups/:groupId", authenticate, authorize(...ADMIN), c.deleteFormGroup);
 router.get("/groups/:groupId/export", authenticate, authorize(...ADMIN), c.exportGroupResults);
+router.get("/groups/:groupId/bulk-template", authenticate, authorize(...ADMIN), c.getGroupBulkTemplate);
+router.post("/groups/:groupId/bulk-submit", authenticate, authorize(...ADMIN), upload.single("file"), c.bulkSubmitGroupResponses);
 
 // ── Teaching Report ───────────────────────────────────────────
 router.get("/teaching-report", authenticate, authorize(...ADMIN, "FACULTY"), c.getTeachingReport);

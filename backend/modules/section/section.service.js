@@ -1,8 +1,6 @@
 import xlsx from "xlsx";
-import { generateFeedbackFormsForSection } from "./section.generate.service.js";
 import { sectionTemplate, sectionSubjectTemplate } from "../shared/template.helper.js";
 import prisma from "../../utils/prisma.js";
-
 
 // ── Includes ───────────────────────────────────────────────────
 const sectionInclude = {
@@ -110,7 +108,6 @@ export const assignSubjectToSection = async (section_id, subject_id, faculty_id,
       });
     }
     const result = await tx.section.findUnique({ where: { id: section_id }, include: sectionInclude });
-    generateFeedbackFormsForSection(section_id).catch(() => { });
     return result;
   });
 };
@@ -207,20 +204,104 @@ export const bulkCreateSections = async (buffer) => {
 // ══════════════════════════════════════════════════════════════
 export const bulkAssignSubjects = async (buffer) => {
   const wb = xlsx.read(buffer, { type: "buffer" });
-  const rows = xlsx.utils.sheet_to_json(wb.Sheets["Data"] || wb.Sheets[wb.SheetNames[0]], { defval: "" });
-  const results = { created: [], failed: [], total: rows.length };
-  for (const row of rows) {
-    const section_id = String(row["Section ID*"] || row.section_id || "").trim();
-    const subject_id = String(row["Subject ID*"] || row.subject_id || "").trim();
-    const faculty_id = String(row["Faculty ID"] || row.faculty_id || "").trim() || null;
-    const type = String(row["Type"] || "REGULAR").trim().toUpperCase();
-    const status = String(row["Status"] || "ACTIVE").trim().toUpperCase();
-    if (!section_id || !subject_id) { results.failed.push({ row, reason: "Section ID and Subject ID required" }); continue; }
-    try {
-      await assignSubjectToSection(section_id, subject_id, faculty_id, type, status);
-      results.created.push({ section_id, subject_id });
-    } catch (e) { results.failed.push({ row, reason: e.message }); }
+
+  // Build lookup maps: subject code → id, faculty email → id
+  const [allSubjects, allFaculty] = await Promise.all([
+    prisma.subject.findMany({ select: { id: true, code: true } }),
+    prisma.faculty.findMany({ select: { id: true, user: { select: { email: true } } } }),
+  ]);
+  const subjectByCode = Object.fromEntries(allSubjects.map((s) => [s.code.toLowerCase().trim(), s.id]));
+  const facultyByEmail = Object.fromEntries(allFaculty.map((f) => [f.user?.email?.toLowerCase().trim(), f.id]));
+
+  // Find section by name — build lookup: sheetName → section_id
+  const allSections = await prisma.section.findMany({
+    select: { id: true, name: true, semester: true, course: { select: { name: true, program: { select: { name: true } } } } },
+  });
+  // Map each sheet name to a section (match on sheet name = generated template sheet name)
+  const usedNames = new Set();
+  const safeSheet = (sec) => {
+    const course = sec.course?.name || "";
+    const base = `${course}–${sec.name} Sem${sec.semester}`.replace(/[\[\]:*?/\\]/g, "").slice(0, 31);
+    let n = base;
+    if (usedNames.has(n)) { let i = 2; while (usedNames.has(n)) { const s = `(${i++})`; n = base.slice(0, 31 - s.length) + s; } }
+    usedNames.add(n); return n;
+  };
+  const sheetToSectionId = {};
+  for (const sec of allSections) sheetToSectionId[safeSheet(sec)] = sec.id;
+
+  const SKIP_SHEETS = new Set(["subjects (reference)", "faculty (reference)", "instructions"]);
+  const results = { created: [], updated: [], failed: [], total: 0, sheets_processed: 0 };
+
+  for (const sheetName of wb.SheetNames) {
+    if (SKIP_SHEETS.has(sheetName.toLowerCase())) continue;
+
+    const section_id = sheetToSectionId[sheetName];
+    if (!section_id) {
+      results.failed.push({ sheet: sheetName, reason: "No matching section found for this sheet name" });
+      continue;
+    }
+    results.sheets_processed++;
+
+    // rows: skip header rows until we find "Subject Code *" column
+    const ws = wb.Sheets[sheetName];
+    const rows = xlsx.utils.sheet_to_json(ws, { defval: "" });
+
+    // Find data rows — skip info rows, find rows that have Subject Code * header
+    let dataRows = rows.filter((row) => {
+      const keys = Object.keys(row).map((k) => k.toLowerCase());
+      return keys.some((k) => k.includes("subject code"));
+    });
+
+    // If no header match, treat all non-empty rows after row 5 as data
+    if (!dataRows.length) {
+      const allRows = xlsx.utils.sheet_to_json(ws, { defval: "", header: 1 });
+      // Find the row index where "Subject Code" appears
+      const headerIdx = allRows.findIndex((r) => r.some((c) => String(c).toLowerCase().includes("subject code")));
+      if (headerIdx === -1) { results.failed.push({ sheet: sheetName, reason: "Could not find header row with 'Subject Code'" }); continue; }
+      const headers = allRows[headerIdx].map((h) => String(h).trim());
+      dataRows = allRows.slice(headerIdx + 1)
+        .filter((r) => r.some((c) => c !== ""))
+        .map((r) => Object.fromEntries(headers.map((h, i) => [h, r[i] ?? ""])));
+    }
+
+    results.total += dataRows.length;
+
+    for (const row of dataRows) {
+      // Support both "Subject Code *" and "Subject Code" column names
+      const rawCode = String(row["Subject Code *"] || row["Subject Code"] || "").trim();
+      const rawEmail = String(row["Faculty Email"] || row["Faculty Email (optional)"] || "").trim();
+      const type = String(row["Type"] || "REGULAR").trim().toUpperCase() || "REGULAR";
+      const status = String(row["Status"] || "ACTIVE").trim().toUpperCase() || "ACTIVE";
+
+      if (!rawCode) { results.failed.push({ sheet: sheetName, row: rawCode || "(empty)", reason: "Subject Code is required" }); continue; }
+
+      const subject_id = subjectByCode[rawCode.toLowerCase()];
+      if (!subject_id) { results.failed.push({ sheet: sheetName, row: rawCode, reason: `Subject code "${rawCode}" not found` }); continue; }
+
+      let faculty_id = null;
+      if (rawEmail) {
+        faculty_id = facultyByEmail[rawEmail.toLowerCase()];
+        if (!faculty_id) { results.failed.push({ sheet: sheetName, row: rawCode, reason: `Faculty email "${rawEmail}" not found` }); continue; }
+      }
+
+      try {
+        await assignSubjectToSection(section_id, subject_id, faculty_id, type, status);
+        results.created.push({ sheet: sheetName, subject_code: rawCode, faculty_email: rawEmail || null });
+      } catch (e) {
+        if (e.code === "P2002") {
+          // Already exists — update faculty/type/status
+          try {
+            await prisma.sectionSubject.update({
+              where: { section_id_subject_id: { section_id, subject_id } },
+              data: { faculty_id: faculty_id || undefined, type, status },
+            });
+            results.updated.push({ sheet: sheetName, subject_code: rawCode });
+          } catch (ue) { results.failed.push({ sheet: sheetName, row: rawCode, reason: ue.message }); }
+        } else { results.failed.push({ sheet: sheetName, row: rawCode, reason: e.message }); }
+      }
+    }
   }
+
   return results;
 };
 

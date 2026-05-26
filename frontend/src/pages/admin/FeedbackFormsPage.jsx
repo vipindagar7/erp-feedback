@@ -18,9 +18,9 @@ import {
   ChevronDown, ChevronRight, AlertTriangle, Users, GraduationCap,
   Layers, X, Search, Check, Star, MessageSquare, ListChecks,
   HelpCircle, ArrowLeft, ArrowRight, Loader2, RefreshCw, ExternalLink,
-  Calendar, BookOpen, Pencil, Filter, Building2, ChevronUp,
+  Calendar, BookOpen, Pencil, Filter, Building2, ChevronUp, Upload, FileSpreadsheet,
 } from "lucide-react";
-import {notify} from "../../hooks/notify.js"
+import { notify } from "../../hooks/notify.js";
 
 // ── Constants ──────────────────────────────────────────────────
 const FORM_TYPES = [
@@ -576,7 +576,44 @@ function DeleteGroupModal({ group, onClose, onDeleted }) {
 function TeachingGroupRow({ group, onEditGroup, onDeleteGroup, onEditForm, onDeleteForm, onRefresh, navigate }) {
   const [open, setOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [templateLoading, setTemplateLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadResult, setUploadResult] = useState(null);
+  const uploadRef = useRef();
   const now = new Date();
+
+  const downloadBulkTemplate = async () => {
+    setTemplateLoading(true);
+    try {
+      const res = await axiosInstance.get(EP.feedback.groupBulkTemplate(group.id), { responseType: "blob" });
+      const cd = res.headers["content-disposition"] || "";
+      const name = cd.match(/filename="?([^"]+)"?/)?.[1] || `${group.name}_template.xlsx`;
+      const url = URL.createObjectURL(new Blob([res.data]));
+      const a = document.createElement("a"); a.href = url; a.download = name; a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      try {
+        const text = err.response?.data ? await err.response.data.text() : "";
+        const msg = text ? JSON.parse(text)?.message : null;
+        notify.error(msg || "Download failed");
+      } catch { notify.error("Download failed"); }
+    } finally { setTemplateLoading(false); }
+  };
+
+  const handleBulkUpload = async (file) => {
+    setUploading(true);
+    setUploadResult(null);
+    try {
+      const fd = new FormData(); fd.append("file", file);
+      const res = await axiosInstance.post(EP.feedback.groupBulkSubmit(group.id), fd,
+        { headers: { "Content-Type": "multipart/form-data" } });
+      setUploadResult(res.data?.data);
+      notify.success(res.data?.message || "Responses uploaded");
+      onRefresh();
+    } catch (err) {
+      notify.error(err.response?.data?.message || "Upload failed");
+    } finally { setUploading(false); }
+  };
   const st = getStatus(group);
   const totalResp = (group.forms || []).reduce((s, f) => s + (f._count?.responses || 0), 0);
 
@@ -598,8 +635,10 @@ function TeachingGroupRow({ group, onEditGroup, onDeleteGroup, onEditForm, onDel
       const a = document.createElement("a"); a.href = url; a.download = name; a.click();
       URL.revokeObjectURL(url);
     } catch (err) {
-      const text = await err.response?.data?.text?.() || "";
-      notify.error(JSON.parse(text)?.message || "Export failed");
+      try {
+        const text = err.response?.data ? await err.response.data.text() : "";
+        notify.error((text ? JSON.parse(text)?.message : null) || "Export failed");
+      } catch { notify.error("Export failed"); }
     } finally { setExporting(false); }
   };
 
@@ -643,10 +682,20 @@ function TeachingGroupRow({ group, onEditGroup, onDeleteGroup, onEditForm, onDel
               className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
               <Pencil size={13} />
             </button>
-            <button onClick={exportActive} title="Export active results" disabled={exporting}
+            <button onClick={exportActive} title="Export results Excel" disabled={exporting}
               className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-950/20 transition-colors">
               {exporting ? <Loader2 size={13} className="animate-spin" /> : <Download size={13} />}
             </button>
+            <button onClick={downloadBulkTemplate} title="Download bulk submission template" disabled={templateLoading}
+              className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/20 transition-colors">
+              {templateLoading ? <Loader2 size={13} className="animate-spin" /> : <FileSpreadsheet size={13} />}
+            </button>
+            <button onClick={() => uploadRef.current?.click()} title="Upload bulk responses" disabled={uploading}
+              className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-colors">
+              {uploading ? <Loader2 size={13} className="animate-spin" /> : <Upload size={13} />}
+            </button>
+            <input ref={uploadRef} type="file" accept=".xlsx" className="sr-only"
+              onChange={(e) => { if (e.target.files[0]) { handleBulkUpload(e.target.files[0]); e.target.value = ""; } }} />
             <button onClick={() => onDeleteGroup(group)} title="Delete group"
               className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors">
               <Trash2 size={13} />
@@ -654,6 +703,33 @@ function TeachingGroupRow({ group, onEditGroup, onDeleteGroup, onEditForm, onDel
           </div>
         </td>
       </tr>
+
+      {/* Upload result banner */}
+      {uploadResult && open && (
+        <tr>
+          <td colSpan={7} className="px-4 py-2 bg-muted/5 border-b border-border">
+            <div className={cn("flex items-center gap-3 px-3 py-2 rounded-xl text-xs border",
+              uploadResult.failed?.length > 0
+                ? "bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400"
+                : "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400")}>
+              <FileSpreadsheet size={13} className="shrink-0" />
+              <span className="font-medium">
+                {uploadResult.submitted || 0} submitted · {uploadResult.updated || 0} updated
+                {uploadResult.failed?.length > 0 && ` · ${uploadResult.failed.length} failed`}
+                {uploadResult.sheets_processed != null && ` (${uploadResult.sheets_processed} sheets)`}
+              </span>
+              {uploadResult.failed?.length > 0 && (
+                <div className="flex-1 max-h-16 overflow-y-auto space-y-0.5">
+                  {uploadResult.failed.map((f, i) => (
+                    <p key={i} className="text-[10px]">[{f.sheet}] {f.email || f.form_id || ""} — {f.reason}</p>
+                  ))}
+                </div>
+              )}
+              <button onClick={() => setUploadResult(null)} className="ml-auto text-muted-foreground hover:text-foreground shrink-0">×</button>
+            </div>
+          </td>
+        </tr>
+      )}
 
       {/* INDIVIDUAL FORM ROWS (inside group) */}
       {open && (group.forms || []).map((f) => {

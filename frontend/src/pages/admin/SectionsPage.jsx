@@ -6,8 +6,7 @@ import {
   fetchCourses, fetchSubjects, fetchPrograms, fetchDepartments,
 } from "../../redux/academic/academicSlice.js";
 import axiosInstance from "../../lib/axios.js";
-
-import { Layers, ChevronRight, Plus, X, Pencil, Trash2, Upload, Download, UserCheck, ArrowUp, Users } from "lucide-react";
+import { Layers, ChevronRight, Plus, X, Pencil, Trash2, Upload, Download, UserCheck, ArrowUp, Users, Search, Zap, Loader2 } from "lucide-react";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { ConfirmModal, Spinner, ResultsModal } from "../AcademicPage.jsx";
 import { PromoteSectionsModal, SectionBulkStatusModal } from "../../components/SectionPromoteModal.jsx";
 import { cn } from "../../lib/utils.js";
+import { fmtSection } from "../../lib/formatSection.js";
 import { notify } from "../../hooks/notify.js";
 
 const TYPES = ["REGULAR", "ELECTIVE", "COMBINED", "TRAINING", "OTHER"];
@@ -138,47 +138,94 @@ function SectionModal({ open, onClose, onSubmit, initialData, loading, courses, 
 // ── Assign subject modal ────────────────────────────────────────
 function AssignModal({ open, onClose, onSubmit, loading, subjects, faculty, assignedIds = [] }) {
   const [form, setForm] = useState({ subject_id: "", faculty_id: "none", type: "REGULAR", status: "ACTIVE" });
+  const [subQ, setSubQ] = useState("");
+  const [facQ, setFacQ] = useState("");
   useEffect(() => {
-    if (open) setForm({ subject_id: "", faculty_id: "none", type: "REGULAR", status: "ACTIVE" });
+    if (open) { setForm({ subject_id: "", faculty_id: "none", type: "REGULAR", status: "ACTIVE" }); setSubQ(""); setFacQ(""); }
   }, [open]);
   if (!open) return null;
 
   const available = subjects.filter((s) => !assignedIds.includes(s.id));
+  const filteredSubs = subQ ? available.filter((s) => s.name.toLowerCase().includes(subQ.toLowerCase()) || s.code.toLowerCase().includes(subQ.toLowerCase())) : available;
+  const filteredFac = facQ ? faculty.filter((f) => f.name.toLowerCase().includes(facQ.toLowerCase()) || (f.emp_id || "").toLowerCase().includes(facQ.toLowerCase())) : faculty;
   const setV = (k) => (v) => setForm((f) => ({ ...f, [k]: v }));
+  const selSub = available.find((s) => s.id === form.subject_id);
+  const selFac = faculty.find((f) => f.id === form.faculty_id);
 
   return (
     <Dialog open onOpenChange={(v) => { if (!v) onClose(); }}>
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Assign Subject</DialogTitle>
           <DialogDescription>Assigning a faculty here also adds this subject to their profile automatically.</DialogDescription>
         </DialogHeader>
         <div className="space-y-3 py-1">
+          {/* Subject search */}
           <div className="space-y-1.5">
             <Label>Subject *</Label>
-            <Select value={form.subject_id} onValueChange={setV("subject_id")}>
-              <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="Select subject…" /></SelectTrigger>
-              <SelectContent>
-                {available.length === 0
-                  ? <SelectItem value="__all_assigned__" disabled>All subjects already assigned</SelectItem>
-                  : available.map((s) => (
-                    <SelectItem key={s.id} value={s.id}>{s.name} ({s.code})</SelectItem>
-                  ))}
-              </SelectContent>
-            </Select>
+            <div className="relative">
+              <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <input value={subQ} onChange={(e) => setSubQ(e.target.value)} placeholder="Search subject by name or code…"
+                className="w-full h-9 pl-7 pr-3 text-sm border border-input rounded-lg bg-background outline-none focus:ring-2 focus:ring-ring" />
+            </div>
+            {selSub && (
+              <div className="flex items-center gap-2 p-2 bg-primary/5 border border-primary/20 rounded-lg text-xs">
+                <span className="font-semibold text-foreground">{selSub.name}</span>
+                <span className="text-muted-foreground font-mono">{selSub.code}</span>
+                <button onClick={() => setForm((f) => ({ ...f, subject_id: "" }))} className="ml-auto text-muted-foreground hover:text-destructive"><X size={11} /></button>
+              </div>
+            )}
+            <div className="max-h-40 overflow-y-auto border border-border rounded-lg divide-y divide-border">
+              {filteredSubs.length === 0
+                ? <p className="text-xs text-muted-foreground text-center py-3">{available.length === 0 ? "All subjects assigned" : "No matches"}</p>
+                : filteredSubs.map((s) => (
+                  <button key={s.id} onClick={() => { setForm((f) => ({ ...f, subject_id: s.id })); setSubQ(""); }}
+                    className={cn("w-full flex items-center gap-3 px-3 py-2 text-sm text-left hover:bg-muted transition-colors",
+                      form.subject_id === s.id && "bg-primary/5")}>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-foreground truncate">{s.name}</p>
+                      <p className="text-xs text-muted-foreground font-mono">{s.code}{s.category ? ` · ${s.category}` : ""}{s.credits ? ` · ${s.credits}cr` : ""}</p>
+                    </div>
+                    {form.subject_id === s.id && <div className="w-2 h-2 rounded-full bg-primary shrink-0" />}
+                  </button>
+                ))}
+            </div>
           </div>
+
+          {/* Faculty search */}
           <div className="space-y-1.5">
             <Label>Faculty <span className="text-muted-foreground text-xs">(optional)</span></Label>
-            <Select value={form.faculty_id} onValueChange={setV("faculty_id")}>
-              <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">No faculty assigned</SelectItem>
-                {faculty.map((f) => (
-                  <SelectItem key={f.id} value={f.id}>{f.name}{f.emp_id ? ` (${f.emp_id})` : ""}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="relative">
+              <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <input value={facQ} onChange={(e) => setFacQ(e.target.value)} placeholder="Search faculty by name or ID…"
+                className="w-full h-9 pl-7 pr-3 text-sm border border-input rounded-lg bg-background outline-none focus:ring-2 focus:ring-ring" />
+            </div>
+            {selFac && form.faculty_id !== "none" && (
+              <div className="flex items-center gap-2 p-2 bg-primary/5 border border-primary/20 rounded-lg text-xs">
+                <span className="font-semibold text-foreground">{selFac.name}</span>
+                {selFac.emp_id && <span className="text-muted-foreground">{selFac.emp_id}</span>}
+                <button onClick={() => setForm((f) => ({ ...f, faculty_id: "none" }))} className="ml-auto text-muted-foreground hover:text-destructive"><X size={11} /></button>
+              </div>
+            )}
+            <div className="max-h-32 overflow-y-auto border border-border rounded-lg divide-y divide-border">
+              <button onClick={() => { setForm((f) => ({ ...f, faculty_id: "none" })); setFacQ(""); }}
+                className={cn("w-full px-3 py-2 text-sm text-left text-muted-foreground hover:bg-muted", form.faculty_id === "none" && "bg-primary/5")}>
+                No faculty assigned
+              </button>
+              {filteredFac.map((f) => (
+                <button key={f.id} onClick={() => { setForm((p) => ({ ...p, faculty_id: f.id })); setFacQ(""); }}
+                  className={cn("w-full flex items-center gap-3 px-3 py-2 text-sm text-left hover:bg-muted transition-colors",
+                    form.faculty_id === f.id && "bg-primary/5")}>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-foreground truncate">{f.name}</p>
+                    {f.emp_id && <p className="text-xs text-muted-foreground">{f.emp_id}</p>}
+                  </div>
+                  {form.faculty_id === f.id && <div className="w-2 h-2 rounded-full bg-primary shrink-0" />}
+                </button>
+              ))}
+            </div>
           </div>
+
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label>Type</Label>
@@ -301,7 +348,21 @@ function SectionRow({ section, allSubjects, allFaculty, onEdit, onDelete, onProm
   const { actionLoading } = useSelector((s) => s.academic.sections);
   const [expanded, setExpanded] = useState(false);
   const [assignOpen, setAssignOpen] = useState(false);
+  const [autoAssigning, setAutoAssigning] = useState(false);
+  const [autoAssignResult, setAutoAssignResult] = useState(null);
   const assignedIds = section.sectionSubjects?.map((ss) => ss.subject_id) || [];
+
+  const handleAutoAssign = async () => {
+    setAutoAssigning(true);
+    setAutoAssignResult(null);
+    try {
+      const r = await axiosInstance.post(`/curriculum/auto-assign/${section.id}`);
+      setAutoAssignResult(r.data?.data);
+      onRefresh();
+    } catch (e) {
+      setAutoAssignResult({ error: e.response?.data?.message || "Auto-assign failed" });
+    } finally { setAutoAssigning(false); }
+  };
 
   const handleAssign = async (data) => {
     const r = await dispatch(assignSubject({ id: section.id, data }));
@@ -383,15 +444,36 @@ function SectionRow({ section, allSubjects, allFaculty, onEdit, onDelete, onProm
         <tr>
           <td colSpan={8} className="bg-muted/10 border-b border-border">
             <div className="px-6 py-4">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                   Subjects ({section.sectionSubjects?.length || 0})
                 </p>
-                <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5"
-                  onClick={() => setAssignOpen(true)}>
-                  <Plus size={11} /> Assign Subject
-                </Button>
+                <div className="flex items-center gap-1.5">
+                  <Button size="sm" variant="outline"
+                    className="h-7 text-xs gap-1 text-amber-700 border-amber-200 hover:bg-amber-50 dark:text-amber-400 dark:border-amber-800 dark:hover:bg-amber-950/20"
+                    onClick={handleAutoAssign} disabled={autoAssigning}>
+                    {autoAssigning ? <Loader2 size={11} className="animate-spin" /> : <Zap size={11} />}
+                    Auto-assign
+                  </Button>
+                  <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5"
+                    onClick={() => setAssignOpen(true)}>
+                    <Plus size={11} /> Assign Subject
+                  </Button>
+                </div>
               </div>
+              {autoAssignResult && (
+                <div className={cn("mb-3 p-2.5 rounded-xl text-xs border flex items-start gap-2",
+                  autoAssignResult.error
+                    ? "bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400"
+                    : "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400")}>
+                  <Zap size={11} className="mt-0.5 shrink-0" />
+                  <div>
+                    {autoAssignResult.error
+                      ? <p>{autoAssignResult.error}</p>
+                      : <p><strong>{autoAssignResult.assigned?.length || 0} assigned</strong>, {autoAssignResult.already_had?.length || 0} already set{autoAssignResult.message ? ` — ${autoAssignResult.message}` : ""}</p>}
+                  </div>
+                </div>
+              )}
               {!section.sectionSubjects?.length ? (
                 <p className="text-sm text-muted-foreground py-1">No subjects assigned yet.</p>
               ) : (
@@ -506,6 +588,23 @@ export default function SectionsPage() {
     } catch { notify.error("Download failed"); }
   };
 
+  const [bulkTemplateLoading, setBulkTemplateLoading] = useState(false);
+  const handleBulkTemplateDownload = async () => {
+    setBulkTemplateLoading(true);
+    try {
+      // Fetch all sections (up to 500) and download one combined template
+      const res = await axiosInstance.get("/sections/subject-template", { responseType: "blob" });
+      const cd = res.headers["content-disposition"] || "";
+      const name = cd.match(/filename="?([^"]+)"?/)?.[1] || "all_sections_template.xlsx";
+      const url = URL.createObjectURL(new Blob([res.data]));
+      const a = document.createElement("a"); a.href = url; a.download = name; a.click();
+      URL.revokeObjectURL(url);
+      notify.success("Downloaded — one sheet per section, assign by Subject Code + Faculty Email");
+    } catch (e) {
+      notify.error(e.response?.data?.message || "Download failed");
+    } finally { setBulkTemplateLoading(false); }
+  };
+
   const filteredCourses = filterDept === "all"
     ? courses
     : courses.filter((c) => c.program?.department?.id === filterDept);
@@ -531,6 +630,12 @@ export default function SectionsPage() {
             </Button>
             <Button variant="outline" size="sm" onClick={() => handleTemplate("/sections/subject-template", "subject_assign_template.xlsx")}>
               <Download size={13} className="mr-1.5" /> Subject Template
+            </Button>
+            <Button variant="outline" size="sm"
+              className="text-blue-700 border-blue-200 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-800 dark:hover:bg-blue-950/20"
+              onClick={handleBulkTemplateDownload} disabled={bulkTemplateLoading}>
+              {bulkTemplateLoading ? <Loader2 size={13} className="mr-1.5 animate-spin" /> : <Download size={13} className="mr-1.5" />}
+              All Section Templates
             </Button>
             <Button variant="outline" size="sm" onClick={() => fileRef.current?.click()}>
               <Upload size={13} className="mr-1.5" /> Bulk Sections

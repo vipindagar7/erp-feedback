@@ -31,9 +31,9 @@ export const programTemplate = async () => {
     ["Name*", "Department ID*"],
     ["B. Tech.", depts[0]?.id || "<dept-id>"],
     {
-      name:    "Departments (Reference)",
+      name: "Departments (Reference)",
       headers: ["Department ID", "Department Name"],
-      rows:    depts.map((d) => [d.id, d.name]),
+      rows: depts.map((d) => [d.id, d.name]),
     }
   );
 };
@@ -47,9 +47,9 @@ export const courseTemplate = async () => {
     ["Name*", "Program ID*"],
     ["CSE AIML", programs[0]?.id || "<program-id>"],
     {
-      name:    "Programs (Reference)",
+      name: "Programs (Reference)",
       headers: ["Program ID", "Program Name", "Department"],
-      rows:    programs.map((p) => [p.id, p.name, p.department?.name || ""]),
+      rows: programs.map((p) => [p.id, p.name, p.department?.name || ""]),
     }
   );
 };
@@ -61,77 +61,115 @@ export const subjectTemplate = () =>
   );
 
 export const sectionTemplate = async () => {
-  const [courses, faculty] = await Promise.all([
-    prisma.course.findMany({
-      orderBy: { name: "asc" },
-      include: { program: { include: { department: true } } },
-    }),
-    prisma.faculty.findMany({ orderBy: { name: "asc" } }),
-  ]);
-
-  const wb = xlsx.utils.book_new();
-
-  // Main sheet
   const headers = ["Name*", "Course ID*", "Semester* (1-8)", "Batch*", "Room No", "Class Coordinator ID"];
-  const sample  = ["A", courses[0]?.id || "<course-id>", "1", "2024-2028", "101", faculty[0]?.id || ""];
-  const ws = xlsx.utils.aoa_to_sheet([headers, sample]);
+  const example = ["A", "<course-uuid>", "1", "2024-2028", "Room 101", ""];
+  const ws = xlsx.utils.aoa_to_sheet([headers, example]);
   ws["!cols"] = headers.map((h) => ({ wch: Math.max(h.length + 4, 20) }));
+  const wb = xlsx.utils.book_new();
   xlsx.utils.book_append_sheet(wb, ws, "Data");
-
-  // Courses reference
-  const cWs = xlsx.utils.aoa_to_sheet([
-    ["Course ID", "Course Name", "Program", "Department"],
-    ...courses.map((c) => [c.id, c.name, c.program?.name || "", c.program?.department?.name || ""]),
-  ]);
-  cWs["!cols"] = [{ wch: 38 }, { wch: 24 }, { wch: 20 }, { wch: 20 }];
-  xlsx.utils.book_append_sheet(wb, cWs, "Courses (Reference)");
-
-  // Faculty reference
-  const fWs = xlsx.utils.aoa_to_sheet([
-    ["Faculty ID", "Name", "Emp ID"],
-    ...faculty.map((f) => [f.id, f.name, f.emp_id || ""]),
-  ]);
-  fWs["!cols"] = [{ wch: 38 }, { wch: 24 }, { wch: 14 }];
-  xlsx.utils.book_append_sheet(wb, fWs, "Faculty (Reference)");
-
-  return xlsx.write(wb, { type: "buffer", bookType: "xlsx" });
+  return { buffer: xlsx.write(wb, { type: "buffer", bookType: "xlsx" }), filename: "sections_template.xlsx" };
 };
 
 export const sectionSubjectTemplate = async () => {
-  const [sections, subjects, faculty] = await Promise.all([
-    prisma.section.findMany({
-      orderBy: { name: "asc" },
-      include: { course: true },
-    }),
-    prisma.subject.findMany({ orderBy: { name: "asc" } }),
-    prisma.faculty.findMany({ orderBy: { name: "asc" } }),
+  // Fetch all sections with their course/program info and already-assigned subjects
+  const sections = await prisma.section.findMany({
+    include: {
+      course: { select: { id: true, name: true, program: { select: { name: true, department: { select: { name: true } } } } } },
+      sectionSubjects: {
+        include: {
+          subject: { select: { code: true, name: true } },
+          faculty: { select: { user: { select: { email: true } }, name: true } },
+        },
+      },
+    },
+    orderBy: [{ course: { program: { name: "asc" } } }, { name: "asc" }, { semester: "asc" }],
+  });
+
+  // Fetch lookup data for reference sheet
+  const [allSubjects, allFaculty] = await Promise.all([
+    prisma.subject.findMany({ orderBy: { code: "asc" }, select: { id: true, name: true, code: true, category: true, credits: true, nickname: true } }),
+    prisma.faculty.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true, emp_id: true, user: { select: { email: true } } } }),
   ]);
 
   const wb = xlsx.utils.book_new();
+  // Sheet name matches student template: "CourseName–SecName SemX"
+  const usedNames = new Set();
+  const safeSheet = (sec) => {
+    const course = sec.course?.name || "";
+    const base = `${course}–${sec.name} Sem${sec.semester}`.replace(/[\[\]:*?/\\]/g, "").slice(0, 31);
+    let n = base;
+    if (usedNames.has(n)) { let i = 2; while (usedNames.has(n)) { const s = `(${i++})`; n = base.slice(0, 31 - s.length) + s; } }
+    usedNames.add(n); return n;
+  };
 
-  const headers = ["Section ID*", "Subject ID*", "Faculty ID", "Type", "Status"];
-  const sample  = [sections[0]?.id || "<section-id>", subjects[0]?.id || "<subject-id>", faculty[0]?.id || "", "REGULAR", "ACTIVE"];
-  const ws = xlsx.utils.aoa_to_sheet([headers, sample]);
-  ws["!cols"] = headers.map(() => ({ wch: 38 }));
-  xlsx.utils.book_append_sheet(wb, ws, "Data");
+  // ── One sheet per section ─────────────────────────────────────────────────
+  for (const sec of sections) {
+    const prog = sec.course?.program?.name || "";
+    const course = sec.course?.name || "";
+    const sheetName = safeSheet(sec);
 
-  const sWs = xlsx.utils.aoa_to_sheet([
-    ["Section ID", "Section Name", "Course", "Semester"],
-    ...sections.map((s) => [s.id, s.name, s.course?.name || "", s.semester]),
-  ]);
-  xlsx.utils.book_append_sheet(wb, sWs, "Sections (Reference)");
+    // Header rows — section info
+    const infoRows = [
+      ["SECTION SUBJECT ASSIGNMENT"],
+      [`Section: ${sec.name}`, `Course: ${course}`, `Program: ${prog}`, `Sem: ${sec.semester}`, `Batch: ${sec.batch || ""}`],
+      [`Dept: ${sec.course?.program?.department?.name || ""}`],
+      [],
+      // Column headers
+      ["Subject Code *", "Faculty Email", "Type", "Status", "— Subject Name (auto info)", "— Faculty Name (auto info)"],
+    ];
 
-  const subWs = xlsx.utils.aoa_to_sheet([
-    ["Subject ID", "Name", "Code", "Category"],
-    ...subjects.map((s) => [s.id, s.name, s.code, s.category]),
-  ]);
+    // Pre-fill existing assignments as examples
+    const dataRows = sec.sectionSubjects.length
+      ? sec.sectionSubjects.map((ss) => [
+        ss.subject?.code || "",
+        ss.faculty?.user?.email || "",
+        "REGULAR",
+        "ACTIVE",
+        ss.subject?.name || "",
+        ss.faculty?.name || "",
+      ])
+      : [["", "", "REGULAR", "ACTIVE", "← enter subject code", "← enter faculty email (optional)"]];
+
+    const ws = xlsx.utils.aoa_to_sheet([...infoRows, ...dataRows]);
+    ws["!cols"] = [{ wch: 18 }, { wch: 32 }, { wch: 12 }, { wch: 10 }, { wch: 30 }, { wch: 24 }];
+    // Style the header row (row index 4, 0-based = row 5 in Excel)
+    xlsx.utils.book_append_sheet(wb, ws, sheetName);
+  }
+
+  // ── Subject Reference sheet ───────────────────────────────────────────────
+  const subHeaders = ["Subject Code", "Name", "Nickname", "Category", "Credits"];
+  const subRows = allSubjects.map((s) => [s.code, s.name, s.nickname || "", s.category, s.credits]);
+  const subWs = xlsx.utils.aoa_to_sheet([subHeaders, ...subRows]);
+  subWs["!cols"] = [{ wch: 16 }, { wch: 36 }, { wch: 14 }, { wch: 14 }, { wch: 8 }];
   xlsx.utils.book_append_sheet(wb, subWs, "Subjects (Reference)");
 
-  const fWs = xlsx.utils.aoa_to_sheet([
-    ["Faculty ID", "Name", "Emp ID"],
-    ...faculty.map((f) => [f.id, f.name, f.emp_id || ""]),
-  ]);
-  xlsx.utils.book_append_sheet(wb, fWs, "Faculty (Reference)");
+  // ── Faculty Reference sheet ───────────────────────────────────────────────
+  const facHeaders = ["Email", "Name", "Emp ID"];
+  const facRows = allFaculty.map((f) => [f.user?.email || "", f.name, f.emp_id || ""]);
+  const facWs = xlsx.utils.aoa_to_sheet([facHeaders, ...facRows]);
+  facWs["!cols"] = [{ wch: 36 }, { wch: 28 }, { wch: 14 }];
+  xlsx.utils.book_append_sheet(wb, facWs, "Faculty (Reference)");
 
-  return xlsx.write(wb, { type: "buffer", bookType: "xlsx" });
+  // ── Instructions sheet ────────────────────────────────────────────────────
+  const instrWs = xlsx.utils.aoa_to_sheet([
+    ["HOW TO USE THIS TEMPLATE"],
+    [],
+    ["1. Each sheet = one section. Fill in Subject Code and Faculty Email columns."],
+    ["2. Subject Code must match exactly — see the 'Subjects (Reference)' sheet."],
+    ["3. Faculty Email is optional. Leave blank to assign subject without faculty."],
+    ["4. Faculty Email must match exactly — see the 'Faculty (Reference)' sheet."],
+    ["5. Type: REGULAR | ELECTIVE | COMBINED | TRAINING | OTHER (default: REGULAR)"],
+    ["6. Status: ACTIVE | COMPLETED | REMOVED (default: ACTIVE)"],
+    ["7. Do not rename or delete sheets. Do not change columns A-D."],
+    ["8. Columns E-F (Subject Name, Faculty Name) are for reference — they are ignored on upload."],
+    [],
+    ["Upload via: Sections page → Bulk Assign button"],
+  ]);
+  instrWs["!cols"] = [{ wch: 80 }];
+  xlsx.utils.book_append_sheet(wb, instrWs, "Instructions");
+
+  return {
+    buffer: xlsx.write(wb, { type: "buffer", bookType: "xlsx" }),
+    filename: `section_subject_template_${new Date().toISOString().slice(0, 10)}.xlsx`,
+  };
 };

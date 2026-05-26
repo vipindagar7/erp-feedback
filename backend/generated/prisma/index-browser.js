@@ -409,6 +409,20 @@ exports.Prisma.NotificationScalarFieldEnum = {
   created_at: 'created_at'
 };
 
+exports.Prisma.CurriculumSubjectScalarFieldEnum = {
+  id: 'id',
+  program_id: 'program_id',
+  course_id: 'course_id',
+  semester: 'semester',
+  subject_id: 'subject_id',
+  type: 'type',
+  is_core: 'is_core',
+  credits: 'credits',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -471,7 +485,8 @@ exports.Prisma.ModelName = {
   FeedbackFormStudent: 'FeedbackFormStudent',
   FeedbackResponse: 'FeedbackResponse',
   FeedbackAnswer: 'FeedbackAnswer',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  CurriculumSubject: 'CurriculumSubject'
 };
 
 /**

@@ -72,10 +72,11 @@ model Program {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  department  Department          @relation(fields: [dept_id], references: [id], onDelete: Cascade)
-  courses     Course[]
-  students    Student[]
-  enrollments StudentEnrollment[]
+  department         Department          @relation(fields: [dept_id], references: [id], onDelete: Cascade)
+  courses            Course[]
+  students           Student[]
+  enrollments        StudentEnrollment[]
+  curriculumSubjects CurriculumSubject[]
 
   @@index([dept_id])
 }
@@ -88,11 +89,12 @@ model Course {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  program       Program             @relation(fields: [program_id], references: [id], onDelete: Cascade)
-  sections      Section[]
-  students      Student[]
-  enrollments   StudentEnrollment[]
-  feedbackForms FeedbackForm[]
+  program            Program             @relation(fields: [program_id], references: [id], onDelete: Cascade)
+  sections           Section[]
+  students           Student[]
+  enrollments        StudentEnrollment[]
+  feedbackForms      FeedbackForm[]
+  curriculumSubjects CurriculumSubject[]
 
   @@index([program_id])
 }
@@ -108,10 +110,11 @@ model Subject {
 
   createdAt DateTime @default(now())
 
-  students        StudentSubject[]
-  facultySubjects FacultySubject[]
-  feedbackForms   FeedbackForm[]
-  sectionSubjects SectionSubject[]
+  students           StudentSubject[]
+  facultySubjects    FacultySubject[]
+  feedbackForms      FeedbackForm[]
+  sectionSubjects    SectionSubject[]
+  curriculumSubjects CurriculumSubject[]
 }
 
 // ─── Section ───────────────────────────────────────────────────
@@ -505,4 +508,28 @@ enum NotificationType {
   GENERAL
   ACCOUNT_BLOCKED
   ACCOUNT_UNBLOCKED
+}
+
+// ── Curriculum — subject list per program+course+semester ─────────────────────
+model CurriculumSubject {
+  id         String  @id @default(uuid())
+  program_id String
+  course_id  String
+  semester   Int
+  subject_id String
+  type       String  @default("REGULAR") // REGULAR | ELECTIVE | PRACTICAL | TRAINING | OTHER
+  is_core    Boolean @default(true) // core vs elective
+  credits    Int? // override subject default
+  order      Int     @default(0) // display/sort order
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  program Program @relation(fields: [program_id], references: [id], onDelete: Cascade)
+  course  Course  @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  subject Subject @relation(fields: [subject_id], references: [id], onDelete: Cascade)
+
+  @@unique([course_id, semester, subject_id])
+  @@index([program_id])
+  @@index([course_id, semester])
 }

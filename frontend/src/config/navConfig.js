@@ -26,7 +26,8 @@ export const ADMIN_NAV = [
     { key: "courses", label: "Courses", path: "/admin/courses", icon: BookOpen, permission: "manage_departments" },
     { key: "sections", label: "Sections", path: "/admin/sections", icon: Layers, permission: "manage_sections" },
     { key: "subjects", label: "Subjects", path: "/admin/subjects", icon: Library, permission: "manage_subjects" },
-
+    { path: "/admin/curriculum", label: "Curriculum", icon: "📚", permission: "manage_subjects" },
+    
     { key: "g3", group: "Feedback" },
     { key: "fb-cats", label: "Categories", path: "/admin/feedback/categories", icon: MessageSquareText, permission: "manage_feedback" },
     { key: "fb-qs", label: "Questions", path: "/admin/feedback/questions", icon: HelpCircle, permission: "manage_feedback" },

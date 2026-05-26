@@ -33,6 +33,7 @@ import notificationRoutes from "./modules/notification/notification.routes.js";
 
 import adminEnrollRoutes from "./modules/enrollment/enrollment.routes.js";
 import studentEnrollRoutes from "./modules/student/student-enrollment.routes.js";
+import curriculumRoutes from "./modules/curriculum/curriculum.routes.js";
 
 import settingsRoutes from "./modules/settings/settings.routes.js";
 import reportsRoutes from "./modules/reports/reports.routes.js";
@@ -221,6 +222,9 @@ app.use("/api/students/enrollments", studentEnrollRoutes);
 
 app.use("/api/groups", groupsRoutes);
 
+app.use("/api/curriculum", curriculumRoutes);
+
+
 /* =========================================================
    404 HANDLER
 ========================================================= */
@@ -279,11 +283,13 @@ const startServer = async () => {
 
         app.listen(PORT, () => {
             logger.info(`🚀 ERP Backend running on port ${PORT}`);
+            
         });
 
     } catch (error) {
 
         logger.error(`Database connection failed: ${error.message}`);
+        console.log(error)
         process.exit(1);
     }
 };

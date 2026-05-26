@@ -37,6 +37,7 @@ import FacultyFeedbackPage from "./pages/faculty/FacultyFeedbackPage.jsx";
 import StudentDashboard from "./pages/student/StudentDashboard.jsx";
 import StudentFeedbackPage from "./pages/student/StudentFeedbackPage.jsx";
 import EnrollmentPage from "./pages/admin/EnrollmentPage.jsx";
+import CurriculumPage from "./pages/admin/Curriculumpage.jsx";
 
 // ── Root redirect — sends user to their role home ──────────────
 function RootRedirect() {
@@ -97,7 +98,7 @@ export const router = createBrowserRouter([
             // Results needs :form_id param — FeedbackResultsPage uses useParams()
             { path: "feedback/results", element: <FeedbackResultsPage /> },
             { path: "feedback/teaching", element: <FeedbackTeachingReportPage /> },
-
+            { path: "curriculum", element: <CurriculumPage /> },
             { path: "admins", element: <AdminsPage /> },
             { path: "groups", element: <SpecialGroupsPage /> },
 
